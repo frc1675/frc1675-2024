@@ -39,6 +39,7 @@ deploy {
     }
 }
 
+
 def deployArtifact = deploy.targets.roborio.artifacts.frcJava
 
 // Set to true to use debug for JNI.
@@ -98,4 +99,40 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+}
+
+def getRobotVersionData = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'log', '-1', '--pretty=format:Commit: \'%s\' by %aN on %ai (%h)\n'       
+        standardOutput = stdout
+    }
+    stdout.write("Branch: ".getBytes())
+    exec {
+        commandLine 'git', 'branch', '--show-current'
+        standardOutput = stdout
+    }
+    stdout.write("Uncommitted Changes:".getBytes())
+    exec {
+      commandLine 'git', 'diff', '--shortstat'
+      standardOutput = stdout
+    }
+    stdout.write("--------------------\n".getBytes())
+    exec {
+        commandLine 'git', 'status', '-s'
+        standardOutput = stdout
+    }
+    stdout.close()
+    return stdout.toString()
+}
+
+tasks.named("build") {
+  doLast {
+   def versionFile = new File(".robotVersion")
+   if(versionFile.text.length() > 0){
+    versionFile.delete()
+   }
+   versionFile << getRobotVersionData()
+   println("Wrote changes to .robotVersion 🤖")
+  }
 }
