@@ -127,7 +127,15 @@ def getRobotVersionData = { ->
 }
 
 def writeVersionToFile = { ->
-    def versionFile = new File(".robotVersion")
+    def versionDeployDir = new File("./src/main/deploy/version");
+
+    if(!versionDeployDir.exists()) {
+        if(! versionDeployDir.mkdir()) {
+            println "Version deploy directory could not be created."
+        }
+    }
+
+    def versionFile = new File(versionDeployDir, ".robotVersion")
     if(versionFile.exists()){
         versionFile.delete()
     }

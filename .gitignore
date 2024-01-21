@@ -182,4 +182,4 @@ ctre_sim/
 simgui.json
 simgui-ds.json
 networktables.json
-.robotVersion
+src/main/deploy/version/*
