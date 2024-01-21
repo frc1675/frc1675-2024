@@ -133,6 +133,6 @@ tasks.named("build") {
     versionFile.delete()
    }
    versionFile << getRobotVersionData()
-   println("Wrote changes to .robotVersion 🤖")
+   println("Wrote changes to .robotVersion")
   }
 }
