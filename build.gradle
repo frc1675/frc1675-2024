@@ -126,13 +126,29 @@ def getRobotVersionData = { ->
     return stdout.toString()
 }
 
+def writeVersionToFile = { ->
+    def versionFile = new File(".robotVersion")
+    if(versionFile.exists()){
+        versionFile.delete()
+    }
+    versionFile << getRobotVersionData()
+    println("Wrote version information to .robotVersion")
+}
+
 tasks.named("build") {
-  doLast {
-   def versionFile = new File(".robotVersion")
-   if(versionFile.text.length() > 0){
-    versionFile.delete()
-   }
-   versionFile << getRobotVersionData()
-   println("Wrote changes to .robotVersion 🤖")
+  doFirst {
+    writeVersionToFile()
   }
+}
+
+tasks.named("deploy") {
+    doFirst {
+        writeVersionToFile()
+    }
+}
+
+tasks.named("simulateExternalJavaRelease") {
+    doFirst {
+        writeVersionToFile()
+    }
 }
