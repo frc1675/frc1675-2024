@@ -48,12 +48,12 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private void initDashboard() {
-    dashboard = Shuffleboard.getTab("Drive");
+    dashboard = Shuffleboard.getTab("Drive"); //NOAH: get a new shuffleboard tab
     SendableRegistry.add(new UperTunerSendable(0), "UperTuner");
 
     dashboard.add("Velocity Scaler", velocityScale).withWidget("UperTuner").withSize(2, 2);
 
-    dashboard.add(swerve.field);
+    dashboard.add(swerve.field); //NOAH: using object created in first comment, add something to the shuffleboard. Use the version of this method with the double supplier.
     dashboard.addDouble("Module 1 Position", () -> swerve.getModules()[0].getAbsolutePosition()).withPosition(0, 0);
     dashboard.addDouble("Module 2 Position", () -> swerve.getModules()[1].getAbsolutePosition()).withPosition(1, 0);
     dashboard.addDouble("Module 3 Position", () -> swerve.getModules()[2].getAbsolutePosition()).withPosition(0, 1);
