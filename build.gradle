@@ -126,6 +126,9 @@ def getRobotVersionData = { ->
     return stdout.toString()
 }
 
+def writeVersionToShortFile = { ( File versionDir ) -> 
+}
+
 def writeVersionToFile = { ->
     def versionDeployDir = new File("./src/main/deploy/version");
 

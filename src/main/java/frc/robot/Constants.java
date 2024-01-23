@@ -32,7 +32,7 @@ public class Constants {
 
     public class Dashboard {
         public static final boolean DISABLE_TUNER = false;
-        public static final String VERSION_FILE_NAME = "version/.robotVersion";
+        public static final String VERSION_FILE_NAME = "version/.robotVersionShort";
     }
 
     public class Controller {
