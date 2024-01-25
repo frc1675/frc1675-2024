@@ -103,22 +103,22 @@ tasks.withType(JavaCompile) {
 
 def getRobotVersionData = { ->
     def stdout = new ByteArrayOutputStream()
-    exec {
+    execute {
         commandLine 'git', 'log', '-1', '--pretty=format:Commit: \'%s\' by %aN on %ai (%h)\n'       
         standardOutput = stdout
     }
     stdout.write("Branch: ".getBytes())
-    exec {
+    execute {
         commandLine 'git', 'branch', '--show-current'
         standardOutput = stdout
     }
     stdout.write("Uncommitted Changes:".getBytes())
-    exec {
+    execute {
       commandLine 'git', 'diff', '--shortstat'
       standardOutput = stdout
     }
     stdout.write("--------------------\n".getBytes())
-    exec {
+    execute {
         commandLine 'git', 'status', '-s'
         standardOutput = stdout
     }
@@ -126,7 +126,13 @@ def getRobotVersionData = { ->
     return stdout.toString()
 }
 
-def writeVersionToShortFile = { ( File versionDir ) -> 
+def getMinifiedRobotVersionData = {
+    def miniData = new StringBuffer()
+    miniData.append(("git config --list".execute().text).split("user.name=")[1].split("\n")[0]+"@")
+    miniData.append("git branch --show-current".execute().text)
+    miniData.append("|"+"git rev-parse --short HEAD".execute().text)
+    miniData.append("|"+("git status".execute().text.length() > 0 ? "*" : ""))
+    return miniData.toString() 
 }
 
 def writeVersionToFile = { ->
@@ -139,10 +145,13 @@ def writeVersionToFile = { ->
     }
 
     def versionFile = new File(versionDeployDir, ".robotVersion")
-    if(versionFile.exists()){
+    def miniVersionFile = new File(versionDeployDir, ".robotVersionShort") 
+    if(versionFile.exists() || miniVersionFile.exists()){
         versionFile.delete()
+        miniVersionFile.delete()
     }
     versionFile << getRobotVersionData()
+    println(getMinifiedRobotVersionData())
     println("Wrote version information to .robotVersion")
 }
 
