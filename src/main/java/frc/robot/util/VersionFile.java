@@ -14,8 +14,8 @@ import frc.robot.Constants;
 public class VersionFile {
 
     private static VersionFile instance = new VersionFile();
-    private final String versionString;
-    private boolean stringOnShuffleboard = false;
+    private final String miniVersionString;
+    private boolean isStringOnShuffleboard = false;
 
     public static VersionFile getInstance() {
         return instance;
@@ -34,13 +34,13 @@ public class VersionFile {
             } catch (FileNotFoundException e) {
                 // TODO: add log statement, remove DS error
                 DriverStation.reportError("Exception occured while trying to read version string from file", false);
-                versionString = "Version string unreadable: FileNotFound exception occurred.";
+                miniVersionString = "Version string unreadable: FileNotFound exception occurred.";
                 return;
             }
-            versionString = builder.toString();
+            miniVersionString = builder.toString();
 
         } else {
-            versionString = "Version string unreadable: File unreadable.";
+            miniVersionString = "Version string unreadable: File unreadable.";
         }
 
     }
@@ -57,13 +57,13 @@ public class VersionFile {
      *                 to appear on.
      */
     public void putToDashboard(String tabTitle) {
-        if (!stringOnShuffleboard) {
+        if (!isStringOnShuffleboard) {
             ShuffleboardTab t = Shuffleboard.getTab(tabTitle);
-            String[] s = versionString.split("\n");
+            String[] s = miniVersionString.split("\n");
             t.addString("Commit", () -> s[0]).withPosition(0, 0).withSize(5, 1);
             t.addString("Branch", () -> s[1]).withPosition(0, 1).withSize(5, 1);
             t.addString("Uncommitted Changes", () -> s[2]).withPosition(0, 2).withSize(5, 1);
-            stringOnShuffleboard = true;
+            isStringOnShuffleboard = true;
         }
     }
 
@@ -77,7 +77,7 @@ public class VersionFile {
 
     @Override
     public String toString() {
-        return versionString;
+        return miniVersionString;
     }
 
 }

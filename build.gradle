@@ -101,38 +101,26 @@ tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-def getRobotVersionData = { ->
-    def stdout = new ByteArrayOutputStream()
-    execute {
-        commandLine 'git', 'log', '-1', '--pretty=format:Commit: \'%s\' by %aN on %ai (%h)\n'       
-        standardOutput = stdout
-    }
-    stdout.write("Branch: ".getBytes())
-    execute {
-        commandLine 'git', 'branch', '--show-current'
-        standardOutput = stdout
-    }
-    stdout.write("Uncommitted Changes:".getBytes())
-    execute {
-      commandLine 'git', 'diff', '--shortstat'
-      standardOutput = stdout
-    }
-    stdout.write("--------------------\n".getBytes())
-    execute {
-        commandLine 'git', 'status', '-s'
-        standardOutput = stdout
-    }
-    stdout.close()
-    return stdout.toString()
+def getRobotVersionData() { 
+    def robotVersion = new StringBuilder()     
+    robotVersion.append("Commit: "+"git rev-parse HEAD".execute().text.replace('\n', '')+" by "+("git config --list".execute().text).split("user.name=")[1].split("\n")[0]+"\n")       
+    robotVersion.append("Branch: ")
+    robotVersion.append('git branch --show-current'.execute().text)
+    robotVersion.append("Uncommitted Changes: ")
+    robotVersion.append('git diff --shortstat'.execute().text)
+    robotVersion.append("--------------------\n")
+    robotVersion.append('git status -s'.execute().text)
+    return robotVersion.toString()
 }
 
-def getMinifiedRobotVersionData = {
-    def miniData = new StringBuffer()
+def getMinifiedRobotVersionData() {
+    def miniData = new StringBuilder()
     miniData.append(("git config --list".execute().text).split("user.name=")[1].split("\n")[0]+"@")
     miniData.append("git branch --show-current".execute().text)
     miniData.append("|"+"git rev-parse --short HEAD".execute().text)
     miniData.append("|"+("git status".execute().text.length() > 0 ? "*" : ""))
-    return miniData.toString() 
+    String miniDataString = miniData.toString().replace('\n', '') 
+    return miniDataString 
 }
 
 def writeVersionToFile = { ->
@@ -145,13 +133,13 @@ def writeVersionToFile = { ->
     }
 
     def versionFile = new File(versionDeployDir, ".robotVersion")
-    def miniVersionFile = new File(versionDeployDir, ".robotVersionShort") 
-    if(versionFile.exists() || miniVersionFile.exists()){
+    def versionFileMini = new File(versionDeployDir, ".robotVersionMini")
+    if(versionFile.exists() || versionFileMini.exists()){
         versionFile.delete()
-        miniVersionFile.delete()
+        versionFileMini.delete()
     }
     versionFile << getRobotVersionData()
-    println(getMinifiedRobotVersionData())
+    versionFileMini << getMinifiedRobotVersionData()
     println("Wrote version information to .robotVersion")
 }
 
