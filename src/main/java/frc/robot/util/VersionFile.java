@@ -14,15 +14,8 @@ import frc.robot.Constants;
 public class VersionFile {
 
     private static VersionFile instance = null;
-    private String miniVersionString;
+    private final String miniVersionString;
     private boolean isStringOnShuffleboard = false;
-
-    public static VersionFile getInstance() {
-      if(instance == null){
-        instance = new VersionFile();
-      }   
-      return instance;
-    }
 
     private VersionFile() {
         File versionFileMini = new File(Filesystem.getDeployDirectory(), Constants.Dashboard.VERSION_FILE_NAME);
@@ -42,6 +35,13 @@ public class VersionFile {
         }else{
           miniVersionString = "Version string unreadable: File unreadable";   
         }
+    }
+
+    public static VersionFile getInstance() {
+      if(instance == null){
+        instance = new VersionFile();
+      }   
+      return instance;
     }
 
     /**
