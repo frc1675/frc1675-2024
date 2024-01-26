@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.UperTunerSendable;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
 
@@ -44,20 +45,21 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     initDashboard();
-    swerve.chassisVelocityCorrection = false;
+    swerve.chassisVelocityCorrection = false;    
   }
 
   private void initDashboard() {
     dashboard = Shuffleboard.getTab("Drive");
     SendableRegistry.add(new UperTunerSendable(0), "UperTuner");
 
-    dashboard.add("Velocity Scaler", velocityScale).withWidget("UperTuner").withSize(2, 2);
+    dashboard.add("Velocity Scaler", velocityScale).withWidget("UperTuner").withSize(2, 2).withPosition(5, 1);
 
-    dashboard.add(swerve.field);
-    dashboard.addDouble("Module 1 Position", () -> swerve.getModules()[0].getAbsolutePosition()).withPosition(0, 0);
-    dashboard.addDouble("Module 2 Position", () -> swerve.getModules()[1].getAbsolutePosition()).withPosition(1, 0);
-    dashboard.addDouble("Module 3 Position", () -> swerve.getModules()[2].getAbsolutePosition()).withPosition(0, 1);
-    dashboard.addDouble("Module 4 Position", () -> swerve.getModules()[3].getAbsolutePosition()).withPosition(1, 1);
+    dashboard.add(swerve.field).withPosition(0, 1).withSize(5, 3);
+    int position = 0;
+    for (SwerveModule m : swerve.getModules()) {
+      dashboard.addDouble(m.configuration.name +" Module Position °", () -> m.getAbsolutePosition()).withPosition(position, 0).withSize(2, 1);
+      position += 2;
+    }
   }
 
   /**
@@ -77,9 +79,9 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double x, double y, double rotation) {
-    controllerInput[0] = x * Constants.Drive.MAXIMUM_VELOCITY;
-    controllerInput[1] = y * Constants.Drive.MAXIMUM_VELOCITY;
-    controllerInput[2] = rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY;
+    controllerInput[0] = x * Constants.Drive.MAXIMUM_VELOCITY * velocityScale.getCurrentValue();
+    controllerInput[1] = y * Constants.Drive.MAXIMUM_VELOCITY * velocityScale.getCurrentValue();
+    controllerInput[2] = rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY * velocityScale.getCurrentValue();
   }
 
   public Pose2d getPose() {
