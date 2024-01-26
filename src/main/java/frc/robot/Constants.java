@@ -30,6 +30,15 @@ public class Constants {
         
     }
 
+    public class Shooter {
+        public static final int INDEXER_MOTOR_ID = 1; // PLACEHOLDER
+        public static final int SHOOTER_MOTOR_ONE_ID = 2; // PLACEHOLDER
+        public static final int SHOOTER_MOTOR_TWO_ID = 3; // PLACEHOLDER
+        public static final int LASER_CAN_ID = 4; // PLACEHOLDER
+        public static final int INDEXER_NOTE_DETECTION_RANGE = 100; // PLACEHOLDER
+        public static final double TARGET_SPEED_ERROR_MARGIN = 0.1; // PLACEHOLDER
+    }
+
     public class Dashboard {
         public static final boolean DISABLE_TUNER = false;
     }
