@@ -12,7 +12,7 @@ public class Constants {
 
         public static final double DRIVE_GEAR_RATIO = 6.12;
         public static final double STEER_GEAR_RATIO = 12.8;
-        public static final double PULSE_PER_ROTATION = 42; //encoder resolution
+        public static final double PULSE_PER_ROTATION = 1;
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
 
     }
