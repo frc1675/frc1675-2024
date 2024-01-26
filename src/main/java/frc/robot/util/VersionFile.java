@@ -13,24 +13,25 @@ import frc.robot.Constants;
 
 public class VersionFile {
 
-    private static VersionFile instance = new VersionFile();
-    private final String miniVersionString;
+    private static VersionFile instance = null;
+    private String miniVersionString;
     private boolean isStringOnShuffleboard = false;
 
     public static VersionFile getInstance() {
-        return instance;
+      if(instance == null){
+        instance = new VersionFile();
+      }   
+      return instance;
     }
 
     private VersionFile() {
-        File versionFile = new File(Filesystem.getDeployDirectory(), Constants.Dashboard.VERSION_FILE_NAME);
+        File versionFileMini = new File(Filesystem.getDeployDirectory(), Constants.Dashboard.VERSION_FILE_NAME);
         StringBuilder builder = new StringBuilder();
-        if (versionFile.canRead()) {
-            try (Scanner reader = new Scanner(new FileReader(versionFile))) {
-
+        if (versionFileMini.canRead()) {
+            try (Scanner reader = new Scanner(new FileReader(versionFileMini))) {
                 while (reader.hasNext()) {
                     builder.append(reader.nextLine() + "\n");
                 }
-
             } catch (FileNotFoundException e) {
                 // TODO: add log statement, remove DS error
                 DriverStation.reportError("Exception occured while trying to read version string from file", false);
@@ -38,11 +39,9 @@ public class VersionFile {
                 return;
             }
             miniVersionString = builder.toString();
-
-        } else {
-            miniVersionString = "Version string unreadable: File unreadable.";
+        }else{
+          miniVersionString = "Version string unreadable: File unreadable";   
         }
-
     }
 
     /**
@@ -59,10 +58,7 @@ public class VersionFile {
     public void putToDashboard(String tabTitle) {
         if (!isStringOnShuffleboard) {
             ShuffleboardTab t = Shuffleboard.getTab(tabTitle);
-            String[] s = miniVersionString.split("\n");
-            t.addString("Commit", () -> s[0]).withPosition(0, 0).withSize(5, 1);
-            t.addString("Branch", () -> s[1]).withPosition(0, 1).withSize(5, 1);
-            t.addString("Uncommitted Changes", () -> s[2]).withPosition(0, 2).withSize(5, 1);
+            t.addString("Robot Version: ", () -> miniVersionString).withSize(3, 1); 
             isStringOnShuffleboard = true;
         }
     }
