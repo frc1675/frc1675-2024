@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.fasterxml.jackson.databind.type.PlaceholderForType;
+
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -16,7 +18,16 @@ public class Constants {
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
 
     }
-
+    public class Arm{
+        public static final int ENCODER_COUNT = 8192;
+        public static final int MOTOR_1_ID = 0;
+        public static final int MOTOR_2_ID = 0;
+        public static final double HOME_POSITION = 0;
+        public static final double P_COEFFICIENT = 0;
+        public static final double I_COEFFICIENT = 0;
+        public static final double D_COEFFICIENT = 0;
+    }
+   
     public class PathPlanner {
         //TODO tune constants if necessary
         public static final double MAXIMUM_VELOCITY= 5.0; //meters per second
