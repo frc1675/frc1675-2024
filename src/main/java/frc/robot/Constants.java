@@ -47,6 +47,15 @@ public class Constants {
         public static final FieldArea2d FRIENDLY_ALLIANCE_AREA = new FieldArea2d(0, 0, 5.85, 8.21);
     }
 
+    public class Shooter {
+        public static final int INDEXER_MOTOR_ID = 1; // PLACEHOLDER
+        public static final int SHOOTER_MOTOR_ONE_ID = 2; // PLACEHOLDER
+        public static final int SHOOTER_MOTOR_TWO_ID = 3; // PLACEHOLDER
+        public static final int LASER_CAN_ID = 4; // PLACEHOLDER
+        public static final int INDEXER_NOTE_DETECTION_RANGE = 100; // PLACEHOLDER
+        public static final double TARGET_SPEED_ERROR_MARGIN = 0.1; // PLACEHOLDER
+    }
+
     public class Dashboard {
         public static final boolean DISABLE_TUNER = false;
         public static final String VERSION_FILE_NAME = "version/.robotVersionMini";
