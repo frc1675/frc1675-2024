@@ -8,12 +8,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 
 public class RobotContainer {
 
   private DriveSubsystem drive = new DriveSubsystem();
+  private ShooterSubsystem shooter = new ShooterSubsystem();
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
 
   public RobotContainer() {
