@@ -29,7 +29,7 @@ public class Arm extends SubsystemBase{
     }
 
     public boolean isOnTarget(){
-        return(getAngle() == targetAngle);
+        return((targetAngle - Constants.Arm.TARGET_RANGE <= getAngle()) && (targetAngle + Constants.Arm.TARGET_RANGE >= getAngle()));
     }
 
     public double getTarget(){
@@ -40,7 +40,7 @@ public class Arm extends SubsystemBase{
         targetAngle = inputTarget;
     }
     public boolean isAtHomePostion() {
-        return(getAngle() == Constants.Arm.HOME_POSITION);
+        return((Constants.Arm.HOME_POSITION - Constants.Arm.HOME_POSITION_RANGE <= getAngle()) && (Constants.Arm.HOME_POSITION + Constants.Arm.HOME_POSITION_RANGE >= getAngle()));
     }
 
     @Override

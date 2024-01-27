@@ -26,6 +26,8 @@ public class Constants {
         public static final double P_COEFFICIENT = 0;
         public static final double I_COEFFICIENT = 0;
         public static final double D_COEFFICIENT = 0;
+        public static final double HOME_POSITION_RANGE = 5.0;
+        public static final double TARGET_RANGE = 5.0;
     }
    
     public class PathPlanner {
