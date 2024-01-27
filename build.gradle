@@ -118,7 +118,7 @@ def getMinifiedRobotVersionData() {
     miniData.append(("git config --list".execute().text).split("user.name=")[1].split("\n")[0]+"@")
     miniData.append("git branch --show-current".execute().text)
     miniData.append(" | "+"git rev-parse --short HEAD".execute().text)
-    miniData.append(" | "+("git status".execute().text.length() > 0 ? "*" : "") 
+    miniData.append(" | "+("git status".execute().text.length() > 0 ? "*" : ""))
     return miniData.toString().replace('\n', '')
 }
 
