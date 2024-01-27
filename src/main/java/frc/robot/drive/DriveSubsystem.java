@@ -63,6 +63,15 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
+   * Zero the gyroscope. This is useful for resetting which way is considered
+   * positive for field relative robot driving. This should probably only be done
+   * while debugging.
+   */
+  public void zeroGyroscope() {
+    swerve.zeroGyro();
+  }
+
+  /**
    * Used for auto building via path planner
    * 
    * @return robot relative chassis speeds
@@ -102,6 +111,11 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
 
+  /**
+   * Used for auto building via path planner
+   * 
+   * @param override new pose
+   */
   public void resetOdometry(Pose2d override) {
     swerve.resetOdometry(override);
   }
