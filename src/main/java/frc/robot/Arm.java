@@ -19,9 +19,9 @@ public class Arm extends SubsystemBase{
     private DigitalInput homeSwitch;
 
     public Arm(){
-        homeSwitch = new DigitalInput(27);
+        homeSwitch = new DigitalInput(Constants.Arm.DIGITAL_INPUT_CHANNEL);
         pid = new PIDController(Constants.Arm.P_COEFFICIENT, Constants.Arm.I_COEFFICIENT, Constants.Arm.D_COEFFICIENT);
-        armEncoder = new Encoder(28,29);
+        armEncoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A_ID, Constants.Arm.ENCODER_CHANNEL_B_ID);
         motorOne = new CANSparkMax(Constants.Arm.ARM_MOTOR_ONE, MotorType.kBrushless);
         motorTwo = new CANSparkMax(Constants.Arm.ARM_MOTOR_TWO, MotorType.kBrushless);
         if (Robot.isSimulation()){
