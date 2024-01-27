@@ -7,21 +7,37 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Undertaker extends SubsystemBase{
     
-    private CANSparkMax intakeMotor = new CANSparkMax( Constants.Undertaker.INTAKE_MOTOR_ONE, MotorType.kBrushless);
-    private CANSparkMax intakeMotor2 = new CANSparkMax( Constants.Undertaker.INTAKE_MOTOR_TWO, MotorType.kBrushless);
+    private CANSparkMax intakeMotorOne = new CANSparkMax( Constants.Undertaker.INTAKE_MOTOR_ONE, MotorType.kBrushless);
+    private CANSparkMax intakeMotorTwo = new CANSparkMax( Constants.Undertaker.INTAKE_MOTOR_TWO, MotorType.kBrushless);
     
-    public void undertakerStop(){
-        intakeMotor.set(0);
-        intakeMotor2.set(0);
+    public class Undertakers {
+      public static final int INTAKE_MOTOR_ONE = 9;
+      public static final int INTAKE_MOTOR_TWO = 10;
+    }
+
+    public void undertakerControls(double speed){
+        //stop
+        intakeMotorOne.set(0);
+        intakeMotorTwo.set(0);
+
+        //forwards
+        intakeMotorOne.set(speed);
+        intakeMotorTwo.set(speed);
+
+        //backwards
+        intakeMotorOne.set(speed * -1);
+        intakeMotorTwo.set(speed * -1);
     }
     
+/** 
       public void noteRelease(double speed){
-        intakeMotor.set(speed);
-        intakeMotor2.set(speed);
+        intakeMotorOne.set(speed);
+        intakeMotorTwo.set(speed);
     }
     
       public void notePickup(double speed){
-        intakeMotor.set(speed * -1);
-        intakeMotor2.set(speed * -1);
+        intakeMotorOne.set(speed * -1);
+        intakeMotorTwo.set(speed * -1);
     }
+    */
 }
