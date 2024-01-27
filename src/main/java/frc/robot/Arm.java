@@ -1,8 +1,10 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
-
+import com.revrobotics.REVPhysicsSim;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;  
@@ -17,19 +19,22 @@ public class Arm extends SubsystemBase{
     private DigitalInput homeSwitch;
 
     public Arm(){
-        homeSwitch = new DigitalInput(0);
+        homeSwitch = new DigitalInput(27);
         pid = new PIDController(Constants.Arm.P_COEFFICIENT, Constants.Arm.I_COEFFICIENT, Constants.Arm.D_COEFFICIENT);
-        armEncoder = new Encoder(0,0);
-        motorOne = new CANSparkMax(Constants.Arm.MOTOR_1_ID, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
-        motorTwo = new CANSparkMax(Constants.Arm.MOTOR_2_ID, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+        armEncoder = new Encoder(28,29);
+        motorOne = new CANSparkMax(Constants.Arm.ARM_MOTOR_ONE, MotorType.kBrushless);
+        motorTwo = new CANSparkMax(Constants.Arm.ARM_MOTOR_TWO, MotorType.kBrushless);
+        if (Robot.isSimulation()){
+            REVPhysicsSim.getInstance().addSparkMax(motorOne, DCMotor.getNEO(1));
+            REVPhysicsSim.getInstance().addSparkMax(motorTwo, DCMotor.getNEO(1));
+        }
     }
-
     public double getAngle(){
-        return (armEncoder.get()/Constants.Arm.ENCODER_COUNT)*360;
+        return ((double) armEncoder.get()/Constants.Arm.ENCODER_COUNT)*360;
     }
 
     public boolean isOnTarget(){
-        return((targetAngle - Constants.Arm.TARGET_RANGE <= getAngle()) && (targetAngle + Constants.Arm.TARGET_RANGE >= getAngle()));
+        return((targetAngle - Constants.Arm.TARGET_RANGE_DEGREES <= getAngle()) && (targetAngle + Constants.Arm.TARGET_RANGE_DEGREES >= getAngle()));
     }
 
     public double getTarget(){
@@ -40,20 +45,25 @@ public class Arm extends SubsystemBase{
         targetAngle = inputTarget;
     }
     public boolean isAtHomePostion() {
-        return((Constants.Arm.HOME_POSITION - Constants.Arm.HOME_POSITION_RANGE <= getAngle()) && (Constants.Arm.HOME_POSITION + Constants.Arm.HOME_POSITION_RANGE >= getAngle()));
+        if (homeSwitch.get()){
+            return true;
+        } else{
+            return((Constants.Arm.HOME_POSITION - Constants.Arm.HOME_POSITION_RANGE_DEGREES <= getAngle()) && (Constants.Arm.HOME_POSITION + Constants.Arm.HOME_POSITION_RANGE_DEGREES >= getAngle()));
+
+        }
     }
 
     @Override
     public void periodic(){
-        double motorSpeed = pid.calculate(targetAngle - getAngle());
+        double motorVoltage = pid.calculate(targetAngle - getAngle());
         if (homeSwitch.get()){
-            if (motorSpeed >= 0){
-                motorOne.set(motorSpeed);
-                motorTwo.set(motorSpeed);
+            if (motorVoltage >= 0){
+                motorOne.setVoltage(motorVoltage);
+                motorTwo.setVoltage(motorVoltage);
             }
         } else{
-            motorOne.set(motorSpeed);
-            motorTwo.set(motorSpeed);
+            motorOne.setVoltage(motorVoltage);
+            motorTwo.setVoltage(motorVoltage);
         }
     }
 }
