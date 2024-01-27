@@ -29,6 +29,8 @@ public class Constants {
         public static final double HOME_POSITION_RANGE_DEGREES = 5.0;
         public static final double TARGET_RANGE_DEGREES = 5.0;
         public static final int DIGITAL_INPUT_CHANNEL = 28;
+        public static final double ARM_ANGLE_LIMIT_DEGREES = 0;
+        public static final double HOME_SWITCH_FAILSAFE = 0;
     }
    
     public class PathPlanner {
