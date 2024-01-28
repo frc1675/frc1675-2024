@@ -46,6 +46,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     initDashboard();
     swerve.chassisVelocityCorrection = false;    
+    swerve.setHeadingCorrection(true);
   }
 
   private void initDashboard() {
