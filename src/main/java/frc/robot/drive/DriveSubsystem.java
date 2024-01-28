@@ -145,8 +145,6 @@ public class DriveSubsystem extends SubsystemBase {
         true, false
       );
 
-    swerve.updateOdometry();
-
     headingPidfConfig.p = headingTuneableP.getCurrentValue();
     headingPidfConfig.i = headingTuneableI.getCurrentValue();
     headingPidfConfig.d = headingTuneableD.getCurrentValue();
