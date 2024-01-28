@@ -21,6 +21,7 @@ import frc.robot.util.UperTunerSendable;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
+import swervelib.parser.PIDFConfig;
 import swervelib.parser.SwerveParser;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -29,6 +30,12 @@ public class DriveSubsystem extends SubsystemBase {
   private double[] controllerInput = { 0, 0, 0 }; // [x, y, rotation]
 
   private UperTunerSendable velocityScale = new UperTunerSendable(1.0, 0.0, 1.0);
+
+  private UperTunerSendable headingTuneableP;
+  private UperTunerSendable headingTuneableI;
+  private UperTunerSendable headingTuneableD;
+
+  private PIDFConfig headingPidfConfig;
 
   private ShuffleboardTab dashboard;
 
@@ -47,6 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
     initDashboard();
     swerve.chassisVelocityCorrection = false;    
     swerve.setHeadingCorrection(true);
+    headingPidfConfig = swerve.swerveController.config.headingPIDF;
   }
 
   private void initDashboard() {
@@ -54,6 +62,14 @@ public class DriveSubsystem extends SubsystemBase {
     SendableRegistry.add(new UperTunerSendable(0), "UperTuner");
 
     dashboard.add("Velocity Scaler", velocityScale).withWidget("UperTuner").withSize(2, 2).withPosition(5, 1);
+
+    headingTuneableP = new UperTunerSendable(headingPidfConfig.p, 0, 5);
+    headingTuneableI = new UperTunerSendable(headingPidfConfig.i, 0, 5);
+    headingTuneableD = new UperTunerSendable(headingPidfConfig.d, 0, 5);
+
+    dashboard.add("Heading P", headingTuneableP).withWidget("UperTuner").withSize(2, 2).withPosition(5, 3);
+    dashboard.add("Heading I", headingTuneableI).withWidget("UperTuner").withSize(2, 2).withPosition(7, 3);
+    dashboard.add("Heading D", headingTuneableD).withWidget("UperTuner").withSize(2, 2).withPosition(9, 3);
 
     dashboard.add(swerve.field).withPosition(0, 1).withSize(5, 3);
     int position = 0;
@@ -130,5 +146,9 @@ public class DriveSubsystem extends SubsystemBase {
       );
 
     swerve.updateOdometry();
+
+    headingPidfConfig.p = headingTuneableP.getCurrentValue();
+    headingPidfConfig.i = headingTuneableI.getCurrentValue();
+    headingPidfConfig.d = headingTuneableD.getCurrentValue();
   }
 }
