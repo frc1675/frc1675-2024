@@ -123,7 +123,7 @@ def getMinifiedRobotVersionData() {
 }
 
 def writeVersionToFile = { ->
-    if("git config user.name".execute().text.length < 1) {
+    if("git config user.name".execute().text.length() < 1) {
         println "Git username not configured, skipping robot version file writing. We are probably on the build server."
         return;
     }
