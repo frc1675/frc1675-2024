@@ -138,8 +138,11 @@ def writeVersionToFile = { ->
 
     def versionFile = new File(versionDeployDir, ".robotVersion")
     def versionFileMini = new File(versionDeployDir, ".robotVersionMini")
-    if(versionFile.exists() || versionFileMini.exists()){
+    if(versionFile.exists()){
         versionFile.delete()
+    }
+
+    if(versionFileMini.exists()) {
         versionFileMini.delete()
     }
     versionFile << getRobotVersionData()
