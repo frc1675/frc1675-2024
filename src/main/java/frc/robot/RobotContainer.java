@@ -22,7 +22,6 @@ public class RobotContainer {
 
   private void configureBindings() {
     Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
-    is this valid java?
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
