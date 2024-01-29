@@ -103,7 +103,7 @@ tasks.withType(JavaCompile) {
 
 def getRobotVersionData() { 
     def robotVersion = new StringBuilder()     
-    robotVersion.append("Commit: @"+"git rev-parse --short HEAD".execute().text.replace('\n', '')+" by "+("git config --list".execute().text).split("user.name=")[1].split("\n")[0]+"\n")       
+    robotVersion.append("Commit: @"+"git rev-parse --short HEAD".execute().text.replace('\n', '')+" by "+"git config user.name".execute().text+"\n")
     robotVersion.append("Branch: ")
     robotVersion.append('git branch --show-current'.execute().text)
     robotVersion.append("Uncommitted Changes: ")
@@ -115,7 +115,7 @@ def getRobotVersionData() {
 
 def getMinifiedRobotVersionData() {
     def miniData = new StringBuilder()
-    miniData.append(("git config --list".execute().text).split("user.name=")[1].split("\n")[0]+"@")
+    miniData.append("git config user.name".execute().text + "@")
     miniData.append("git branch --show-current".execute().text)
     miniData.append(" | "+"git rev-parse --short HEAD".execute().text)
     miniData.append(" | "+("git status".execute().text.length() > 0 ? "*" : ""))
@@ -123,9 +123,8 @@ def getMinifiedRobotVersionData() {
 }
 
 def writeVersionToFile = { ->
-    println "git".execute().text
-    if("git".execute().text.contains("command not found")) {
-        println "Git not installed, skipping robot version file writing. We are probably on the build server."
+    if("git config user.name".execute().text.length < 1) {
+        println "Git username not configured, skipping robot version file writing. We are probably on the build server."
         return;
     }
     
