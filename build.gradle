@@ -123,6 +123,11 @@ def getMinifiedRobotVersionData() {
 }
 
 def writeVersionToFile = { ->
+    if("git".execute().text.contains("command not found")) {
+        println "Git not installed, skipping robot version file writing. We are probably on the build server."
+        return;
+    }
+    
     def versionDeployDir = new File("./src/main/deploy/version");
 
     if(!versionDeployDir.exists()) {
