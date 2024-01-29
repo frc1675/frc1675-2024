@@ -39,6 +39,7 @@ deploy {
     }
 }
 
+
 def deployArtifact = deploy.targets.roborio.artifacts.frcJava
 
 // Set to true to use debug for JNI.
@@ -98,4 +99,71 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+}
+
+def getRobotVersionData() { 
+    def robotVersion = new StringBuilder()     
+    robotVersion.append("Commit: @"+"git rev-parse --short HEAD".execute().text.replace('\n', '')+" by "+"git config user.name".execute().text+"\n")
+    robotVersion.append("Branch: ")
+    robotVersion.append('git branch --show-current'.execute().text)
+    robotVersion.append("Uncommitted Changes: ")
+    robotVersion.append('git diff --shortstat'.execute().text)
+    robotVersion.append("--------------------\n")
+    robotVersion.append('git status -s'.execute().text)
+    return robotVersion.toString()
+}
+
+def getMinifiedRobotVersionData() {
+    def miniData = new StringBuilder()
+    miniData.append("git config user.name".execute().text + "@")
+    miniData.append("git branch --show-current".execute().text)
+    miniData.append(" | "+"git rev-parse --short HEAD".execute().text)
+    miniData.append(" | "+("git status -s".execute().text.length() > 0 ? "*" : ""))
+    return miniData.toString().replace('\n', '')
+}
+
+def writeVersionToFile = { ->
+    if("git config user.name".execute().text.length() < 1) {
+        println "Git username not configured, skipping robot version file writing. We are probably on the build server."
+        return;
+    }
+    
+    def versionDeployDir = new File("./src/main/deploy/version");
+
+    if(!versionDeployDir.exists()) {
+        if(! versionDeployDir.mkdir()) {
+            println "Version deploy directory could not be created."
+        }
+    }
+
+    def versionFile = new File(versionDeployDir, ".robotVersion")
+    def versionFileMini = new File(versionDeployDir, ".robotVersionMini")
+    if(versionFile.exists()){
+        versionFile.delete()
+    }
+
+    if(versionFileMini.exists()) {
+        versionFileMini.delete()
+    }
+    versionFile << getRobotVersionData()
+    versionFileMini << getMinifiedRobotVersionData()
+    println("Wrote version information to .robotVersion")
+}
+
+tasks.named("build") {
+  doFirst {
+    writeVersionToFile()
+  }
+}
+
+tasks.named("deploy") {
+    doFirst {
+        writeVersionToFile()
+    }
+}
+
+tasks.named("simulateExternalJavaRelease") {
+    doFirst {
+        writeVersionToFile()
+    }
 }
