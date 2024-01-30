@@ -6,13 +6,15 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 
 public class RobotContainer {
-
+  private final Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
+  private final JoystickButton intakeButton = new JoystickButton(driverController, Constants.Controller.Y_BUTTON);
   private DriveSubsystem drive = new DriveSubsystem();
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
 
@@ -21,7 +23,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
+    intakeButton.onTrue(getAutonomousCommand());
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,

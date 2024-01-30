@@ -10,11 +10,16 @@ public class Undertaker extends SubsystemBase{
     private CANSparkMax intakeMotorOne = new CANSparkMax( Constants.Undertaker.INTAKE_MOTOR_ONE, MotorType.kBrushless);
     private CANSparkMax intakeMotorTwo = new CANSparkMax( Constants.Undertaker.INTAKE_MOTOR_TWO, MotorType.kBrushless);
 
-    public class Undertakers {}
 
     public void undertakerControl(double speed){
         intakeMotorOne.set(speed);
         intakeMotorTwo.set(speed);
     }
-    
+
+    public void undertakerOff(int off){
+         intakeMotorOne.set(Constants.Undertaker.INTAKE_MOTOR_OFF);
+        intakeMotorTwo.set(Constants.Undertaker.INTAKE_MOTOR_OFF);
+    }
+
 }
+ 

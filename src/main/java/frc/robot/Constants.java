@@ -61,5 +61,7 @@ public class Constants {
     public class Undertaker {
         public static final int INTAKE_MOTOR_ONE = 9;
         public static final int INTAKE_MOTOR_TWO = 10;
+        public static final int INTAKE_MOTOR_OFF = 0;
+
     }    
 }
