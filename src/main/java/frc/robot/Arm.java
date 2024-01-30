@@ -51,8 +51,11 @@ public class Arm extends SubsystemBase {
         if (homeSwitch.get()) {
             return true;
         } else {
-            return ((Constants.Arm.HOME_POSITION - Constants.Arm.HOME_POSITION_RANGE_DEGREES <= getAngle())
-                    && (Constants.Arm.HOME_POSITION + Constants.Arm.HOME_POSITION_RANGE_DEGREES >= getAngle()));
+            return (
+                (Constants.Arm.HOME_POSITION - Constants.Arm.HOME_POSITION_RANGE_DEGREES <= getAngle())
+                && 
+                (Constants.Arm.HOME_POSITION + Constants.Arm.HOME_POSITION_RANGE_DEGREES >= getAngle())
+                );
 
         }
     }
@@ -60,24 +63,39 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         double motorVoltage = pid.calculate(targetAngle - getAngle());
-        if (homeSwitch.get()) {
-            if (getAngle() >= Constants.Arm.HOME_SWITCH_FAILSAFE) {
+
+        if(homeSwitch.get()) {
+            //Check if encoder and home switch disagree
+            if(getAngle() > Constants.Arm.HOME_SWITCH_FAILSAFE) {
+                //Assume a sensor is broken, do not move arm.
                 motorOne.setVoltage(0);
                 motorTwo.setVoltage(0);
-            } else {
-                if (motorVoltage >= 0) {
+            }else if(motorVoltage > 0) {
+                //Only allow the motors to move away from the switch
+                motorOne.setVoltage(motorVoltage);
+                motorTwo.setVoltage(motorVoltage);
+            }else {
+                //Stop arm if already moving in incorrect direction
+                motorOne.setVoltage(0);
+                motorTwo.setVoltage(0);
+            }
+        }else {
+            if(getAngle() > Constants.Arm.ARM_ANGLE_LIMIT_DEGREES) {
+                //Arm is outside of desired range, only let it go back in.
+                if(motorVoltage < 0) {
                     motorOne.setVoltage(motorVoltage);
                     motorTwo.setVoltage(motorVoltage);
+                }else {
+                    //Stop arm if already moving in incorrect direction
+                    motorOne.setVoltage(0);
+                    motorTwo.setVoltage(0);
                 }
-            }
-        } else if (getAngle() == Constants.Arm.ARM_ANGLE_LIMIT_DEGREES) {
-            if (motorVoltage >= 0) {
-                motorOne.setVoltage(motorVoltage);
-                motorTwo.setVoltage(motorVoltage);
-            } else {
+            }else {
+                //Arm within safe range, do what it wants
                 motorOne.setVoltage(motorVoltage);
                 motorTwo.setVoltage(motorVoltage);
             }
+
         }
     }
 }
