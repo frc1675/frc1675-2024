@@ -17,8 +17,8 @@ public class Constants {
 
     }
     public class Arm{
-        public static final int ENCODER_CHANNEL_A_ID = 28;
-        public static final int ENCODER_CHANNEL_B_ID = 29;
+        public static final int ENCODER_CHANNEL_A = 28;
+        public static final int ENCODER_CHANNEL_B = 29;
         public static final int ENCODER_COUNT = 8192;
         public static final int ARM_MOTOR_ONE = 11;
         public static final int ARM_MOTOR_TWO = 12;
@@ -30,7 +30,7 @@ public class Constants {
         public static final double TARGET_RANGE_DEGREES = 5.0;
         public static final int DIGITAL_INPUT_CHANNEL = 28;
         public static final double ARM_ANGLE_LIMIT_DEGREES = 0;
-        public static final double HOME_SWITCH_FAILSAFE = 0;
+        public static final double HOME_SWITCH_FAILSAFE_DEGREES = 0;
     }
    
     public class PathPlanner {

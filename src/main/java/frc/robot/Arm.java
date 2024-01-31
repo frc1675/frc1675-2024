@@ -21,7 +21,7 @@ public class Arm extends SubsystemBase {
     public Arm() {
         homeSwitch = new DigitalInput(Constants.Arm.DIGITAL_INPUT_CHANNEL);
         pid = new PIDController(Constants.Arm.P_COEFFICIENT, Constants.Arm.I_COEFFICIENT, Constants.Arm.D_COEFFICIENT);
-        armEncoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A_ID, Constants.Arm.ENCODER_CHANNEL_B_ID);
+        armEncoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A, Constants.Arm.ENCODER_CHANNEL_B);
         motorOne = new CANSparkMax(Constants.Arm.ARM_MOTOR_ONE, MotorType.kBrushless);
         motorTwo = new CANSparkMax(Constants.Arm.ARM_MOTOR_TWO, MotorType.kBrushless);
         if (Robot.isSimulation()) {
@@ -66,7 +66,7 @@ public class Arm extends SubsystemBase {
 
         if(homeSwitch.get()) {
             //Check if encoder and home switch disagree
-            if(getAngle() > Constants.Arm.HOME_SWITCH_FAILSAFE) {
+            if(getAngle() > Constants.Arm.HOME_SWITCH_FAILSAFE_DEGREES) {
                 //Assume a sensor is broken, do not move arm.
                 motorOne.setVoltage(0);
                 motorTwo.setVoltage(0);
