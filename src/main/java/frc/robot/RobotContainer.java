@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.command.undertaker.EjectNote;
+import frc.robot.command.undertaker.IntakeNote;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
@@ -14,8 +16,10 @@ import frc.robot.util.MathUtils;
 
 public class RobotContainer {
   private final Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
-  private final JoystickButton intakeButton = new JoystickButton(driverController, Constants.Controller.Y_BUTTON);
+  private final JoystickButton intakeButton = new JoystickButton(driverController, Constants.Controller.A_BUTTON);
+  private final JoystickButton intakeButton_2 = new JoystickButton(driverController, Constants.Controller.B_BUTTON);
   private DriveSubsystem drive = new DriveSubsystem();
+  private Undertaker undertaker = new Undertaker();
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
 
   public RobotContainer() {
@@ -23,7 +27,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    intakeButton.onTrue(getAutonomousCommand());
+    intakeButton.whileTrue(new IntakeNote(undertaker));
+    intakeButton_2.whileTrue(new EjectNote(undertaker));
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
