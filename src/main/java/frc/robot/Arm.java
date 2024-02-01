@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
@@ -17,6 +18,8 @@ public class Arm extends SubsystemBase {
     private CANSparkMax motorTwo;
     private PIDController pid;
     private DigitalInput homeSwitch;
+    private boolean broken;
+    private EncoderSim simEncoder;
 
     public Arm() {
         homeSwitch = new DigitalInput(Constants.Arm.DIGITAL_INPUT_CHANNEL);
@@ -24,14 +27,17 @@ public class Arm extends SubsystemBase {
         armEncoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A, Constants.Arm.ENCODER_CHANNEL_B);
         motorOne = new CANSparkMax(Constants.Arm.ARM_MOTOR_ONE, MotorType.kBrushless);
         motorTwo = new CANSparkMax(Constants.Arm.ARM_MOTOR_TWO, MotorType.kBrushless);
+        broken = false;
         if (Robot.isSimulation()) {
             REVPhysicsSim.getInstance().addSparkMax(motorOne, DCMotor.getNEO(1));
             REVPhysicsSim.getInstance().addSparkMax(motorTwo, DCMotor.getNEO(1));
+            simEncoder = new EncoderSim(armEncoder);
         }
+        
     }
 
     public double getAngle() {
-        return ((double) armEncoder.get() / Constants.Arm.ENCODER_COUNT) * 360;
+        return ((double) simEncoder.getCount() / Constants.Arm.ENCODER_COUNT) * 360;
     }
 
     public boolean isOnTarget() {
@@ -44,20 +50,19 @@ public class Arm extends SubsystemBase {
     }
 
     public void setTarget(double inputTarget) {
-        targetAngle = inputTarget;
+        if (inputTarget >= Constants.Arm.MAX_ARM_RANGE_DEGREES){
+            targetAngle = Constants.Arm.MAX_ARM_RANGE_DEGREES;
+        } else {
+            targetAngle = inputTarget;  
+        }
     }
 
     public boolean isAtHomePostion() {
-        if (homeSwitch.get()) {
-            return true;
-        } else {
-            return (
-                (Constants.Arm.HOME_POSITION - Constants.Arm.HOME_POSITION_RANGE_DEGREES <= getAngle())
-                && 
-                (Constants.Arm.HOME_POSITION + Constants.Arm.HOME_POSITION_RANGE_DEGREES >= getAngle())
-                );
+        return homeSwitch.get();
+    }
 
-        }
+    public boolean isBroken() {
+        return broken;
     }
 
     @Override
@@ -70,6 +75,7 @@ public class Arm extends SubsystemBase {
                 //Assume a sensor is broken, do not move arm.
                 motorOne.setVoltage(0);
                 motorTwo.setVoltage(0);
+                broken = true;
             }else if(motorVoltage > 0) {
                 //Only allow the motors to move away from the switch
                 motorOne.setVoltage(motorVoltage);

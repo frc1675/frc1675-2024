@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.MoveToHome;
+import frc.robot.commands.MoveToPosition;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
@@ -25,7 +27,11 @@ public class RobotContainer {
 
   private void configureBindings() {
     Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
-    JoystickButton driverABUtton = new JoystickButton(driverController, Constants.Controller.A_BUTTON);
+    Joystick operatorController = new Joystick(Constants.Controller.OPERATOR_CONTROLLER);
+    JoystickButton operatorAButton = new JoystickButton(operatorController, Constants.Controller.A_BUTTON);
+    JoystickButton operatorBButton = new JoystickButton(operatorController, Constants.Controller.B_BUTTON);
+
+    JoystickButton driverAButton = new JoystickButton(driverController, Constants.Controller.A_BUTTON);
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
@@ -35,7 +41,13 @@ public class RobotContainer {
         )
     );
 
-    driverABUtton.onTrue(new InstantCommand(() -> arm.setTarget(80), arm));
+    operatorAButton.onTrue(
+      new MoveToPosition(arm, Constants.Arm.HIGH_SCORE_POSITION)
+    );
+
+    operatorBButton.onTrue(
+      new MoveToHome(arm)
+    );
   }
 
   private double getJoystickInput(Joystick stick, int axe) {
