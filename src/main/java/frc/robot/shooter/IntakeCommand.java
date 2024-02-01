@@ -24,14 +24,14 @@ public class IntakeCommand extends Command {
     @Override
     public void execute() {
         if (!subsystem.isIndexerLoaded()) {
-            subsystem.setTargetIndexerSpeed(targetSpeed);
+            subsystem.setIndexerSpeed(targetSpeed);
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        subsystem.setTargetIndexerSpeed(0);
+        subsystem.setIndexerSpeed(0);
     }
 
     // Returns true when the command should end.

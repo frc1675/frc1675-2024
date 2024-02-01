@@ -24,7 +24,7 @@ public class ShootCommand extends Command {
     public void execute() {
         // SpinUpShooter(targetSpeed?)
         if (subsystem.isShooterReady()) {
-            subsystem.setTargetIndexerSpeed(targetSpeed);
+            subsystem.setIndexerSpeed(targetSpeed);
         }
     }
 
