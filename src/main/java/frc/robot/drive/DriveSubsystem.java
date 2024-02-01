@@ -23,6 +23,8 @@ import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import swervelib.parser.PIDFConfig;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -40,6 +42,7 @@ public class DriveSubsystem extends SubsystemBase {
   private ShuffleboardTab dashboard;
 
   public DriveSubsystem() {
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
       swerve = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(
         Constants.Drive.MAXIMUM_VELOCITY, 
@@ -51,16 +54,16 @@ public class DriveSubsystem extends SubsystemBase {
       e.printStackTrace();
     }
 
-    initDashboard();
-    swerve.chassisVelocityCorrection = false;    
-    swerve.setHeadingCorrection(true);
     headingPidfConfig = swerve.swerveController.config.headingPIDF;
+    swerve.chassisVelocityCorrection = false;    
+    swerve.setHeadingCorrection(false);
+    initDashboard();
   }
 
   private void initDashboard() {
     dashboard = Shuffleboard.getTab("Drive");
     SendableRegistry.add(new UperTunerSendable(0), "UperTuner");
-
+    dashboard.addString("Current Command", this::getCommandName);
     dashboard.add("Velocity Scaler", velocityScale).withWidget("UperTuner").withSize(2, 2).withPosition(5, 1);
 
     headingTuneableP = new UperTunerSendable(headingPidfConfig.p, 0, 5);
@@ -77,6 +80,13 @@ public class DriveSubsystem extends SubsystemBase {
       dashboard.addDouble(m.configuration.name +" Module Position °", () -> m.getAbsolutePosition()).withPosition(position, 0).withSize(2, 1);
       position += 2;
     }
+  }
+
+  private String getCommandName() {
+    if(this.getCurrentCommand() == null) {
+      return "None";
+    }
+    return this.getCurrentCommand().getName();
   }
 
   /**
@@ -101,7 +111,7 @@ public class DriveSubsystem extends SubsystemBase {
    * Used for auto building via path planner
    */
   public void setRobotRelativeChassisSpeeds(ChassisSpeeds speeds) {
-    swerve.setChassisSpeeds(speeds);
+    swerve.drive(new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond), speeds.omegaRadiansPerSecond, false, false);
   }
 
   public void drive(double x, double y, double rotation) {
@@ -145,8 +155,10 @@ public class DriveSubsystem extends SubsystemBase {
         true, false
       );
 
-    headingPidfConfig.p = headingTuneableP.getCurrentValue();
-    headingPidfConfig.i = headingTuneableI.getCurrentValue();
-    headingPidfConfig.d = headingTuneableD.getCurrentValue();
+    if (headingPidfConfig != null) {
+      headingPidfConfig.p = headingTuneableP.getCurrentValue();
+      headingPidfConfig.i = headingTuneableI.getCurrentValue();
+      headingPidfConfig.d = headingTuneableD.getCurrentValue();
+    }
   }
 }

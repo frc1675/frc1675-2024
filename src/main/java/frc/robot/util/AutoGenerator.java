@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -47,6 +48,8 @@ public class AutoGenerator {
             drive::getRobotRelativeSpeeds,
             drive::setRobotRelativeChassisSpeeds,
             new HolonomicPathFollowerConfig(
+                new PIDConstants(Constants.PathPlanner.TRANSLATION_P),
+                new PIDConstants(Constants.PathPlanner.ROTATION_P),
                 Constants.PathPlanner.MAXIMUM_VELOCITY, 
                 Constants.PathPlanner.DRIVEBASE_RADIUS, 
                 new ReplanningConfig()
