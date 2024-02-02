@@ -22,7 +22,6 @@ public class ShootCommand extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // SpinUpShooter(targetSpeed?)
         if (subsystem.isShooterReady()) {
             subsystem.setIndexerSpeed(targetSpeed);
         }

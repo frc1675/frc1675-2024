@@ -13,7 +13,7 @@ import frc.robot.Robot;
 
 public class ShooterSubsystem extends SubsystemBase {
     private CANSparkMax indexerMotorOne = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
-    private CANSparkMax indexerMotorTwo = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
+    private CANSparkMax indexerMotorTwo = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
     private CANSparkMax shooterMotorOne = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
     private CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
     private RelativeEncoder shooterMotorOneEncoder = shooterMotorOne.getEncoder();
@@ -33,14 +33,14 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isIndexerLoaded() {
-        LaserCan.Measurement measurement = laserCAN.getMeasurement();
+        LaserCan.Measurement measurement = laserCAN.getMeasurement(); // CREDIT NOAH WEISHAN
         return measurement.distance_mm < Constants.Shooter.INDEXER_NOTE_DETECTION_RANGE;
     }
 
     public boolean isShooterReady() {
         double shooterOneSpeedOffset = shooterMotorOneEncoder.getVelocity() - targetShooterSpeed;
         double shooterTwoSpeedOffset = shooterMotorTwoEncoder.getVelocity() - targetShooterSpeed;
-        return Math.abs(shooterOneSpeedOffset) <= Constants.Shooter.TARGET_SPEED_ERROR_MARGIN && Math.abs(shooterTwoSpeedOffset) <= Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
+        return Math.abs(shooterOneSpeedOffset) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN && Math.abs(shooterTwoSpeedOffset) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
     }
 
     public void setTargetShooterSpeed(double targetSpeed) {
