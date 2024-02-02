@@ -21,6 +21,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    new LaserCAN_POC();
     Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
 
     drive.setDefaultCommand(
