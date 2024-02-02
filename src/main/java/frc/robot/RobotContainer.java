@@ -6,11 +6,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
+import frc.robot.shooter.*;
 
 public class RobotContainer {
 
@@ -24,6 +26,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
+    Joystick operatorController = new Joystick(Constants.Controller.OPERATOR_CONTROLLER);
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
@@ -32,6 +35,16 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)
         )
     );
+
+
+    JoystickButton xButton = new JoystickButton(operatorController, Constants.Controller.X_BUTTON);
+    JoystickButton yButton = new JoystickButton(operatorController, Constants.Controller.Y_BUTTON);
+
+    xButton.toggleOnTrue(new ShootAndSpinUp(shooter));
+    
+    // move to undertaker subsystem:
+    yButton.toggleOnTrue(new IntakeCommand(shooter, 200));
+
 
   }
 
