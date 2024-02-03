@@ -5,14 +5,13 @@ package frc.robot.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class IntakeCommand extends Command {
-    private final ShooterSubsystem subsystem;
-    private final double targetSpeed;
+public class Shoot extends Command {
+    private ShooterSubsystem subsystem;
+    private double targetSpeed;
 
-    public IntakeCommand(ShooterSubsystem subsystem, double targetSpeed) {
+    public Shoot(ShooterSubsystem subsystem, double targetSpeed) {
         this.subsystem = subsystem;
-        this.targetSpeed = targetSpeed;  
-        
+        this.targetSpeed = targetSpeed;
         addRequirements(subsystem);
     }
 
@@ -23,7 +22,7 @@ public class IntakeCommand extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (!subsystem.isIndexerLoaded()) {
+        if (subsystem.isShooterReady()) {
             subsystem.setIndexerSpeed(targetSpeed);
         }
     }
@@ -31,7 +30,7 @@ public class IntakeCommand extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        subsystem.setIndexerSpeed(0);
+        
     }
 
     // Returns true when the command should end.

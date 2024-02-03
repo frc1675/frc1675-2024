@@ -40,10 +40,10 @@ public class RobotContainer {
     JoystickButton xButton = new JoystickButton(operatorController, Constants.Controller.X_BUTTON);
     JoystickButton yButton = new JoystickButton(operatorController, Constants.Controller.Y_BUTTON);
 
-    xButton.toggleOnTrue(new ShootAndSpinUp(shooter));
+    xButton.toggleOnTrue(new SpinUpAndShoot(shooter));
     
     // move to undertaker subsystem:
-    yButton.toggleOnTrue(new IntakeCommand(shooter, 200));
+    yButton.toggleOnTrue(new ShooterIntake(shooter, 200));
 
 
   }

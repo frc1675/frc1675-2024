@@ -5,11 +5,11 @@ package frc.robot.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class EjectCommand extends Command {
+public class ShooterEject extends Command {
     private final ShooterSubsystem subsystem;
     private final double targetSpeed;
 
-    public EjectCommand(ShooterSubsystem subsystem, double targetSpeed) {
+    public ShooterEject(ShooterSubsystem subsystem, double targetSpeed) {
         this.subsystem = subsystem;
         this.targetSpeed = targetSpeed;  
         
@@ -24,7 +24,7 @@ public class EjectCommand extends Command {
     @Override
     public void execute() {
         if (subsystem.isIndexerLoaded()) {
-            subsystem.setIndexerSpeed(-targetSpeed);
+            subsystem.setIndexerSpeed(-Math.abs(targetSpeed));
         }
     }
 
