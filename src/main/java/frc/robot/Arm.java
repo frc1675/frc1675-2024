@@ -22,8 +22,8 @@ public class Arm extends SubsystemBase {
     private EncoderSim simEncoder;
 
     public Arm() {
-        homeSwitch = new DigitalInput(Constants.Arm.DIGITAL_INPUT_CHANNEL);
-        pid = new PIDController(Constants.Arm.P_COEFFICIENT, Constants.Arm.I_COEFFICIENT, Constants.Arm.D_COEFFICIENT);
+        homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_DIGITAL_INPUT_CHANNEL);
+        pid = new PIDController(Constants.Arm.PID_CONTROLLER_P_COEFFICIENT, Constants.Arm.PID_CONTROLLER_I_COEFFICIENT, Constants.Arm.PID_CONTROLLER_D_COEFFICIENT);
         armEncoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A, Constants.Arm.ENCODER_CHANNEL_B);
         motorOne = new CANSparkMax(Constants.Arm.ARM_MOTOR_ONE, MotorType.kBrushless);
         motorTwo = new CANSparkMax(Constants.Arm.ARM_MOTOR_TWO, MotorType.kBrushless);
@@ -41,8 +41,8 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isOnTarget() {
-        return ((targetAngle - Constants.Arm.TARGET_RANGE_DEGREES <= getAngle())
-                && (targetAngle + Constants.Arm.TARGET_RANGE_DEGREES >= getAngle()));
+        return ((targetAngle - Constants.Arm.TARGET_MOVEMENT_RANGE_DEGREES <= getAngle())
+                && (targetAngle + Constants.Arm.TARGET_MOVEMENT_RANGE_DEGREES >= getAngle()));
     }
 
     public double getTarget() {

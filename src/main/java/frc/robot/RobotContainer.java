@@ -17,6 +17,7 @@ import frc.robot.util.MathUtils;
 
 public class RobotContainer {
 
+  public static Object configureBindings;
   private DriveSubsystem drive = new DriveSubsystem();
   private Arm arm = new Arm();
   private AutoGenerator autoGenerator = new AutoGenerator(drive);

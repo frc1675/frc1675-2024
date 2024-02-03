@@ -23,16 +23,17 @@ public class Constants {
         public static final int ARM_MOTOR_ONE = 15;
         public static final int ARM_MOTOR_TWO = 16;
         public static final double HOME_POSITION = 0;
-        public static final double P_COEFFICIENT = 1;
-        public static final double I_COEFFICIENT = 0;
-        public static final double D_COEFFICIENT = 0;
-        public static final double HOME_POSITION_RANGE_DEGREES = 5.0;
-        public static final double TARGET_RANGE_DEGREES = 5.0;
-        public static final int DIGITAL_INPUT_CHANNEL = 30;
+        public static final double PID_CONTROLLER_P_COEFFICIENT = 1;
+        public static final double PID_CONTROLLER_I_COEFFICIENT = 0;
+        public static final double PID_CONTROLLER_D_COEFFICIENT = 0;
+        public static final double HOME_POSITION_MOVEMENT_RANGE_DEGREES = 5.0;
+        public static final double TARGET_MOVEMENT_RANGE_DEGREES = 5.0;
+        public static final int HOMESWITCH_DIGITAL_INPUT_CHANNEL = 30;
         public static final double ARM_ANGLE_LIMIT_DEGREES = 0;
         public static final double HOME_SWITCH_FAILSAFE_DEGREES = 0;
         public static final double MAX_ARM_RANGE_DEGREES = 90;
         public static final double HIGH_SCORE_POSITION = 60;
+        public static final double DEBOUNCE_TIME = 0.5;
     }
    
     public class PathPlanner {
