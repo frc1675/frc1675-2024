@@ -41,9 +41,7 @@ public class RobotContainer {
     xButton.toggleOnTrue(new SpinUpAndShoot(shooter));
     
     // move to undertaker subsystem:
-    yButton.toggleOnTrue(new ShooterIntake(shooter, 200));
-
-
+    yButton.toggleOnTrue(new ShooterIntake(shooter, 1));
   }
 
   private double getJoystickInput(Joystick stick, int axe) {
