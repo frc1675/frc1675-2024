@@ -46,13 +46,18 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isIndexerLoaded() {
-        LaserCan.Measurement measurement = laserCAN.getMeasurement();
+        LaserCan.Measurement measurement = laserCAN.getMeasurement(); // CREDIT NOAH WEISHAN
+        if (Robot.isSimulation())
+            return true;
         return measurement.distance_mm < Constants.Shooter.INDEXER_NOTE_DETECTION_RANGE;
     }
 
     public boolean isShooterReady() {
         double shooterOneSpeedOffset = shooterMotorOneEncoder.getVelocity() - targetShooterSpeed;
         double shooterTwoSpeedOffset = shooterMotorTwoEncoder.getVelocity() - targetShooterSpeed;
+        if (Robot.isSimulation())
+            return true;
+
         return Math.abs(shooterOneSpeedOffset) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN && Math.abs(shooterTwoSpeedOffset) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
     }
 
