@@ -38,6 +38,10 @@ public class Constants {
         public static final int LASER_CAN = 21; // PLACEHOLDER
         public static final int INDEXER_NOTE_DETECTION_RANGE = 100; // PLACEHOLDER
         public static final double TARGET_SPEED_ERROR_MARGIN = 0.1; // PLACEHOLDER
+    
+        public static final double TARGET_INDEXER_SPEED = .5;
+        public static final double TARGET_SHOOTER_SPEED = 1;
+        public static final double WAIT_UNTIL_END_SECS = 2;
     }
 
     public class Dashboard {

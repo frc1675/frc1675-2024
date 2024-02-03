@@ -3,41 +3,42 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.shooter;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 
 public class Shoot extends Command {
     private ShooterSubsystem subsystem;
     private double targetSpeed;
+    private Timer timer;
 
     public Shoot(ShooterSubsystem subsystem, double targetSpeed) {
         this.subsystem = subsystem;
         this.targetSpeed = targetSpeed;
+        timer = new Timer();
         addRequirements(subsystem);
     }
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+        subsystem.setIndexerSpeed(targetSpeed);
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {
-        System.out.println(subsystem.isShooterReady());
-        if (subsystem.isShooterReady()) {
-            subsystem.setIndexerSpeed(targetSpeed);
-        }
-    }
+    public void execute() {}
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        
+        if (interrupted)
+            subsystem.setIndexerSpeed(0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        subsystem.setIndexerSpeed(0);
-        return false;
+        return timer.hasElapsed(Constants.Shooter.WAIT_UNTIL_END_SECS);
     }
 }
