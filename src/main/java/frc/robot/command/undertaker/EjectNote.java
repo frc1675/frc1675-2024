@@ -18,7 +18,7 @@ public class EjectNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    undertaker.run(Constants.Undertaker.EJECT_VOLTAGE);
+    undertaker.run(Constants.Undertaker.EJECT_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

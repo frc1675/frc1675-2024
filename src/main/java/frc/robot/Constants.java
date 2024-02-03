@@ -62,8 +62,8 @@ public class Constants {
         public static final int INTAKE_MOTOR_ONE = 13;
         public static final int INTAKE_MOTOR_TWO = 14;
 
-        public static final double INTAKE_VOLTAGE = 6.0;
-        public static final double EJECT_VOLTAGE = -6.0;
+        public static final double INTAKE_SPEED = 0.5;
+        public static final double EJECT_SPEED = -0.5;
 
     }    
 }
