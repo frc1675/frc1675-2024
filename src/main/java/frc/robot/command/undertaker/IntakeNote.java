@@ -13,7 +13,7 @@ public class IntakeNote extends Command {
   private Undertaker undertaker;
 
 
-  /** Creates a new IntakeNote. */
+  
   public IntakeNote(Undertaker undertaker) {
     addRequirements(undertaker);
     this.undertaker = undertaker;
@@ -22,7 +22,7 @@ public class IntakeNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    undertaker.undertakerControl(Constants.Undertaker.INTAKE_SPEED);
+    undertaker.run(Constants.Undertaker.INTAKE_VOLTAGE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,7 +32,7 @@ public class IntakeNote extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    undertaker.undertakerControl(0);
+    undertaker.run(0);
   }
 
   // Returns true when the command should end.

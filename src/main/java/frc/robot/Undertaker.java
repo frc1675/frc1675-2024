@@ -19,7 +19,7 @@ public class Undertaker extends SubsystemBase{
         }
     }
 
-    public void undertakerControl(double speed){
+    public void run(double speed){
         intakeMotorOne.setVoltage(speed);
         intakeMotorTwo.setVoltage(speed);
 
