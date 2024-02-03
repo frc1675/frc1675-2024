@@ -5,11 +5,11 @@ package frc.robot.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class SpinUpCommand extends Command {
+public class SpinUp extends Command {
     private final ShooterSubsystem subsystem;
     private final double targetSpeed;
 
-    public SpinUpCommand(ShooterSubsystem subsystem, double targetSpeed) {
+    public SpinUp(ShooterSubsystem subsystem, double targetSpeed) {
         this.subsystem = subsystem;
         this.targetSpeed = targetSpeed;  
         
