@@ -18,25 +18,24 @@ public class SpinUp extends Command {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+        subsystem.setTargetShooterSpeed(targetSpeed);
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {
-        if (!subsystem.isShooterReady()) {
-            subsystem.setTargetShooterSpeed(targetSpeed);
-        }
-    }
+    public void execute() {}
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        subsystem.setTargetShooterSpeed(0);
+        if (interrupted)
+            subsystem.setTargetShooterSpeed(0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return subsystem.isShooterReady();
     }
 }
