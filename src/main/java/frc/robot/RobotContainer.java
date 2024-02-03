@@ -27,6 +27,8 @@ public class RobotContainer {
   private void configureBindings() {
     Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
     Joystick operatorController = new Joystick(Constants.Controller.OPERATOR_CONTROLLER);
+    JoystickButton xButton = new JoystickButton(operatorController, Constants.Controller.X_BUTTON);
+    JoystickButton yButton = new JoystickButton(operatorController, Constants.Controller.Y_BUTTON);
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
@@ -35,10 +37,6 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)
         )
     );
-
-
-    JoystickButton xButton = new JoystickButton(operatorController, Constants.Controller.X_BUTTON);
-    JoystickButton yButton = new JoystickButton(operatorController, Constants.Controller.Y_BUTTON);
 
     xButton.toggleOnTrue(new SpinUpAndShoot(shooter));
     

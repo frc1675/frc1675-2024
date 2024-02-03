@@ -22,6 +22,7 @@ public class Shoot extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        System.out.println(subsystem.isShooterReady());
         if (subsystem.isShooterReady()) {
             subsystem.setIndexerSpeed(targetSpeed);
         }
@@ -36,6 +37,7 @@ public class Shoot extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+        subsystem.setIndexerSpeed(0);
         return false;
     }
 }
