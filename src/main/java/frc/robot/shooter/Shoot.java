@@ -23,6 +23,7 @@ public class Shoot extends Command {
     @Override
     public void initialize() {
         subsystem.setIndexerSpeed(targetSpeed);
+        timer.start();  
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -34,6 +35,8 @@ public class Shoot extends Command {
     public void end(boolean interrupted) {
         subsystem.setTargetShooterSpeed(0);
         subsystem.setIndexerSpeed(0);
+        timer.stop();
+        timer.reset();
     }
 
     // Returns true when the command should end.
