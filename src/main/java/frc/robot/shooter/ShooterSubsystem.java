@@ -1,8 +1,10 @@
 package frc.robot.shooter;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +20,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
     private RelativeEncoder shooterMotorOneEncoder = shooterMotorOne.getEncoder();
     private RelativeEncoder shooterMotorTwoEncoder = shooterMotorTwo.getEncoder();
+    private SparkPIDController shooterMotorOnePID = shooterMotorOne.getPIDController();
 
     private LaserCan laserCAN = new LaserCan(Constants.Shooter.LASER_CAN);
     
@@ -30,10 +33,20 @@ public class ShooterSubsystem extends SubsystemBase {
             REVPhysicsSim.getInstance().addSparkMax(shooterMotorOne, DCMotor.getNEO(1));
             REVPhysicsSim.getInstance().addSparkMax(shooterMotorTwo, DCMotor.getNEO(1));
         }
+
+        shooterMotorOnePID.setP(Constants.Shooter.SHOOTER_PID_P);
+        shooterMotorOnePID.setI(Constants.Shooter.SHOOTER_PID_I);
+        shooterMotorOnePID.setD(Constants.Shooter.SHOOTER_PID_D);
+        shooterMotorOnePID.setIZone(Constants.Shooter.SHOOTER_PID_IZONE);
+        shooterMotorOnePID.setFF(Constants.Shooter.SHOOTER_PID_FF);
+        shooterMotorOnePID.setOutputRange(-Constants.Shooter.SHOOTER_PID_OUTPUT_RANGE, Constants.Shooter.SHOOTER_PID_OUTPUT_RANGE);
+        //shooterMotorOnePID.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0);
+
+        shooterMotorTwo.follow(shooterMotorOne, true);
     }
 
     public boolean isIndexerLoaded() {
-        LaserCan.Measurement measurement = laserCAN.getMeasurement(); // CREDIT NOAH WEISHAN
+        LaserCan.Measurement measurement = laserCAN.getMeasurement();
         return measurement.distance_mm < Constants.Shooter.INDEXER_NOTE_DETECTION_RANGE;
     }
 
@@ -44,9 +57,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setTargetShooterSpeed(double targetSpeed) {
-        shooterMotorOne.setVoltage(targetSpeed * 12); // TODO: use PID loop to update voltage
-        shooterMotorTwo.setVoltage(targetSpeed * 12);
-        targetShooterSpeed = targetSpeed;
+        shooterMotorOnePID.setReference(targetSpeed, CANSparkBase.ControlType.kVelocity);
     }
 
     public void setIndexerSpeed(double speed) {

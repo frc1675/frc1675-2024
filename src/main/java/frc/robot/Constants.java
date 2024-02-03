@@ -55,6 +55,12 @@ public class Constants {
         public static final int LASER_CAN = 21; // PLACEHOLDER
         public static final int INDEXER_NOTE_DETECTION_RANGE = 100; // PLACEHOLDER
         public static final double TARGET_SPEED_ERROR_MARGIN = 0.1; // PLACEHOLDER
+        public static final double SHOOTER_PID_P = 1.0; // PLACEHOLDER
+        public static final double SHOOTER_PID_I = 1.0; // PLACEHOLDER
+        public static final double SHOOTER_PID_D = 1.0; // PLACEHOLDER
+        public static final double SHOOTER_PID_IZONE = 1.0; // PLACHOLDER
+        public static final double SHOOTER_PID_FF = 1.0; // PLACEHOLDER
+        public static final double SHOOTER_PID_OUTPUT_RANGE = 1.0; // PLACEHOLDER
     }
 
     public class Dashboard {
