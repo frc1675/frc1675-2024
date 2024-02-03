@@ -44,6 +44,10 @@ public class Constants {
         public static final double SHOOTER_PID_IZONE = 1.0; // PLACHOLDER
         public static final double SHOOTER_PID_FF = 1.0; // PLACEHOLDER
         public static final double SHOOTER_PID_OUTPUT_RANGE = 1.0; // PLACEHOLDER
+    
+        public static final double TARGET_INDEXER_SPEED = .5;
+        public static final double TARGET_SHOOTER_SPEED = 1;
+        public static final double WAIT_UNTIL_END_SECS = 2;
     }
 
     public class Dashboard {

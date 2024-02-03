@@ -1,12 +1,13 @@
 package frc.robot.shooter;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 
 public class SpinUpAndShoot extends SequentialCommandGroup {
     public SpinUpAndShoot(ShooterSubsystem subsystem) {
         addCommands(
-            new SpinUp(subsystem, 1),
-            new Shoot(subsystem, 1)
+            new SpinUp(subsystem, Constants.Shooter.TARGET_SHOOTER_SPEED),
+            new Shoot(subsystem, Constants.Shooter.TARGET_INDEXER_SPEED)
         );
     }
 }
