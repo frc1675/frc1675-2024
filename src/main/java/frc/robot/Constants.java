@@ -58,4 +58,7 @@ public class Constants {
         public static final int LEFT_JOYSTICK_BUTTON = 9;
         public static final int RIGHT_JOYSTICK_BUTTON = 10;
     }
+    public class LEDController {
+        public static final int LED_CONTROLLER_CHANNEL = 0;
+    }
 }

@@ -6,8 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.notification.ChangeColor;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
@@ -16,6 +18,8 @@ public class RobotContainer {
 
   private DriveSubsystem drive = new DriveSubsystem();
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
+  private Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
+  private JoystickButton driverControllerAButton = new JoystickButton(driverController, Constants.Controller.A_BUTTON);
 
   public RobotContainer() {
     configureBindings();
@@ -23,8 +27,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
-
     drive.setDefaultCommand(
         new DefaultDrive(drive,
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
@@ -32,6 +34,8 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)
         )
     );
+
+    driverControllerAButton.onTrue(new ChangeColor());
 
   }
 
