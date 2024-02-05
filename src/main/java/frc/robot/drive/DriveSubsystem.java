@@ -132,7 +132,7 @@ public class DriveSubsystem extends SubsystemBase {
         +
         Math.pow((visionMeasuredPose.getY() - swerve.getPose().getY()), 2)
       );
-    if (distance <= Constants.Drive.MAXIMUM_VISON_POSE_OVERRIDE_DISTANCE) {
+    if (distance <= Constants.Drive.MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE) {
       swerve.swerveDrivePoseEstimator.addVisionMeasurement(visionMeasuredPose, Timer.getFPGATimestamp());
     }
 
