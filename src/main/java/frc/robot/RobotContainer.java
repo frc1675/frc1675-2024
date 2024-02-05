@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
@@ -18,12 +22,17 @@ public class RobotContainer {
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
 
   public RobotContainer() {
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
+    DataLogManager.log("Data log started.");
+
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }
 
   private void configureBindings() {
     Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
+    JoystickButton driverControllerStartButton = new JoystickButton(driverController, Constants.Controller.START_BUTTON);
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
@@ -33,6 +42,7 @@ public class RobotContainer {
         )
     );
 
+    driverControllerStartButton.onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
   }
 
   private double getJoystickInput(Joystick stick, int axe) {
