@@ -8,7 +8,7 @@ public class Constants {
         public static final double MAXIMUM_VELOCITY = 5.0; //meters per second
         public static final double MAXIMUM_ANGULAR_VELOCITY = 10; //radians per second
 
-        public static final double MAXIMUM_VISON_POSE_OVERRIDE_DISTANCE = 1.0; //meters
+        public static final double MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE = 1.0; //meters
 
         public static final double DRIVE_GEAR_RATIO = 6.12;
         public static final double STEER_GEAR_RATIO = 12.8;
@@ -20,7 +20,7 @@ public class Constants {
     public class PathPlanner {
         //TODO tune constants if necessary
         public static final double MAXIMUM_VELOCITY= 2.5; //meters per second
-        public static final double MAXIMUM_ACCELERATON = 1.25; //meters per second squared
+        public static final double MAXIMUM_ACCELERATION = 1.25; //meters per second squared
 
         public static final double MAXIMUM_ANGULAR_VELOCITY = 7.5; //radians per second
         public static final double MAXIMUM_ANGULAR_ACCELERATION = 3.75; //radians per second squared
