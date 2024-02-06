@@ -48,6 +48,8 @@ public class Constants {
         public static final double TARGET_INDEXER_SPEED = .2;
         public static final double TARGET_SHOOTER_SPEED = 2000;
         public static final double WAIT_UNTIL_END_SECS = 2;
+
+        public static final String SHUFFLEBOARD_TAB = "Shooter";
     }
 
     public class Dashboard {
