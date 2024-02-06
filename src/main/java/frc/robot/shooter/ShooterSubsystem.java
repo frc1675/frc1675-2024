@@ -1,91 +1,51 @@
 package frc.robot.shooter;
 
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.REVPhysicsSim;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import au.grapplerobotics.LaserCan;
 
 import frc.robot.Constants;
-import frc.robot.Robot;
 
 public class ShooterSubsystem extends SubsystemBase {
-    private CANSparkMax indexerMotorOne = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
-    private CANSparkMax indexerMotorTwo = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
-    private CANSparkMax shooterMotorOne = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
-    private CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
-    private RelativeEncoder shooterMotorOneEncoder = shooterMotorOne.getEncoder();
-    private RelativeEncoder shooterMotorTwoEncoder = shooterMotorTwo.getEncoder();
-    private SparkPIDController shooterMotorOnePID = shooterMotorOne.getPIDController();
-
-    private LaserCan laserCAN = new LaserCan(Constants.Shooter.LASER_CAN);
-    
+    private IShooterIO shooterIO = new RealShooterIO();
     private double targetShooterSpeed = 0;
 
     public ShooterSubsystem() {
-        if (Robot.isSimulation()) {
-            REVPhysicsSim.getInstance().addSparkMax(indexerMotorOne, DCMotor.getNEO(1));
-            REVPhysicsSim.getInstance().addSparkMax(indexerMotorTwo, DCMotor.getNEO(1));
-            REVPhysicsSim.getInstance().addSparkMax(shooterMotorOne, DCMotor.getNEO(1));
-            REVPhysicsSim.getInstance().addSparkMax(shooterMotorTwo, DCMotor.getNEO(1));
-        }
-
-        shooterMotorOnePID.setP(Constants.Shooter.SHOOTER_PID_P);
-        shooterMotorOnePID.setI(Constants.Shooter.SHOOTER_PID_I);
-        shooterMotorOnePID.setD(Constants.Shooter.SHOOTER_PID_D);
-        shooterMotorOnePID.setIZone(Constants.Shooter.SHOOTER_PID_IZONE);
-        shooterMotorOnePID.setFF(Constants.Shooter.SHOOTER_PID_FF);
-        shooterMotorOnePID.setOutputRange(-Constants.Shooter.SHOOTER_PID_OUTPUT_RANGE, Constants.Shooter.SHOOTER_PID_OUTPUT_RANGE);
-        //shooterMotorOnePID.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0);
-
-        shooterMotorTwo.follow(shooterMotorOne, true);
-
         ShuffleboardInit();
     }
 
     private void ShuffleboardInit() {
+        double[] shooterSpeeds = shooterIO.getShooterSpeeds();
+        double[] indexerSpeeds = shooterIO.getIndexerSpeeds();
+
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.SHUFFLEBOARD_TAB);
         tab.addDouble("Target Shooter Speed", () -> targetShooterSpeed).withPosition(0, 0).withSize(2, 1);
-        tab.addDouble("Shooter 1 Speed", () -> shooterMotorOneEncoder.getVelocity()).withPosition(2, 0);
-        tab.addDouble("Shooter 2 Speed", () -> shooterMotorTwoEncoder.getVelocity()).withPosition(3, 0);
-        tab.addDouble("Shooter Speed Dif.", () -> shooterMotorOneEncoder.getVelocity() - shooterMotorTwoEncoder.getVelocity()).withPosition(4, 0).withSize(2, 1);
+        tab.addDouble("Shooter 1 Speed", () -> shooterSpeeds[0]).withPosition(2, 0);
+        tab.addDouble("Shooter 2 Speed", () -> shooterSpeeds[1]).withPosition(3, 0);
+        tab.addDouble("Shooter Speed Dif.", () -> shooterSpeeds[0] - shooterSpeeds[1]).withPosition(4, 0).withSize(2, 1);
         tab.addBoolean("Shooter Ready?", () -> isShooterReady()).withPosition(6, 0);
         tab.addBoolean("Has Note?", () -> isIndexerLoaded()).withPosition(6, 1);
-        tab.addDouble("Indexer 1 Speed", () -> indexerMotorOne.getEncoder().getVelocity()).withPosition(0, 1);
-        tab.addDouble("Indexer 2 Speed", () -> indexerMotorTwo.getEncoder().getVelocity()).withPosition(1, 1);
-        tab.addDouble("Indexer Speed Dif.", () -> indexerMotorOne.getEncoder().getVelocity() - indexerMotorTwo.getEncoder().getVelocity()).withPosition(2, 1);
+        tab.addDouble("Indexer 1 Speed", () -> indexerSpeeds[0]).withPosition(0, 1);
+        tab.addDouble("Indexer 2 Speed", () -> indexerSpeeds[1]).withPosition(1, 1);
+        tab.addDouble("Indexer Speed Dif.", () -> indexerSpeeds[0] - indexerSpeeds[1]).withPosition(2, 1);
     }
 
     public boolean isIndexerLoaded() {
-        LaserCan.Measurement measurement = laserCAN.getMeasurement();
-        if (Robot.isSimulation())
-            return true;
-        return measurement.distance_mm < Constants.Shooter.INDEXER_NOTE_DETECTION_RANGE;
+        return shooterIO.isIndexerLoaded();
     }
 
     public boolean isShooterReady() {
-        double shooterOneSpeedOffset = shooterMotorOneEncoder.getVelocity() - targetShooterSpeed;
-        double shooterTwoSpeedOffset = shooterMotorTwoEncoder.getVelocity() - targetShooterSpeed;
-        if (Robot.isSimulation())
-            return true;
-
-        return Math.abs(shooterOneSpeedOffset) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN && Math.abs(shooterTwoSpeedOffset) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
+        double[] speeds = shooterIO.getShooterSpeeds();
+        return Math.abs(targetShooterSpeed - speeds[0]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN && Math.abs(targetShooterSpeed - speeds[1]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
     }
 
     public void setTargetShooterSpeed(double targetSpeed) {
-        shooterMotorOnePID.setReference(targetSpeed, CANSparkBase.ControlType.kVelocity);
         targetShooterSpeed = targetSpeed;
+        shooterIO.setShooterOutput(targetSpeed); // TODO: convert RPM to -1 to 1
     }
 
     public void setIndexerSpeed(double speed) {
-        indexerMotorOne.setVoltage(speed * 12); // TODO: convert m/s to volts (currently ratio to volts)
-        indexerMotorTwo.setVoltage(speed * 12);
+        shooterIO.setIndexerOutput(speed); // TODO: convert RPM to -1 to 1
     }
 
     @Override
