@@ -26,7 +26,7 @@ public class Constants {
         public static final double MAXIMUM_ANGULAR_ACCELERATION = 3.75; //radians per second squared
 
         //TODO measure on robot
-        public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(13.7885); //meters
+        public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); //meters
 
         public static final double TRANSLATION_P = 1000;
 
