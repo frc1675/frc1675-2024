@@ -7,6 +7,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import au.grapplerobotics.LaserCan;
 
@@ -43,10 +45,25 @@ public class ShooterSubsystem extends SubsystemBase {
         //shooterMotorOnePID.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0);
 
         shooterMotorTwo.follow(shooterMotorOne, true);
+
+        ShuffleboardInit();
+    }
+
+    private void ShuffleboardInit() {
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.SHUFFLEBOARD_TAB);
+        tab.addDouble("Target Shooter Speed", () -> targetShooterSpeed).withPosition(0, 0).withSize(2, 1);
+        tab.addDouble("Shooter 1 Speed", () -> shooterMotorOneEncoder.getVelocity()).withPosition(2, 0);
+        tab.addDouble("Shooter 2 Speed", () -> shooterMotorTwoEncoder.getVelocity()).withPosition(3, 0);
+        tab.addDouble("Shooter Speed Dif.", () -> shooterMotorOneEncoder.getVelocity() - shooterMotorTwoEncoder.getVelocity()).withPosition(4, 0).withSize(2, 1);
+        tab.addBoolean("Shooter Ready?", () -> isShooterReady()).withPosition(6, 0);
+        tab.addBoolean("Has Note?", () -> isIndexerLoaded()).withPosition(6, 1);
+        tab.addDouble("Indexer 1 Speed", () -> indexerMotorOne.getEncoder().getVelocity()).withPosition(0, 1);
+        tab.addDouble("Indexer 2 Speed", () -> indexerMotorTwo.getEncoder().getVelocity()).withPosition(1, 1);
+        tab.addDouble("Indexer Speed Dif.", () -> indexerMotorOne.getEncoder().getVelocity() - indexerMotorTwo.getEncoder().getVelocity()).withPosition(2, 1);
     }
 
     public boolean isIndexerLoaded() {
-        LaserCan.Measurement measurement = laserCAN.getMeasurement(); // CREDIT NOAH WEISHAN
+        LaserCan.Measurement measurement = laserCAN.getMeasurement();
         if (Robot.isSimulation())
             return true;
         return measurement.distance_mm < Constants.Shooter.INDEXER_NOTE_DETECTION_RANGE;
@@ -63,6 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setTargetShooterSpeed(double targetSpeed) {
         shooterMotorOnePID.setReference(targetSpeed, CANSparkBase.ControlType.kVelocity);
+        targetShooterSpeed = targetSpeed;
     }
 
     public void setIndexerSpeed(double speed) {
