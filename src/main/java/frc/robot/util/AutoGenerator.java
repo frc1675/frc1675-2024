@@ -41,6 +41,8 @@ public class AutoGenerator {
     private SendableChooser<Command> autoSelector;
     private Field2d fieldMap = new Field2d();
 
+    private String previousPath = "";
+
     public AutoGenerator(DriveSubsystem drive) {
         AutoBuilder.configureHolonomic(
             drive::getPose,
@@ -98,7 +100,8 @@ public class AutoGenerator {
             selectedCommandExists = false;
         }
         
-        if(selectedCommandExists) {
+        if (!getAutoCommand().getName().equals(previousPath)) {
+            if(selectedCommandExists) {
             for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(getAutoCommand().getName())) {
                 allStates.addAll(path.getTrajectory(new ChassisSpeeds(), new Rotation2d()).getStates());
             }
@@ -107,10 +110,12 @@ public class AutoGenerator {
 
             fieldMap.setRobotPose(trajectory.getInitialPose());
             fieldMap.getObject("traj").setTrajectory(trajectory);
-        }else {
-            fieldMap.setRobotPose(0, 0, Rotation2d.fromDegrees(0));
-            fieldMap.getObject("traj").setTrajectory(new Trajectory());
+            }else {
+                fieldMap.setRobotPose(0, 0, Rotation2d.fromDegrees(0));
+                fieldMap.getObject("traj").setTrajectory(new Trajectory());
+            }
         }
+        previousPath = getAutoCommand().getName();
     }
 
     private Trajectory statesToWPITrajectory(List<State> states) { 
