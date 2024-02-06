@@ -33,6 +33,7 @@ public class Constants {
         public static final double HOME_SWITCH_FAILSAFE_DEGREES = 0;
         public static final double MAX_ARM_RANGE_DEGREES = 90;
         public static final double HIGH_SCORE_POSITION = 60;
+        public static final double LOW_SCORE_POSITIOIN = 50;
         public static final double DEBOUNCE_TIME = 0.5;
     }
    
