@@ -17,7 +17,7 @@ public class LEDSubsystem extends SubsystemBase{
     tab.addString("Status:", () -> status.getStatusMessage());
   }
 
-  public void handleStateUpdate(LEDStateEnum status){
+  public void changeColor(LEDStateEnum status){
     ledController.set(status.getSparkValue()); 
     this.status = status;
   }

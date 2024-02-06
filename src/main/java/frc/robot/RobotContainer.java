@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.ChangeColor;
+import frc.robot.notification.LEDSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
@@ -17,6 +18,7 @@ import frc.robot.util.VersionFile;
 public class RobotContainer {
 
   private DriveSubsystem drive = new DriveSubsystem();
+  private LEDSubsystem ledSubsystem = new LEDSubsystem();
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
   private Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
   private JoystickButton driverControllerAButton = new JoystickButton(driverController, Constants.Controller.A_BUTTON);
@@ -35,7 +37,7 @@ public class RobotContainer {
         )
     );
 
-    driverControllerAButton.onTrue(new ChangeColor());
+    driverControllerAButton.onTrue(new ChangeColor(ledSubsystem));
 
   }
 

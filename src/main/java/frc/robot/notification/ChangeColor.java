@@ -5,23 +5,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ChangeColor extends Command {
   private LEDSubsystem subystem;
   
-  public ChangeColor(){
-    subystem = new LEDSubsystem();
+  public ChangeColor(LEDSubsystem subsystem){
+    this.subystem = subsystem;
+    addRequirements(subsystem);
   }
 
   @Override
   public void initialize(){
-    subystem.handleStateUpdate(LEDStateEnum.COLOR_GREEN_SPARK);
+    subystem.changeColor(LEDStateEnum.GREEN);
   }
 
   @Override
-  public void execute(){
-
+  public boolean isFinished() {
+    return true;
   }
-
-  @Override
-  public void end(boolean interrupeted){
-
-  }
-
 }
