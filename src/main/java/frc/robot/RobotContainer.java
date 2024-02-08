@@ -11,19 +11,29 @@ import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.ChangeColor;
 import frc.robot.notification.LEDSubsystem;
+import frc.robot.notification.RealLedIO;
+import frc.robot.notification.SimLedIO;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
+import frc.robot.notification.ILedIO;
 
 public class RobotContainer {
 
   private DriveSubsystem drive = new DriveSubsystem();
-  private LEDSubsystem ledSubsystem = new LEDSubsystem();
+  private final LEDSubsystem ledSubsystem;
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
   private Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
   private JoystickButton driverControllerAButton = new JoystickButton(driverController, Constants.Controller.A_BUTTON);
 
   public RobotContainer() {
+    ILedIO ledIO; 
+    if(Robot.isSimulation()){
+      ledIO = new SimLedIO(); 
+    }else{
+      ledIO = new RealLedIO();
+    }
+    ledSubsystem = new LEDSubsystem(ledIO); 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }
