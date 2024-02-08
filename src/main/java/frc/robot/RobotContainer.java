@@ -6,10 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.cmdGroup.SpeakerScore;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
@@ -31,8 +31,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
-    JoystickButton driverControllerStartButton = new JoystickButton(driverController, Constants.Controller.START_BUTTON);
+    CommandXboxController driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
@@ -42,10 +41,12 @@ public class RobotContainer {
         )
     );
 
-    driverControllerStartButton.onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    
+    driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
   }
 
-  private double getJoystickInput(Joystick stick, int axe) {
+  private double getJoystickInput(CommandXboxController stick, int axe) {
     return -MathUtils.getDeadzoneAdjustedInput(stick.getRawAxis(axe));
   }
 

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -29,9 +30,18 @@ public class Constants {
         public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); //meters
 
         public static final double TRANSLATION_P = 1000;
+        public static final double TRANSLATION_I = 0;
+        public static final double TRANSLATION_D = 0;
 
         public static final double ROTATION_P = 1;
-        
+        public static final double ROTATION_I = 0;
+        public static final double ROTATION_D = 0;
+
+        public static final double DYNAMIC_PATHING_MAX_DISTANCE = 5; //meters
+    }
+
+    public class Field {
+        public static final Translation2d SPEAKER_SCORING_POSITION = new Translation2d(1.67, 5.52);
     }
 
     public class Dashboard {
@@ -49,17 +59,5 @@ public class Constants {
         public static final int RIGHT_X_AXIS = 4;
         public static final int RIGHT_Y_AXIS = 5;
         public static final int RIGHT_TRIGGER = 3;
-
-        public static final int A_BUTTON = 1;
-        public static final int B_BUTTON = 2;
-        public static final int X_BUTTON = 3;
-        public static final int Y_BUTTON = 4;
-
-        public static final int LEFT_BUMPER = 5;
-        public static final int RIGHT_BUMPER = 6;
-        public static final int BACK_BUTTON = 7;
-        public static final int START_BUTTON = 8;
-        public static final int LEFT_JOYSTICK_BUTTON = 9;
-        public static final int RIGHT_JOYSTICK_BUTTON = 10;
     }
 }
