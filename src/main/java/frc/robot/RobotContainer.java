@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
-import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 import frc.robot.shooter.*;
@@ -17,10 +16,18 @@ import frc.robot.shooter.*;
 public class RobotContainer {
 
   private DriveSubsystem drive = new DriveSubsystem();
-  private ShooterSubsystem shooter = new ShooterSubsystem();
+  private ShooterSubsystem shooter;
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
 
   public RobotContainer() {
+    IShooterIO shooterIO;
+    if (Robot.isSimulation()) {
+        shooterIO = new SimShooterIO();
+    } else {
+        shooterIO = new RealShooterIO();
+    }
+
+    shooter = new ShooterSubsystem(shooterIO);
     configureBindings();
   }
 

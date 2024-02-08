@@ -50,6 +50,8 @@ public class Constants {
         public static final double WAIT_UNTIL_END_SECS = 2;
 
         public static final String SHUFFLEBOARD_TAB = "Shooter";
+        public static final double GEARING = 0.5;
+        public static final double MOI = .443;
     }
 
     public class Dashboard {

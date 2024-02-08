@@ -7,27 +7,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
-    private IShooterIO shooterIO = new RealShooterIO();
+    private IShooterIO shooterIO;
     private double targetShooterSpeed = 0;
 
-    public ShooterSubsystem() {
+    public ShooterSubsystem(IShooterIO shooterIO) {
+        this.shooterIO = shooterIO;
         ShuffleboardInit();
     }
 
     private void ShuffleboardInit() {
-        double[] shooterSpeeds = shooterIO.getShooterSpeeds();
-        double[] indexerSpeeds = shooterIO.getIndexerSpeeds();
-
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.SHUFFLEBOARD_TAB);
         tab.addDouble("Target Shooter Speed", () -> targetShooterSpeed).withPosition(0, 0).withSize(2, 1);
-        tab.addDouble("Shooter 1 Speed", () -> shooterSpeeds[0]).withPosition(2, 0);
-        tab.addDouble("Shooter 2 Speed", () -> shooterSpeeds[1]).withPosition(3, 0);
-        tab.addDouble("Shooter Speed Dif.", () -> shooterSpeeds[0] - shooterSpeeds[1]).withPosition(4, 0).withSize(2, 1);
+        tab.addDouble("Shooter 1 Speed", () -> shooterIO.getShooterSpeeds()[0]).withPosition(2, 0);
+        tab.addDouble("Shooter 2 Speed", () -> shooterIO.getShooterSpeeds()[1]).withPosition(3, 0);
+        tab.addDouble("Shooter Speed Dif.", () -> shooterIO.getShooterSpeeds()[0] - shooterIO.getShooterSpeeds()[1]).withPosition(4, 0).withSize(2, 1);
         tab.addBoolean("Shooter Ready?", () -> isShooterReady()).withPosition(6, 0);
         tab.addBoolean("Has Note?", () -> isIndexerLoaded()).withPosition(6, 1);
-        tab.addDouble("Indexer 1 Speed", () -> indexerSpeeds[0]).withPosition(0, 1);
-        tab.addDouble("Indexer 2 Speed", () -> indexerSpeeds[1]).withPosition(1, 1);
-        tab.addDouble("Indexer Speed Dif.", () -> indexerSpeeds[0] - indexerSpeeds[1]).withPosition(2, 1);
+        tab.addDouble("Indexer 1 Speed", () -> shooterIO.getIndexerSpeeds()[0]).withPosition(0, 1);
+        tab.addDouble("Indexer 2 Speed", () -> shooterIO.getIndexerSpeeds()[1]).withPosition(1, 1);
+        tab.addDouble("Indexer Speed Dif.", () -> shooterIO.getIndexerSpeeds()[0] - shooterIO.getIndexerSpeeds()[1]).withPosition(2, 1);
     }
 
     public boolean isIndexerLoaded() {
