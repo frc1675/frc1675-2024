@@ -98,7 +98,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double motorVoltage = pid.calculate(targetAngle - getAngle());
+        double motorVoltage = pid.calculate(targetAngle - getAngle())*12;
 
         if (homeSwitch.get()) {
             // Check if encoder and home switch disagree
