@@ -16,7 +16,7 @@ public class UpdatePose extends Command{
   @Override
   public void execute(){
     if(vision.hasTarget()){
-      drive.resetOdometry(vision.getBotpose());
+      drive.addVisionMeasurement(vision.getBotpose());
     }
   }
 
