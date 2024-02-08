@@ -12,6 +12,8 @@ import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 import frc.robot.shooter.*;
+import frc.robot.shooter.commands.ShooterIntake;
+import frc.robot.shooter.commands.SpinUpAndShoot;
 
 public class RobotContainer {
 

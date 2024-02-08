@@ -1,17 +1,19 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-package frc.robot.shooter;
+package frc.robot.shooter.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.shooter.ShooterSubsystem;
 
-public class Shoot extends Command {
-    private ShooterSubsystem subsystem;
-    private double targetSpeed;
+public class ShooterIntake extends Command {
+    private final ShooterSubsystem subsystem;
+    private final double targetSpeed;
 
-    public Shoot(ShooterSubsystem subsystem, double targetSpeed) {
+    public ShooterIntake(ShooterSubsystem subsystem, double targetSpeed) {
         this.subsystem = subsystem;
-        this.targetSpeed = targetSpeed;
+        this.targetSpeed = targetSpeed;  
+        
         addRequirements(subsystem);
     }
 
@@ -28,13 +30,12 @@ public class Shoot extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        subsystem.setTargetShooterSpeed(0);
         subsystem.setIndexerSpeed(0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return subsystem.isIndexerLoaded();
     }
 }
