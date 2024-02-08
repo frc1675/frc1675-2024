@@ -7,8 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.MoveToHome;
-import frc.robot.commands.MoveToPosition;
+import frc.robot.arm.Arm;
+import frc.robot.arm.IArmIO;
+import frc.robot.arm.RealArmIO;
+import frc.robot.arm.SimArmIO;
+import frc.robot.arm.commands.MoveToHome;
+import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
@@ -17,10 +21,19 @@ import frc.robot.util.MathUtils;
 public class RobotContainer {
 
   private DriveSubsystem drive = new DriveSubsystem();
-  private Arm arm = new Arm();
+  private Arm arm;
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
 
   public RobotContainer() {
+    IArmIO armIO;
+    if (Robot.isSimulation()) {
+      armIO = new SimArmIO();
+    } else {
+      armIO = new RealArmIO();
+    }
+
+    arm = new Arm(armIO);
+
     configureBindings();
   }
 

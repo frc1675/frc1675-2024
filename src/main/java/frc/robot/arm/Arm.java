@@ -1,46 +1,27 @@
-package frc.robot;
+package frc.robot.arm;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.REVPhysicsSim;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
     private double targetAngle;
-    private Encoder armEncoder;
-
-    private CANSparkMax motorOne;
-    private CANSparkMax motorTwo;
     private PIDController pid;
-    private DigitalInput homeSwitch;
     private boolean broken;
-    private EncoderSim simEncoder;
     private ShuffleboardTab dashboard;
+    private IArmIO armIO;
 
-    public Arm() {
-        homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_DIGITAL_INPUT_CHANNEL);
+    public Arm(IArmIO armIO) {
+        this.armIO = armIO;
         pid = new PIDController(Constants.Arm.PID_CONTROLLER_P_COEFFICIENT, Constants.Arm.PID_CONTROLLER_I_COEFFICIENT, Constants.Arm.PID_CONTROLLER_D_COEFFICIENT);
-        armEncoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A, Constants.Arm.ENCODER_CHANNEL_B);
-        motorOne = new CANSparkMax(Constants.Arm.ARM_MOTOR_ONE, MotorType.kBrushless);
-        motorTwo = new CANSparkMax(Constants.Arm.ARM_MOTOR_TWO, MotorType.kBrushless);
         broken = false;
-        if (Robot.isSimulation()) {
-            REVPhysicsSim.getInstance().addSparkMax(motorOne, DCMotor.getNEO(1));
-            REVPhysicsSim.getInstance().addSparkMax(motorTwo, DCMotor.getNEO(1));
-            simEncoder = new EncoderSim(armEncoder);
-        }
         initDashboard();
     }
 
     public double getAngle() {
-        return ((double) simEncoder.getCount() / Constants.Arm.ENCODER_COUNT) * 360;
+        return armIO.getMeasurement();
     }
 
     public boolean isOnTarget() {
@@ -60,7 +41,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isAtHomePostion() {
-        return homeSwitch.get();
+        return armIO.atFrontLimit();
     }
 
     public boolean isBroken() {
@@ -98,39 +79,33 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double motorVoltage = pid.calculate(targetAngle - getAngle());
+        double motorVoltage = pid.calculate(targetAngle - getAngle())*12;
 
-        if (homeSwitch.get()) {
+        if (armIO.atFrontLimit()) {
             // Check if encoder and home switch disagree
             if (getAngle() > Constants.Arm.HOME_SWITCH_FAILSAFE_DEGREES) {
                 // Assume a sensor is broken, do not move arm.
-                motorOne.setVoltage(0);
-                motorTwo.setVoltage(0);
+                armIO.setMotorPower(0);
                 broken = true;
             } else if (motorVoltage > 0) {
                 // Only allow the motors to move away from the switch
-                motorOne.setVoltage(motorVoltage);
-                motorTwo.setVoltage(motorVoltage);
+                armIO.setMotorPower(motorVoltage);
             } else {
                 // Stop arm if already moving in incorrect direction
-                motorOne.setVoltage(0);
-                motorTwo.setVoltage(0);
+                armIO.setMotorPower(0);
             }
         } else {
             if (getAngle() > Constants.Arm.ARM_ANGLE_LIMIT_DEGREES) {
                 // Arm is outside of desired range, only let it go back in.
                 if (motorVoltage < 0) {
-                    motorOne.setVoltage(motorVoltage);
-                    motorTwo.setVoltage(motorVoltage);
+                    armIO.setMotorPower(motorVoltage);
                 } else {
                     // Stop arm if already moving in incorrect direction
-                    motorOne.setVoltage(0);
-                    motorTwo.setVoltage(0);
+                    armIO.setMotorPower(0);
                 }
             } else {
                 // Arm within safe range, do what it wants
-                motorOne.setVoltage(motorVoltage);
-                motorTwo.setVoltage(motorVoltage);
+                armIO.setMotorPower(motorVoltage);
             }
 
         }
