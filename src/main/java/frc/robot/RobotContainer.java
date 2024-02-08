@@ -15,17 +15,29 @@ import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
+import frc.robot.vision.IVision;
+import frc.robot.vision.RealVision;
+import frc.robot.vision.SimVision;
+import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.VisionTestCommand;
 
 public class RobotContainer {
 
   private DriveSubsystem drive = new DriveSubsystem();
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
+  private VisionSubsystem visionSubsystem;
 
   public RobotContainer() {
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
     DataLogManager.log("Data log started.");
-
+    IVision vision;
+    if(Robot.isSimulation()){
+      vision = new SimVision();
+    }else{
+      vision = new RealVision();
+    }
+    visionSubsystem = new VisionSubsystem(vision);
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }
@@ -33,6 +45,7 @@ public class RobotContainer {
   private void configureBindings() {
     Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
     JoystickButton driverControllerStartButton = new JoystickButton(driverController, Constants.Controller.START_BUTTON);
+    JoystickButton driverControllerLeftStickButton = new JoystickButton(driverController, Constants.Controller.LEFT_JOYSTICK_BUTTON);
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
@@ -43,6 +56,7 @@ public class RobotContainer {
     );
 
     driverControllerStartButton.onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    driverControllerLeftStickButton.toggleOnTrue(new VisionTestCommand(visionSubsystem));
   }
 
   private double getJoystickInput(Joystick stick, int axe) {
