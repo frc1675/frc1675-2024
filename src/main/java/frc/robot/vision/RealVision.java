@@ -30,19 +30,23 @@ public class RealVision implements IVision {
     ledMode.setNumber(3);
   }
 
+  @Override
   public Pose2d getBotpose(){
     double[] botposeArray = botpose.getDoubleArray(new double[6]);
     return new Pose2d(botposeArray[0], botposeArray[1], Rotation2d.fromDegrees(botposeArray[5]));
   }
 
+  @Override
   public boolean hasTarget(){
     return isValidTarget.getDouble(0) == 1;
   }
 
+  @Override
   public int getTargetId(){
     return (int) aprilTagID.getInteger(0);
   }
 
+  @Override
   public void setLEDMode(LEDMode ledState){
     switch (ledState) {
       case OFF:
@@ -63,6 +67,7 @@ public class RealVision implements IVision {
     }
   } 
 
+  @Override
   public LEDMode getLEDMode(){
     return currentMode;
   }

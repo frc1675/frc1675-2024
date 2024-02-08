@@ -12,6 +12,7 @@ public class SimVision implements IVision {
   
   public SimVision(){}
 
+  @Override
   public Pose2d getBotpose(){
     return botPose;
   }
@@ -20,6 +21,7 @@ public class SimVision implements IVision {
     this.botPose = targetPose;
   } 
 
+  @Override
   public boolean hasTarget(){
     return hasTarget;
   }
@@ -28,6 +30,7 @@ public class SimVision implements IVision {
     hasTarget = value;
   }
 
+  @Override
   public int getTargetId(){
     return targetId;
   }
@@ -36,10 +39,12 @@ public class SimVision implements IVision {
     targetId = id;
   }
 
+  @Override
   public LEDMode getLEDMode(){
     return currentMode;
   }
 
+  @Override
   public void setLEDMode(LEDMode mode){
     currentMode = mode;
   }
