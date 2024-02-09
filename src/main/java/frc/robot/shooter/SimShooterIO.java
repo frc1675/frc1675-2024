@@ -1,8 +1,6 @@
 package frc.robot.shooter;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants;
 
@@ -39,7 +37,7 @@ public class SimShooterIO implements IShooterIO {
 
     @Override
     public void periodic() {
-        shooterMotorSim.setInputVoltage(12);
+        shooterMotorSim.setInputVoltage(shooterVoltage);
         shooterMotorSim.update(0.020);
     }
     

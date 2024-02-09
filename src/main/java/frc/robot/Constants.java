@@ -51,7 +51,7 @@ public class Constants {
 
         public static final String SHUFFLEBOARD_TAB = "Shooter";
         public static final double GEARING = 0.5;
-        public static final double MOI = .443;
+        public static final double MOI = .001; // Joules * kg / m^2
     }
 
     public class Dashboard {
