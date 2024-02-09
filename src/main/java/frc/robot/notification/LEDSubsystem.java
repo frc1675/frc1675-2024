@@ -17,7 +17,7 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   public void changeColor(LEDStateEnum status){
-    ledIO.setSpark(status.getSparkValue());
+    ledIO.changeColor(status);
     this.status = status;
   }
  

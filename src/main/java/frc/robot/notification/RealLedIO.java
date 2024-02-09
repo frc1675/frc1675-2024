@@ -9,11 +9,10 @@ public class RealLedIO implements ILedIO{
   public RealLedIO(){}
   
   @Override
-  public void setSpark(double sparkValue){
-    ledController.set(sparkValue);  
+  public void changeColor(LEDStateEnum color){
+    ledController.set(color.getSparkValue());  
   }
 
-  @Override
   public boolean getIsAlive(){
     return ledController.isAlive();
   }

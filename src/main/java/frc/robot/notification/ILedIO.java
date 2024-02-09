@@ -2,7 +2,7 @@ package frc.robot.notification;
 
 public interface ILedIO {
   
-  public void setSpark(double sparkValue);
+  public void changeColor(LEDStateEnum color);
 
   public boolean getIsAlive(); 
 
