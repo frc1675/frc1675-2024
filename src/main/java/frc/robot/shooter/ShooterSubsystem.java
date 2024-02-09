@@ -40,6 +40,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public void setTargetShooterSpeed(double targetSpeed) {
         targetShooterSpeed = targetSpeed;
         shooterIO.setShooterOutput(targetSpeed); // TODO: convert RPM to -1 to 1
+        System.out.println("set speed: " + targetSpeed);
     }
 
     public void setIndexerSpeed(double speed) {
@@ -47,7 +48,9 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        shooterIO.periodic();
+    }
 
     @Override
     public void simulationPeriodic() {}
