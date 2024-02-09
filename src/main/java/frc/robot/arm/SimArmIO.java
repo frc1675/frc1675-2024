@@ -3,7 +3,6 @@ package frc.robot.arm;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants;
 
@@ -24,10 +23,10 @@ public class SimArmIO implements IArmIO{
 
     private double angleRads;
     private double motorSpeed;
-    private DigitalInput homeSwitch;
+    private boolean homeSwitch;
 
     public SimArmIO(){
-        homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_DIGITAL_INPUT_CHANNEL);
+        homeSwitch = false;
     }
 
     @Override
@@ -42,7 +41,7 @@ public class SimArmIO implements IArmIO{
 
     @Override
     public boolean atFrontLimit(){
-        return homeSwitch.get();
+        return homeSwitch;
     }
 
     @Override

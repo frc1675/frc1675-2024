@@ -79,6 +79,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        armIO.periodic();
         double motorVoltage = pid.calculate(targetAngle - getAngle())*12;
 
         if (armIO.atFrontLimit()) {
