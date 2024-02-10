@@ -53,7 +53,7 @@ public class RobotContainer {
     );
 
     operatorAButton.onTrue(
-      new MoveToPosition(arm, Constants.Arm.LOW_SCORE_POSITIOIN)
+      new MoveToPosition(arm, Constants.Arm.LOW_SCORE_POSITION)
     );
 
     operatorYButton.onTrue(

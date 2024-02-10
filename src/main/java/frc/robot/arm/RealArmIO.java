@@ -17,7 +17,7 @@ public class RealArmIO implements IArmIO {
         motorOne = new CANSparkMax(Constants.Arm.ARM_MOTOR_ONE, MotorType.kBrushless);
         motorTwo = new CANSparkMax(Constants.Arm.ARM_MOTOR_TWO, MotorType.kBrushless);
         encoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A, Constants.Arm.ENCODER_CHANNEL_B);
-        homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_DIGITAL_INPUT_CHANNEL);
+        homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_CHANNEL);
     }
 
     @Override

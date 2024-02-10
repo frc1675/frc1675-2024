@@ -15,7 +15,7 @@ public class Arm extends SubsystemBase {
 
     public Arm(IArmIO armIO) {
         this.armIO = armIO;
-        pid = new PIDController(Constants.Arm.PID_CONTROLLER_P_COEFFICIENT, Constants.Arm.PID_CONTROLLER_I_COEFFICIENT, Constants.Arm.PID_CONTROLLER_D_COEFFICIENT);
+        pid = new PIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT);
         broken = false;
         initDashboard();
     }
@@ -25,7 +25,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isOnTarget() {
-        return ((targetAngle - Constants.Arm.TARGET_MOVEMENT_RANGE_DEGREES <= getAngle()) && (targetAngle + Constants.Arm.TARGET_MOVEMENT_RANGE_DEGREES >= getAngle()));
+        return ((targetAngle - Constants.Arm.TARGET_RANGE <= getAngle()) && (targetAngle + Constants.Arm.TARGET_RANGE >= getAngle()));
     }
 
     public double getTarget() {
@@ -51,7 +51,7 @@ public class Arm extends SubsystemBase {
     private String armPositionName() {
         if (targetAngle == Constants.Arm.HIGH_SCORE_POSITION){
             return ("High Goal");
-        } else if (targetAngle == Constants.Arm.LOW_SCORE_POSITIOIN){
+        } else if (targetAngle == Constants.Arm.LOW_SCORE_POSITION){
             return ("Low Goal");
         } else if (targetAngle == Constants.Arm.HOME_POSITION) {
             return ("Home");
@@ -61,7 +61,7 @@ public class Arm extends SubsystemBase {
     }
 
     private boolean armPositionStatus() {
-        if (targetAngle == Constants.Arm.HIGH_SCORE_POSITION || targetAngle == Constants.Arm.LOW_SCORE_POSITIOIN || targetAngle == Constants.Arm.HOME_POSITION){
+        if (targetAngle == Constants.Arm.HIGH_SCORE_POSITION || targetAngle == Constants.Arm.LOW_SCORE_POSITION || targetAngle == Constants.Arm.HOME_POSITION){
             return true;
         } else{
             return false;
@@ -84,7 +84,7 @@ public class Arm extends SubsystemBase {
 
         if (armIO.atFrontLimit()) {
             // Check if encoder and home switch disagree
-            if (getAngle() > Constants.Arm.HOME_SWITCH_FAILSAFE_DEGREES) {
+            if (getAngle() > Constants.Arm.HOME_POSITION + Constants.Arm.TARGET_RANGE) {
                 // Assume a sensor is broken, do not move arm.
                 armIO.setMotorPower(0);
                 broken = true;
@@ -96,7 +96,7 @@ public class Arm extends SubsystemBase {
                 armIO.setMotorPower(0);
             }
         } else {
-            if (getAngle() > Constants.Arm.ARM_ANGLE_LIMIT_DEGREES) {
+            if (getAngle() > Constants.Arm.MAX_ARM_RANGE_DEGREES) {
                 // Arm is outside of desired range, only let it go back in.
                 if (motorVoltage < 0) {
                     armIO.setMotorPower(motorVoltage);
