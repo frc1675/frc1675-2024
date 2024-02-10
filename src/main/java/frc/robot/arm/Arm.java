@@ -25,7 +25,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isOnTarget() {
-        return ((targetAngle - Constants.Arm.TARGET_RANGE <= getAngle()) && (targetAngle + Constants.Arm.TARGET_RANGE >= getAngle()));
+        return ((getAngle() >= targetAngle - Constants.Arm.TARGET_RANGE) && (getAngle() <= targetAngle+Constants.Arm.TARGET_RANGE));
     }
 
     public double getTarget() {
@@ -48,23 +48,15 @@ public class Arm extends SubsystemBase {
         return broken;
     }
 
-    private String armPositionName() {
+    private String armTargetName() {
         if (targetAngle == Constants.Arm.HIGH_SCORE_POSITION){
-            return ("High Goal");
+            return "High Goal";
         } else if (targetAngle == Constants.Arm.LOW_SCORE_POSITION){
-            return ("Low Goal");
+            return "Low Goal";
         } else if (targetAngle == Constants.Arm.HOME_POSITION) {
-            return ("Home");
+            return "Home";
         } else{
-            return ("Moving...");
-        }
-    }
-
-    private boolean armPositionStatus() {
-        if (targetAngle == Constants.Arm.HIGH_SCORE_POSITION || targetAngle == Constants.Arm.LOW_SCORE_POSITION || targetAngle == Constants.Arm.HOME_POSITION){
-            return true;
-        } else{
-            return false;
+            return "Undefined Target";
         }
     }
 
@@ -72,15 +64,15 @@ public class Arm extends SubsystemBase {
         dashboard = Shuffleboard.getTab("Arm");
         dashboard.addDouble("Target Angle", () -> getTarget());
         dashboard.addDouble("Arm Angle", () -> getAngle());
-        dashboard.addBoolean("On Target", () -> armPositionStatus());
-        dashboard.addString("Position", () -> armPositionName());
-
+        dashboard.addBoolean("On Target", () -> isOnTarget());
+        dashboard.addString("Target", () -> armTargetName());
+        dashboard.addDouble("Motor Speed", () -> armIO.getMotorSpeed());
     }
 
     @Override
     public void periodic() {
         armIO.periodic();
-        double motorVoltage = pid.calculate(targetAngle - getAngle())*12;
+        double motorPower = pid.calculate(getAngle() - targetAngle);
 
         if (armIO.atFrontLimit()) {
             // Check if encoder and home switch disagree
@@ -88,9 +80,9 @@ public class Arm extends SubsystemBase {
                 // Assume a sensor is broken, do not move arm.
                 armIO.setMotorPower(0);
                 broken = true;
-            } else if (motorVoltage > 0) {
+            } else if (motorPower > 0) {
                 // Only allow the motors to move away from the switch
-                armIO.setMotorPower(motorVoltage);
+                armIO.setMotorPower(motorPower);
             } else {
                 // Stop arm if already moving in incorrect direction
                 armIO.setMotorPower(0);
@@ -98,15 +90,15 @@ public class Arm extends SubsystemBase {
         } else {
             if (getAngle() > Constants.Arm.MAX_ARM_RANGE_DEGREES) {
                 // Arm is outside of desired range, only let it go back in.
-                if (motorVoltage < 0) {
-                    armIO.setMotorPower(motorVoltage);
+                if (motorPower < 0) {
+                    armIO.setMotorPower(motorPower);
                 } else {
                     // Stop arm if already moving in incorrect direction
                     armIO.setMotorPower(0);
                 }
             } else {
                 // Arm within safe range, do what it wants
-                armIO.setMotorPower(motorVoltage);
+                armIO.setMotorPower(motorPower);
             }
 
         }

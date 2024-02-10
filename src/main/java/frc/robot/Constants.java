@@ -27,7 +27,7 @@ public class Constants {
         public static final int ARM_MOTOR_ONE = 15;
         public static final int ARM_MOTOR_TWO = 16;
         //PID constants
-        public static final double PID_P_COEFFICIENT = 1;
+        public static final double PID_P_COEFFICIENT = 0.075;
         public static final double PID_I_COEFFICIENT = 0;
         public static final double PID_D_COEFFICIENT = 0;
         //Arm movment lmits constants

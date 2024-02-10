@@ -40,13 +40,18 @@ public class SimArmIO implements IArmIO{
     }
 
     @Override
+    public double getMotorSpeed(){
+        return motorSpeed;
+    }
+
+    @Override
     public boolean atFrontLimit(){
         return homeSwitch;
     }
 
     @Override
     public void periodic(){
-        armSim.setInput(motorSpeed*12);
+        armSim.setInput(motorSpeed *12);
         armSim.update(0.020);
         angleRads = armSim.getAngleRads();
     }

@@ -22,13 +22,18 @@ public class RealArmIO implements IArmIO {
 
     @Override
     public void setMotorPower(double power){
-        motorOne.setVoltage(power);
-        motorTwo.setVoltage(power);
+        motorOne.setVoltage(power*12);
+        motorTwo.setVoltage(power*12);
     }
 
     @Override
     public double getMeasurement(){
         return ((double) encoder.get() / Constants.Arm.ENCODER_COUNT) * 360;
+    }
+
+    @Override
+    public double getMotorSpeed(){
+        return motorOne.get();
     }
 
     @Override
