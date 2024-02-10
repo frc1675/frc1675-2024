@@ -5,33 +5,38 @@ import edu.wpi.first.math.util.Units;
 public class Constants {
 
     public class Drive {
-        public static final double MAXIMUM_VELOCITY = 5.5; //meters per second
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 15.5; //radians per second
+        public static final double MAXIMUM_VELOCITY = 5.0; //meters per second
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 10; //radians per second
 
-        public static final double MAXIMUM_VISON_POSE_OVERRIDE_DISTANCE = 1.0; //meters
+        public static final double MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE = 1.0; //meters
 
         public static final double DRIVE_GEAR_RATIO = 6.12;
         public static final double STEER_GEAR_RATIO = 12.8;
-        public static final double PULSE_PER_ROTATION = 42; //encoder resolution
+        public static final double PULSE_PER_ROTATION = 1;
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
 
     }
 
     public class PathPlanner {
         //TODO tune constants if necessary
-        public static final double MAXIMUM_VELOCITY= 5.0; //meters per second
-        public static final double MAXIMUM_ACCELERATON = 2.0; //meters per second squared
+        public static final double MAXIMUM_VELOCITY= 2.5; //meters per second
+        public static final double MAXIMUM_ACCELERATION = 1.25; //meters per second squared
 
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 15.0; //radians per second
-        public static final double MAXIMUM_ANGULAR_ACCELERATION = 5.0; //radians per second squared
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 7.5; //radians per second
+        public static final double MAXIMUM_ANGULAR_ACCELERATION = 3.75; //radians per second squared
 
         //TODO measure on robot
         public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(13.7885); //meters
+
+        public static final double TRANSLATION_P = 1000;
+
+        public static final double ROTATION_P = 1;
         
     }
 
     public class Dashboard {
         public static final boolean DISABLE_TUNER = false;
+        public static final String VERSION_FILE_NAME = "version/.robotVersionMini";
     }
 
     public class Controller {
