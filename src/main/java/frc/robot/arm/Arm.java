@@ -1,6 +1,7 @@
 package frc.robot.arm;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -67,6 +68,7 @@ public class Arm extends SubsystemBase {
         dashboard.addBoolean("On Target", () -> isOnTarget());
         dashboard.addString("Target", () -> armTargetName());
         dashboard.addDouble("Motor Speed", () -> armIO.getMotorSpeed());
+        dashboard.add(pid).withWidget(BuiltInWidgets.kPIDController); 
     }
 
     @Override
