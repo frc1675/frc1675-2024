@@ -9,7 +9,7 @@ public class UpdatePose extends Command{
   private final DriveSubsystem drive;
 
   public UpdatePose(VisionSubsystem vision, DriveSubsystem drive){
-    addRequirements(vision, drive);
+    addRequirements(vision);
     this.vision = vision;
     this.drive = drive;
   }
