@@ -41,8 +41,8 @@ public class RealShooterIO implements IShooterIO {
 
     @Override
     public void setShooterOutput(double power) {
-        shooterMotorOne.setVoltage(power);
-        shooterMotorTwo.setVoltage(power);
+        shooterMotorOne.setVoltage(power * 12);
+        shooterMotorTwo.setVoltage(power * 12);
     }
 
     @Override

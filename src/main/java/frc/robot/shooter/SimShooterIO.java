@@ -17,7 +17,7 @@ public class SimShooterIO implements IShooterIO {
 
     @Override
     public void setShooterOutput(double power) {
-        shooterVoltage = power;
+        shooterVoltage = power * 12;
     }
 
     @Override
