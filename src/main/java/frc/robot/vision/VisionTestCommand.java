@@ -8,6 +8,7 @@ public class VisionTestCommand extends Command {
   private final VisionSubsystem vision;
   
   public VisionTestCommand(VisionSubsystem vision){
+    addRequirements(vision);
     this.vision = vision;
   }
 
