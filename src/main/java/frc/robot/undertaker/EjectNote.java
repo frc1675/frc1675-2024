@@ -1,20 +1,12 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
-package frc.robot.command.undertaker;
+package frc.robot.undertaker;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Undertaker;
 
-public class IntakeNote extends Command {
+public class EjectNote extends Command {
+  private UndertakerSubsystem undertaker;
 
-  private Undertaker undertaker;
-
-
-  
-  public IntakeNote(Undertaker undertaker) {
+  public EjectNote(UndertakerSubsystem undertaker) {
     addRequirements(undertaker);
     this.undertaker = undertaker;
   }
@@ -22,7 +14,7 @@ public class IntakeNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    undertaker.run(Constants.Undertaker.INTAKE_SPEED);
+    undertaker.run(Constants.Undertaker.EJECT_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,4 +32,5 @@ public class IntakeNote extends Command {
   public boolean isFinished() {
     return false;
   }
+
 }
