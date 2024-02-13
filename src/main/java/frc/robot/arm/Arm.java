@@ -1,6 +1,7 @@
 package frc.robot.arm;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -9,14 +10,17 @@ import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
     private double targetAngle;
-    private PIDController pid;
+    private ProfiledPIDController pid;
     private boolean broken;
     private ShuffleboardTab dashboard;
     private IArmIO armIO;
+    private TrapezoidProfile.Constraints profileConstraints;
 
     public Arm(IArmIO armIO) {
         this.armIO = armIO;
-        pid = new PIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT);
+        //pid = new PIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT);
+        profileConstraints = new TrapezoidProfile.Constraints(130, 650);
+        pid = new ProfiledPIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT, profileConstraints);
         broken = false;
         initDashboard();
     }
