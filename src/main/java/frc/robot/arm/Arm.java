@@ -78,7 +78,7 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         armIO.periodic();
-        double motorPower = pid.calculate(getAngle() - targetAngle);
+        double motorPower = pid.calculate(getAngle(), targetAngle);
 
         if (armIO.atFrontLimit()) {
             // Check if encoder and home switch disagree
