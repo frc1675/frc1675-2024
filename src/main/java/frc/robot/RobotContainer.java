@@ -12,19 +12,24 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.cmdGroup.SpeakerScore;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.poseScheduler.PoseScheduler;
+import frc.robot.poseScheduler.PoseSpinUp;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
 
 public class RobotContainer {
 
-  private DriveSubsystem drive = new DriveSubsystem();
+  private PoseScheduler poseScheduler = new PoseScheduler();
+  private DriveSubsystem drive = new DriveSubsystem(poseScheduler);
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
 
   public RobotContainer() {
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
     DataLogManager.log("Data log started.");
+
+    poseScheduler.registerCommand(new PoseSpinUp());
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
@@ -43,7 +48,7 @@ public class RobotContainer {
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     
-    driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
+    //driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {

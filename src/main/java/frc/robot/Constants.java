@@ -42,6 +42,7 @@ public class Constants {
 
     public class Field {
         public static final Translation2d SPEAKER_SCORING_POSITION = new Translation2d(1.67, 5.52);
+        public static final double SCORING_AREA_X_BOUNDARY = 5.8;
     }
 
     public class Dashboard {
