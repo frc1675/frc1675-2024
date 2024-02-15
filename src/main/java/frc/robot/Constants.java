@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.poseScheduler.FieldArea2d;
 
 public class Constants {
 
@@ -42,7 +43,8 @@ public class Constants {
 
     public class Field {
         public static final Translation2d SPEAKER_SCORING_POSITION = new Translation2d(1.67, 5.52);
-        public static final double SCORING_AREA_X_BOUNDARY = 5.8;
+
+        public static final FieldArea2d FRIENDLY_ALLIANCE_AREA = new FieldArea2d(0, 0, 5.85, 8.21);
     }
 
     public class Dashboard {

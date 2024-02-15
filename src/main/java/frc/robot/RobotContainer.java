@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.cmdGroup.SpeakerScore;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
-import frc.robot.poseScheduler.PoseSpinUp;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
@@ -29,7 +29,7 @@ public class RobotContainer {
     DriverStation.startDataLog(DataLogManager.getLog());
     DataLogManager.log("Data log started.");
 
-    poseScheduler.registerCommand(new PoseSpinUp());
+    poseScheduler.registerCommand(Constants.Field.FRIENDLY_ALLIANCE_AREA, new PrintCommand("I just spun up the motors"));
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
