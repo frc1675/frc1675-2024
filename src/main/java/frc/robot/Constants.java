@@ -39,9 +39,12 @@ public class Constants {
         public static final int INDEXER_NOTE_DETECTION_RANGE = 100; // PLACEHOLDER
         public static final double TARGET_SPEED_ERROR_MARGIN = 0.1; // PLACEHOLDER
 
-        public static final double SHOOTER_PID_P = 0.05; // PLACEHOLDER
-        public static final double SHOOTER_PID_I = 0; // PLACEHOLDER
-        public static final double SHOOTER_PID_D = 0; // PLACEHOLDER
+        public static final double SHOOTER_PID_P = 0.005;
+        public static final double SHOOTER_PID_I = 0;
+        public static final double SHOOTER_PID_D = 0;
+
+        public static final double SHOOTER_FF_V = 0.000174;
+        public static final double SHOOTER_FF_S = 0;
         //public static final double SHOOTER_PID_IZONE = 1.0; // PLACHOLDER
         //public static final double SHOOTER_PID_FF = 1.0; // PLACEHOLDER
         public static final double SHOOTER_PID_OUTPUT_RANGE = 3000.0; // PLACEHOLDER

@@ -27,7 +27,7 @@ public class SimShooterIO implements IShooterIO {
 
     @Override
     public double[] getShooterSpeeds() {
-        return new double[] {shooterMotorSim.getAngularVelocityRPM(), shooterMotorSim.getAngularVelocityRPM()};
+        return new double[] {shooterMotorSim.getAngularVelocityRPM() / 2.0, shooterMotorSim.getAngularVelocityRPM() / 2.0};
     }
 
     @Override

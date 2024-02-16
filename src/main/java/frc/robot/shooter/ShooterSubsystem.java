@@ -1,6 +1,7 @@
 package frc.robot.shooter;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -13,6 +14,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private IShooterIO shooterIO;
     private double targetShooterSpeed = 0;
     private PIDController pidController = new PIDController(Constants.Shooter.SHOOTER_PID_P, Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
+    private SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S, Constants.Shooter.SHOOTER_FF_V);
 
     public ShooterSubsystem(IShooterIO shooterIO) {
         this.shooterIO = shooterIO;
@@ -45,7 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setTargetShooterSpeed(double targetSpeed) {
-        pidController.setSetpoint(targetSpeed);
+        //pidController.setSetpoint(targetSpeed);
         targetShooterSpeed = targetSpeed;
         System.out.println("set speed: " + targetSpeed);
     }
@@ -56,8 +58,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        pidOutput = pidController.calculate(shooterIO.getShooterSpeeds()[0] - targetShooterSpeed);
+        pidOutput = pidController.calculate(shooterIO.getShooterSpeeds()[0], targetShooterSpeed) + feedForward.calculate(targetShooterSpeed);
         shooterIO.setShooterOutput(pidOutput);
+        //shooterIO.setShooterOutput(0.5);
         shooterIO.periodic();
     }
 

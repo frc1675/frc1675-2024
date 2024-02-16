@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
@@ -47,10 +48,25 @@ public class RobotContainer {
         )
     );
 
-    xButton.toggleOnTrue(new SpinUpAndShoot(shooter));
+    //xButton.toggleOnTrue(new SpinUpAndShoot(shooter));
     
     // move to undertaker subsystem:
-    yButton.toggleOnTrue(new ShooterIntake(shooter, 1));
+    //yButton.toggleOnTrue(new ShooterIntake(shooter, 1));
+    xButton.onTrue(new InstantCommand(() -> {
+      shooter.setTargetShooterSpeed(4000);
+    }));
+
+    xButton.onFalse(new InstantCommand(() -> {
+      shooter.setTargetShooterSpeed(0);
+    }));
+
+    yButton.onTrue(new InstantCommand(() -> {
+      shooter.setTargetShooterSpeed(2000);
+    }));
+
+    yButton.onFalse(new InstantCommand(() -> {
+      shooter.setTargetShooterSpeed(0);
+    }));
   }
 
   private double getJoystickInput(Joystick stick, int axe) {
