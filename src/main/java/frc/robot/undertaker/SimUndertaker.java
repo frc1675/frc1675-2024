@@ -10,7 +10,9 @@ public class SimUndertaker implements IUndertaker {
 
   private final CANSparkMax intakeMotorOne = new CANSparkMax(Constants.Undertaker.INTAKE_MOTOR_ONE, MotorType.kBrushless);
   private final CANSparkMax intakeMotorTwo = new CANSparkMax(Constants.Undertaker.INTAKE_MOTOR_TWO, MotorType.kBrushless);
+  private boolean[] mockMotorStatus = { false, false }; 
   private double desiredSpeed;
+  private boolean hasRun = false;
 
   public SimUndertaker(){
     REVPhysicsSim.getInstance().addSparkMax(intakeMotorOne, DCMotor.getNEO(1));
@@ -32,16 +34,28 @@ public class SimUndertaker implements IUndertaker {
 
   @Override
   public void run(double speed){
-    this.desiredSpeed = speed;
-    intakeMotorOne.setVoltage(speed * 12.0);
-    intakeMotorTwo.setVoltage(speed * 12.0);
+    if (mockMotorStatus[0] && mockMotorStatus[1]) {
+      this.desiredSpeed = speed;
+      intakeMotorOne.setVoltage(speed * 12.0);
+      intakeMotorTwo.setVoltage(speed * 12.0);
+      hasRun = true;
+    }
   }
 
   @Override
   public boolean[] isAlive(){
-    boolean[] mockMotorStatus = { true, true };
     return mockMotorStatus;
   }
 
+  public void setIsAlive(boolean[] status){
+    mockMotorStatus = status;
+  }
 
+  public boolean getHasRun(){
+    return hasRun;
+  }
+
+  public void resetHasRun(){
+    hasRun = false;
+  }
 }

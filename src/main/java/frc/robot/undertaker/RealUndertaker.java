@@ -8,6 +8,7 @@ import frc.robot.Constants;
 
 public class RealUndertaker implements IUndertaker {
 
+  private boolean[] motorStatus = { true, true };
   private CANSparkMax intakeMotorOne = new CANSparkMax(Constants.Undertaker.INTAKE_MOTOR_ONE, MotorType.kBrushless);
   private CANSparkMax intakeMotorTwo = new CANSparkMax(Constants.Undertaker.INTAKE_MOTOR_TWO, MotorType.kBrushless);
   private double desiredSpeed;
@@ -24,9 +25,11 @@ public class RealUndertaker implements IUndertaker {
 
   @Override
   public void run(double speed){
-    desiredSpeed = speed;
-    intakeMotorOne.setVoltage(speed * 12.0);
-    intakeMotorTwo.setVoltage(speed * 12.0);
+    if(motorStatus[0] && motorStatus[1]){
+      desiredSpeed = speed;
+      intakeMotorOne.setVoltage(speed * 12.0);
+      intakeMotorTwo.setVoltage(speed * 12.0);
+    }
   }
 
   @Override
@@ -36,19 +39,8 @@ public class RealUndertaker implements IUndertaker {
 
   @Override
   public boolean[] isAlive() {
-    boolean[] motorStatus = new boolean[2];
-    if(!intakeMotorOne.getFault(FaultID.kCANRX) && !intakeMotorOne.getFault(FaultID.kCANTX)){
-      motorStatus[0] = true;
-    }
-    if(!intakeMotorTwo.getFault(FaultID.kCANRX) && !intakeMotorTwo.getFault(FaultID.kCANTX)){
-      motorStatus[1] = true;
-    }
-    if(intakeMotorOne.getFault(FaultID.kCANRX) && intakeMotorOne.getFault(FaultID.kCANTX)){
-      motorStatus[0] = false;  
-    }
-    if(intakeMotorTwo.getFault(FaultID.kCANRX) && intakeMotorTwo.getFault(FaultID.kCANTX)){
-      motorStatus[1] = false; 
-    }
+    motorStatus[0] = !intakeMotorOne.getFault(FaultID.kCANRX) && !intakeMotorOne.getFault(FaultID.kCANTX);
+    motorStatus[1] = !intakeMotorTwo.getFault(FaultID.kCANRX) && !intakeMotorTwo.getFault(FaultID.kCANTX);
     return motorStatus;
   }
 
