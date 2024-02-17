@@ -8,41 +8,40 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Arm extends SubsystemBase {
+public class ArmSubsystem extends SubsystemBase {
     private double targetAngle;
     private ProfiledPIDController pid;
-    private boolean broken;
+    private boolean broken = false;
     private ShuffleboardTab dashboard;
     private IArmIO armIO;
     private TrapezoidProfile.Constraints profileConstraints;
 
-    public Arm(IArmIO armIO) {
-        this.armIO = armIO;
-        //pid = new PIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT);
-        profileConstraints = new TrapezoidProfile.Constraints(130, 650);
-        pid = new ProfiledPIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT, profileConstraints);
-        broken = false;
-        initDashboard();
+    public ArmSubsystem(IArmIO armIO) {
+      this.armIO = armIO;
+      //pid = new PIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT);
+      profileConstraints = new TrapezoidProfile.Constraints(130, 650);
+      pid = new ProfiledPIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT, profileConstraints);
+      initDashboard();
     }
 
     public double getAngle() {
-        return armIO.getMeasurement();
+      return armIO.getMeasurement();
     }
 
     public boolean isOnTarget() {
-        return ((getAngle() >= targetAngle - Constants.Arm.TARGET_RANGE) && (getAngle() <= targetAngle+Constants.Arm.TARGET_RANGE));
+      return ((getAngle() >= targetAngle - Constants.Arm.TARGET_RANGE) && (getAngle() <= targetAngle+Constants.Arm.TARGET_RANGE));
     }
 
     public double getTarget() {
-        return targetAngle;
+      return targetAngle;
     }
 
     public void setTarget(double inputTarget) {
-        if (inputTarget >= Constants.Arm.MAX_ARM_RANGE_DEGREES) {
-            targetAngle = Constants.Arm.MAX_ARM_RANGE_DEGREES;
-        } else {
-            targetAngle = inputTarget;
-        }
+      if (inputTarget >= Constants.Arm.MAX_ARM_RANGE_DEGREES) {
+        targetAngle = Constants.Arm.MAX_ARM_RANGE_DEGREES;
+      } else {
+        targetAngle = inputTarget;
+      }
     }
 
     public boolean isAtHomePostion() {
@@ -70,6 +69,7 @@ public class Arm extends SubsystemBase {
         dashboard.addDouble("Target Angle", () -> getTarget());
         dashboard.addDouble("Arm Angle", () -> getAngle());
         dashboard.addBoolean("On Target", () -> isOnTarget());
+        dashboard.addBoolean("Is Broken", () -> isBroken());
         dashboard.addString("Target", () -> armTargetName());
         dashboard.addDouble("Motor Speed", () -> armIO.getMotorSpeed());
         dashboard.add(pid).withWidget(BuiltInWidgets.kPIDController); 
@@ -79,7 +79,7 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         armIO.periodic();
         double motorPower = pid.calculate(getAngle(), targetAngle);
-
+        System.out.println(motorPower);
         if (armIO.atFrontLimit()) {
             // Check if encoder and home switch disagree
             if (getAngle() > Constants.Arm.HOME_POSITION + Constants.Arm.TARGET_RANGE) {

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.arm.Arm;
+import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.IArmIO;
 import frc.robot.arm.RealArmIO;
 import frc.robot.arm.SimArmIO;
@@ -30,7 +30,7 @@ import frc.robot.vision.VisionTestCommand;
 public class RobotContainer {
 
   private DriveSubsystem drive = new DriveSubsystem();
-  private Arm arm;
+  private ArmSubsystem arm;
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
   private VisionSubsystem visionSubsystem;
 
@@ -48,7 +48,7 @@ public class RobotContainer {
       vision = new RealVision();
     }
     visionSubsystem = new VisionSubsystem(vision);
-    arm = new Arm(armIO);
+    arm = new ArmSubsystem(armIO);
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }

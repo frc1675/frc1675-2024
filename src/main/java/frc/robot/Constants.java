@@ -34,7 +34,7 @@ public class Constants {
         public static final double MAX_ARM_RANGE_DEGREES = 90;
         public static final double TARGET_RANGE = 5.0;
         public static final double DEBOUNCE_TIME = 0.5;
-        //Position constnats
+        //Position constants
         public static final double HOME_POSITION = 0;
         public static final double HIGH_SCORE_POSITION = 60;
         public static final double LOW_SCORE_POSITION = 50;
