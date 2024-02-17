@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.util.UperTunerSendable;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
@@ -32,6 +33,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double[] controllerInput = { 0, 0, 0 }; // [x, y, rotation]
 
   private UperTunerSendable velocityScale = new UperTunerSendable(1.0, 0.0, 1.0);
+  private PoseScheduler poseScheduler;
 
   private UperTunerSendable headingTuneableP;
   private UperTunerSendable headingTuneableI;
@@ -41,7 +43,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   private ShuffleboardTab dashboard;
 
-  public DriveSubsystem() {
+  public DriveSubsystem(PoseScheduler poseScheduler) {
+    this.poseScheduler = poseScheduler;
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
       swerve = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(
@@ -56,7 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     headingPidfConfig = swerve.swerveController.config.headingPIDF;
     swerve.chassisVelocityCorrection = false;    
-    swerve.setHeadingCorrection(false);
+    swerve.setHeadingCorrection(true);
     initDashboard();
   }
 
@@ -147,6 +150,14 @@ public class DriveSubsystem extends SubsystemBase {
     swerve.resetOdometry(override);
   }
 
+  public void setMotorBrakeMode(boolean mode) {
+    /*
+    for (SwerveModule module : swerve.getModules()) {
+      module.setMotorBrake(mode);
+    }
+     */
+  }
+
   @Override
   public void periodic() {
     swerve.drive(
@@ -154,6 +165,8 @@ public class DriveSubsystem extends SubsystemBase {
         controllerInput[2],
         true, false
       );
+
+    poseScheduler.updatePose(getPose());
 
     if (headingPidfConfig != null) {
       headingPidfConfig.p = headingTuneableP.getCurrentValue();
