@@ -62,4 +62,13 @@ public class Constants {
         public static final int LEFT_JOYSTICK_BUTTON = 9;
         public static final int RIGHT_JOYSTICK_BUTTON = 10;
     }
+
+    public class Undertaker {
+        public static final int INTAKE_MOTOR_ONE = 13;
+        public static final int INTAKE_MOTOR_TWO = 14;
+
+        public static final double INTAKE_SPEED = 0.5;
+        public static final double EJECT_SPEED = -0.5;
+
+    }    
 }
