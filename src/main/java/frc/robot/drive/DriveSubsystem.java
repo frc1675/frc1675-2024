@@ -59,7 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     headingPidfConfig = swerve.swerveController.config.headingPIDF;
     swerve.chassisVelocityCorrection = false;    
-    swerve.setHeadingCorrection(false);
+    swerve.setHeadingCorrection(true);
     initDashboard();
   }
 
@@ -148,6 +148,14 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d override) {
     swerve.resetOdometry(override);
+  }
+
+  public void setMotorBrakeMode(boolean mode) {
+    /*
+    for (SwerveModule module : swerve.getModules()) {
+      module.setMotorBrake(mode);
+    }
+     */
   }
 
   @Override

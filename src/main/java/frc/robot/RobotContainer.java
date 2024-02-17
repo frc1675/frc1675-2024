@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -29,7 +30,9 @@ public class RobotContainer {
     DriverStation.startDataLog(DataLogManager.getLog());
     DataLogManager.log("Data log started.");
 
-    poseScheduler.registerCommand(Constants.Field.FRIENDLY_ALLIANCE_AREA, new PrintCommand("I just spun up the motors"));
+    //poseScheduler.registerCommand(Constants.Field.FRIENDLY_ALLIANCE_AREA, new PrintCommand("I just spun up the motors"));
+
+    drive.setMotorBrakeMode(true);
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
@@ -61,6 +64,12 @@ public class RobotContainer {
 
   public void updateFieldMap() {
     autoGenerator.updateMap();
+  }
+
+  public void onDisabled() {
+    Timer.delay(10); // Wait so that any momentum from the match is absorbed by the brakes before setting to coast. 
+
+    drive.setMotorBrakeMode(false);
   }
 
 }
