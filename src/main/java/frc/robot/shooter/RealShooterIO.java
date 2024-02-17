@@ -17,7 +17,7 @@ public class RealShooterIO implements IShooterIO {
     private RelativeEncoder indexerMotorOneEncoder;
     private RelativeEncoder indexerMotorTwoEncoder;
 
-    private LaserCan laserCAN;
+    //private LaserCan laserCAN;
 
     public RealShooterIO() {
         shooterMotorOne = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
@@ -25,12 +25,15 @@ public class RealShooterIO implements IShooterIO {
         indexerMotorOne = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
         indexerMotorTwo = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
 
+        shooterMotorOne.setInverted(true);
+        shooterMotorTwo.setInverted(true);
+
         shooterMotorOneEncoder = shooterMotorOne.getEncoder();
         shooterMotorTwoEncoder = shooterMotorTwo.getEncoder();
         indexerMotorOneEncoder = indexerMotorOne.getEncoder();
-        indexerMotorOneEncoder = indexerMotorTwo.getEncoder();
+        indexerMotorTwoEncoder = indexerMotorTwo.getEncoder();
 
-        laserCAN = new LaserCan(Constants.Shooter.LASER_CAN);
+        //laserCAN = new LaserCan(Constants.Shooter.LASER_CAN);
     }
 
     @Override
@@ -47,8 +50,9 @@ public class RealShooterIO implements IShooterIO {
 
     @Override
     public boolean isIndexerLoaded() {
-        LaserCan.Measurement measurement = laserCAN.getMeasurement();
-        return measurement.distance_mm < Constants.Shooter.INDEXER_NOTE_DETECTION_RANGE;
+        return false;
+        //LaserCan.Measurement measurement = laserCAN.getMeasurement();
+        //return measurement.distance_mm < Constants.Shooter.INDEXER_NOTE_DETECTION_RANGE;
     }
 
     @Override
