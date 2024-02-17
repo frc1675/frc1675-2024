@@ -6,18 +6,20 @@ import frc.robot.Constants;
 
 public class SimShooterIO implements IShooterIO {
     private double shooterVoltage;
-    private final FlywheelSim shooterMotorSim = new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.MOI);
+    private double indexerVoltage;
+    private final FlywheelSim shooterMotorSim = new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.SHOOTER_MOI);
+    private final FlywheelSim indexerMotorSim = new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.INDEXER_MOI);
 
     public SimShooterIO() {}
 
     @Override
     public void setIndexerOutput(double power) {
-        
+        indexerVoltage = Math.min(1, Math.max(power, -1)) * 12;
     }
 
     @Override
     public void setShooterOutput(double power) {
-        shooterVoltage = power * 12;
+        shooterVoltage = Math.min(1, Math.max(power, -1)) * 12;
     }
 
     @Override
@@ -27,18 +29,21 @@ public class SimShooterIO implements IShooterIO {
 
     @Override
     public double[] getShooterSpeeds() {
-        return new double[] {shooterMotorSim.getAngularVelocityRPM() / 2.0, shooterMotorSim.getAngularVelocityRPM() / 2.0};
+        return new double[] {shooterMotorSim.getAngularVelocityRPM(), shooterMotorSim.getAngularVelocityRPM()};
     }
 
     @Override
     public double[] getIndexerSpeeds() {
-        return new double[] {10000, 560000};
+        return new double[] {indexerMotorSim.getAngularVelocityRPM(), indexerMotorSim.getAngularVelocityRPM()};
     }
 
     @Override
     public void periodic() {
         shooterMotorSim.setInputVoltage(shooterVoltage);
-        shooterMotorSim.update(0.020);
+        shooterMotorSim.update(0.02);
+
+        indexerMotorSim.setInputVoltage(indexerVoltage);
+        indexerMotorSim.update(0.02);
     }
     
 }

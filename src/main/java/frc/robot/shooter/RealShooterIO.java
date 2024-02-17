@@ -35,14 +35,14 @@ public class RealShooterIO implements IShooterIO {
 
     @Override
     public void setIndexerOutput(double power) {
-        indexerMotorOne.setVoltage(power * 12);
-        indexerMotorTwo.setVoltage(power * 12);
+        indexerMotorOne.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
+        indexerMotorTwo.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
     }
 
     @Override
     public void setShooterOutput(double power) {
-        shooterMotorOne.setVoltage(power * 12);
-        shooterMotorTwo.setVoltage(power * 12);
+        shooterMotorOne.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
+        shooterMotorTwo.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
     }
 
     @Override

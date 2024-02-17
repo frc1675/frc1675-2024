@@ -35,36 +35,36 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
+    //Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
     Joystick operatorController = new Joystick(Constants.Controller.OPERATOR_CONTROLLER);
     JoystickButton xButton = new JoystickButton(operatorController, Constants.Controller.X_BUTTON);
     JoystickButton yButton = new JoystickButton(operatorController, Constants.Controller.Y_BUTTON);
 
-    drive.setDefaultCommand(
+    /*drive.setDefaultCommand(
         new DefaultDrive(drive,
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)
         )
-    );
+    );*/
 
     //xButton.toggleOnTrue(new SpinUpAndShoot(shooter));
     
     // move to undertaker subsystem:
     //yButton.toggleOnTrue(new ShooterIntake(shooter, 1));
-    xButton.onTrue(new InstantCommand(() -> {
-      shooter.setTargetShooterSpeed(4000);
-    }));
-
-    xButton.onFalse(new InstantCommand(() -> {
-      shooter.setTargetShooterSpeed(0);
-    }));
-
     yButton.onTrue(new InstantCommand(() -> {
-      shooter.setTargetShooterSpeed(2000);
+      shooter.setTargetIndexerSpeed(Constants.Shooter.TARGET_INDEXER_SPEED);
     }));
 
     yButton.onFalse(new InstantCommand(() -> {
+      shooter.setTargetIndexerSpeed(0);
+    }));
+
+    xButton.onTrue(new InstantCommand(() -> {
+      shooter.setTargetShooterSpeed(Constants.Shooter.TARGET_SHOOTER_SPEED);
+    }));
+
+    xButton.onFalse(new InstantCommand(() -> {
       shooter.setTargetShooterSpeed(0);
     }));
   }

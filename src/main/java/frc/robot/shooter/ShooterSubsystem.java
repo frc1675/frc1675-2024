@@ -10,11 +10,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
-    private double pidOutput = 0;
+    private double shooterPidOutput = 0;
+    private double shooterFfOutput = 0;
+    private double indexerPidOutput = 0;
+    private double indexerFfOutput = 0;
     private IShooterIO shooterIO;
     private double targetShooterSpeed = 0;
-    private PIDController pidController = new PIDController(Constants.Shooter.SHOOTER_PID_P, Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
-    private SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S, Constants.Shooter.SHOOTER_FF_V);
+    private double targetIndexerSpeed = 0;
+    private PIDController shooterPidController = new PIDController(Constants.Shooter.SHOOTER_PID_P, Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
+    private PIDController indexerPidController = new PIDController(Constants.Shooter.INDEXER_PID_P, Constants.Shooter.INDEXER_PID_I, Constants.Shooter.INDEXER_PID_D);
+    private SimpleMotorFeedforward shooterFeedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S, Constants.Shooter.SHOOTER_FF_V);
+    private SimpleMotorFeedforward indexerFeedForward = new SimpleMotorFeedforward(Constants.Shooter.INDEXER_FF_S, Constants.Shooter.INDEXER_FF_V);
 
     public ShooterSubsystem(IShooterIO shooterIO) {
         this.shooterIO = shooterIO;
@@ -27,14 +33,16 @@ public class ShooterSubsystem extends SubsystemBase {
         tab.addDouble("Shooter 1 Speed", () -> shooterIO.getShooterSpeeds()[0]).withPosition(2, 0);
         tab.addDouble("Shooter 2 Speed", () -> shooterIO.getShooterSpeeds()[1]).withPosition(3, 0);
         tab.addDouble("Shooter Speed Dif.", () -> shooterIO.getShooterSpeeds()[0] - shooterIO.getShooterSpeeds()[1]).withPosition(4, 0).withSize(2, 1);
+
         tab.addBoolean("Shooter Ready?", () -> isShooterReady()).withPosition(6, 0);
         tab.addBoolean("Has Note?", () -> isIndexerLoaded()).withPosition(6, 1);
-        tab.addDouble("Indexer 1 Speed", () -> shooterIO.getIndexerSpeeds()[0]).withPosition(0, 1);
-        tab.addDouble("Indexer 2 Speed", () -> shooterIO.getIndexerSpeeds()[1]).withPosition(1, 1);
-        tab.addDouble("Indexer Speed Dif.", () -> shooterIO.getIndexerSpeeds()[0] - shooterIO.getIndexerSpeeds()[1]).withPosition(2, 1);
 
-        tab.add(pidController).withWidget(BuiltInWidgets.kPIDController).withPosition(5, 1);
-        tab.addDouble("PID Input", () -> pidOutput).withPosition(4, 1);
+        tab.addDouble("Target Indexer Speed", () -> targetIndexerSpeed).withPosition(0, 1).withSize(2, 1);
+        tab.addDouble("Indexer 1 Speed", () -> shooterIO.getIndexerSpeeds()[0]).withPosition(2, 1);
+        tab.addDouble("Indexer 2 Speed", () -> shooterIO.getIndexerSpeeds()[1]).withPosition(3, 1);
+        tab.addDouble("Indexer Speed Dif.", () -> shooterIO.getIndexerSpeeds()[0] - shooterIO.getIndexerSpeeds()[1]).withPosition(4, 1).withSize(2, 1);
+        //tab.add(pidController).withWidget(BuiltInWidgets.kPIDController).withPosition(5, 1);
+        //tab.addDouble("PID Input", () -> pidOutput).withPosition(4, 1);
     }
 
     public boolean isIndexerLoaded() {
@@ -49,18 +57,25 @@ public class ShooterSubsystem extends SubsystemBase {
     public void setTargetShooterSpeed(double targetSpeed) {
         //pidController.setSetpoint(targetSpeed);
         targetShooterSpeed = targetSpeed;
-        System.out.println("set speed: " + targetSpeed);
     }
 
-    public void setIndexerSpeed(double speed) {
-        shooterIO.setIndexerOutput(speed); // TODO: convert RPM to -1 to 1
+    public void setTargetIndexerSpeed(double targetSpeed) {
+        targetIndexerSpeed = targetSpeed;
     }
 
     @Override
     public void periodic() {
-        pidOutput = pidController.calculate(shooterIO.getShooterSpeeds()[0], targetShooterSpeed) + feedForward.calculate(targetShooterSpeed);
-        shooterIO.setShooterOutput(pidOutput);
-        //shooterIO.setShooterOutput(0.5);
+  /*      shooterPidOutput = shooterPidController.calculate(shooterIO.getShooterSpeeds()[0], targetShooterSpeed);
+        shooterFfOutput = shooterFeedForward.calculate(targetShooterSpeed);
+        shooterIO.setShooterOutput(shooterPidOutput + shooterFfOutput);
+        
+        indexerPidOutput = indexerPidController.calculate(shooterIO.getIndexerSpeeds()[0], targetIndexerSpeed);
+        indexerFfOutput = indexerFeedForward.calculate(targetIndexerSpeed);
+        shooterIO.setIndexerOutput(indexerPidOutput + indexerFfOutput);
+*/
+        shooterIO.setShooterOutput(targetShooterSpeed > 0 ? 0.2 : 0);
+        shooterIO.setIndexerOutput(targetIndexerSpeed > 0 ? 0.2 : 0);
+
         shooterIO.periodic();
     }
 

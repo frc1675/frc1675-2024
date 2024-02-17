@@ -31,10 +31,10 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final int INDEXER_MOTOR_ONE = 17;
-        public static final int INDEXER_MOTOR_TWO = 18;
-        public static final int SHOOTER_MOTOR_ONE = 19;
-        public static final int SHOOTER_MOTOR_TWO = 20;
+        public static final int INDEXER_MOTOR_ONE = 8;
+        public static final int INDEXER_MOTOR_TWO = 7;
+        public static final int SHOOTER_MOTOR_ONE = 4;
+        public static final int SHOOTER_MOTOR_TWO = 3;
         public static final int LASER_CAN = 21; // PLACEHOLDER
         public static final int INDEXER_NOTE_DETECTION_RANGE = 100; // PLACEHOLDER
         public static final double TARGET_SPEED_ERROR_MARGIN = 0.1; // PLACEHOLDER
@@ -45,17 +45,24 @@ public class Constants {
 
         public static final double SHOOTER_FF_V = 0.000174;
         public static final double SHOOTER_FF_S = 0;
-        //public static final double SHOOTER_PID_IZONE = 1.0; // PLACHOLDER
-        //public static final double SHOOTER_PID_FF = 1.0; // PLACEHOLDER
+        
+        public static final double INDEXER_PID_P = 0.005;
+        public static final double INDEXER_PID_I = 0;
+        public static final double INDEXER_PID_D = 0;
+
+        public static final double INDEXER_FF_V = 0.000174;
+        public static final double INDEXER_FF_S = 0;
+
         public static final double SHOOTER_PID_OUTPUT_RANGE = 3000.0; // PLACEHOLDER
     
-        public static final double TARGET_INDEXER_SPEED = .2;
-        public static final double TARGET_SHOOTER_SPEED = 2000;
+        public static final double TARGET_INDEXER_SPEED = 2000;
+        public static final double TARGET_SHOOTER_SPEED = 3000;
         public static final double WAIT_UNTIL_END_SECS = 2;
 
         public static final String SHUFFLEBOARD_TAB = "Shooter";
         public static final double GEARING = 0.5;
-        public static final double MOI = .001; // Joules * kg / m^2
+        public static final double SHOOTER_MOI = .001; // Joules * kg / m^2
+        public static final double INDEXER_MOI = 1;
     }
 
     public class Dashboard {
