@@ -29,7 +29,11 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public Pose2d getBotpose(){
-    return visionImplementation.getBotpose();
+    Pose2d rtn = visionImplementation.getBotpose();
+    if (rtn == null) {
+      return new Pose2d();
+    }
+    return rtn;
   }
 
   public int getTargetId(){
