@@ -12,8 +12,8 @@ import frc.robot.Constants;
 public class ShooterSubsystem extends SubsystemBase {
     private double shooterPidOutput = 0;
     private double shooterFfOutput = 0;
-    private double indexerPidOutput = 0;
     private double indexerFfOutput = 0;
+    private double indexerPidOutput = 0;
     private IShooterIO shooterIO;
     private double targetShooterSpeed = 0;
     private double targetIndexerSpeed = 0;
@@ -65,16 +65,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-  /*      shooterPidOutput = shooterPidController.calculate(shooterIO.getShooterSpeeds()[0], targetShooterSpeed);
+        /*shooterPidOutput = shooterPidController.calculate(shooterIO.getShooterSpeeds()[0], targetShooterSpeed);
         shooterFfOutput = shooterFeedForward.calculate(targetShooterSpeed);
-        shooterIO.setShooterOutput(shooterPidOutput + shooterFfOutput);
-        
+        shooterIO.setShooterOutput(shooterPidOutput + shooterFfOutput);*/
+  /*       
         indexerPidOutput = indexerPidController.calculate(shooterIO.getIndexerSpeeds()[0], targetIndexerSpeed);
         indexerFfOutput = indexerFeedForward.calculate(targetIndexerSpeed);
         shooterIO.setIndexerOutput(indexerPidOutput + indexerFfOutput);
 */
-        shooterIO.setShooterOutput(targetShooterSpeed > 0 ? 0.2 : 0);
-        shooterIO.setIndexerOutput(targetIndexerSpeed > 0 ? 0.2 : 0);
+        shooterIO.setShooterOutput(targetShooterSpeed > 0 ? 0.9 : 0);
+        shooterIO.setIndexerOutput(targetIndexerSpeed > 0 ? 0.5 : 0);
 
         shooterIO.periodic();
     }
