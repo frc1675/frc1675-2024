@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -13,28 +15,42 @@ import frc.robot.arm.RealArmIO;
 import frc.robot.arm.SimArmIO;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
+import frc.robot.util.VersionFile;
+import frc.robot.vision.IVision;
+import frc.robot.vision.RealVision;
+import frc.robot.vision.SimVision;
+import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.VisionTestCommand;
 
 public class RobotContainer {
 
   private DriveSubsystem drive = new DriveSubsystem();
   private Arm arm;
   private AutoGenerator autoGenerator = new AutoGenerator(drive);
+  private VisionSubsystem visionSubsystem;
 
   public RobotContainer() {
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
+    DataLogManager.log("Data log started.");
     IArmIO armIO;
-    if (Robot.isSimulation()) {
+    IVision vision;
+    if(Robot.isSimulation()){
       armIO = new SimArmIO();
-    } else {
+      vision = new SimVision();
+    }else{
       armIO = new RealArmIO();
+      vision = new RealVision();
     }
-
+    visionSubsystem = new VisionSubsystem(vision);
     arm = new Arm(armIO);
-
     configureBindings();
+    VersionFile.getInstance().putToDashboard();
   }
 
   private void configureBindings() {
@@ -43,6 +59,8 @@ public class RobotContainer {
     JoystickButton operatorAButton = new JoystickButton(operatorController, Constants.Controller.A_BUTTON);
     JoystickButton operatorXButton = new JoystickButton(operatorController, Constants.Controller.X_BUTTON);
     JoystickButton operatorYButton = new JoystickButton(operatorController, Constants.Controller.Y_BUTTON);
+    JoystickButton driverControllerStartButton = new JoystickButton(driverController, Constants.Controller.START_BUTTON);
+    JoystickButton driverControllerLeftStickButton = new JoystickButton(driverController, Constants.Controller.LEFT_JOYSTICK_BUTTON);
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
@@ -63,6 +81,8 @@ public class RobotContainer {
     operatorXButton.onTrue(
       new MoveToHome(arm)
     );
+    driverControllerStartButton.onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    driverControllerLeftStickButton.toggleOnTrue(new VisionTestCommand(visionSubsystem));
   }
 
   private double getJoystickInput(Joystick stick, int axe) {
