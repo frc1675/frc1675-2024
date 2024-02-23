@@ -6,21 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.cmdGroup.SpeakerScore;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.undertaker.EjectNote;
 import frc.robot.undertaker.IUndertaker;
-import frc.robot.undertaker.IntakeNote;
 import frc.robot.undertaker.RealUndertaker;
 import frc.robot.undertaker.SimUndertaker;
 import frc.robot.drive.DefaultDrive;
@@ -30,14 +20,11 @@ import frc.robot.util.AutoGenerator;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.MathUtils;
 import frc.robot.shooter.*;
-import frc.robot.shooter.commands.ShooterIntake;
-import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.IVision;
 import frc.robot.vision.RealVision;
 import frc.robot.vision.SimVision;
 import frc.robot.vision.VisionSubsystem;
-import frc.robot.vision.VisionTestCommand;
 
 public class RobotContainer {
   private final PoseScheduler poseScheduler = new PoseScheduler();
@@ -97,6 +84,21 @@ public class RobotContainer {
         )
     );
 
+    operatorController.y().onTrue(new InstantCommand(() -> {
+        shooter.setTargetIndexerSpeed(Constants.Shooter.TARGET_INDEXER_SPEED);
+    }));
+
+    operatorController.y().onFalse(new InstantCommand(() -> {
+        shooter.setTargetIndexerSpeed(0);
+    }));
+
+    operatorController.x().onTrue(new InstantCommand(() -> {
+        shooter.setTargetShooterSpeed(Constants.Shooter.TARGET_SHOOTER_SPEED);
+    }));
+
+    operatorController.x().onFalse(new InstantCommand(() -> {
+        shooter.setTargetShooterSpeed(0);
+    }));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
@@ -104,7 +106,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return null;//autoGenerator.getAutoCommand();
+    return null; //autoGenerator.getAutoCommand();
   }
 
   public void updateFieldMap() {
