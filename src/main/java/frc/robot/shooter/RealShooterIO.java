@@ -50,7 +50,7 @@ public class RealShooterIO implements IShooterIO {
         // configure the laserCAN sensor
         try {
             laserCAN.setRangingMode(RangingMode.SHORT);
-            laserCAN.setTimingBudget(TimingBudget.TIMING_BUDGET_100MS);
+            laserCAN.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
         } catch (ConfigurationFailedException e) {
         	e.printStackTrace();
         }
