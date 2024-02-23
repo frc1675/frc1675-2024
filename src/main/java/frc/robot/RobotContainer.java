@@ -17,6 +17,7 @@ import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
+import frc.robot.util.VersionFile;
 
 public class RobotContainer {
 
@@ -35,6 +36,7 @@ public class RobotContainer {
     arm = new Arm(armIO);
 
     configureBindings();
+    VersionFile.getInstance().putToDashboard();
   }
 
   private void configureBindings() {

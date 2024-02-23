@@ -55,6 +55,7 @@ public class Constants {
 
     public class Dashboard {
         public static final boolean DISABLE_TUNER = false;
+        public static final String VERSION_FILE_NAME = "version/.robotVersionMini";
     }
 
     public class Controller {
