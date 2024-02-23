@@ -12,5 +12,7 @@ public interface IShooterIO {
 
     public double[] getIndexerSpeeds();
 
+    public double getMeasurement();
+
     public void periodic();
 }

@@ -23,6 +23,11 @@ public class SimShooterIO implements IShooterIO {
     }
 
     @Override
+    public double getMeasurement() {
+        return 0;
+    } 
+
+    @Override
     public boolean isIndexerLoaded() {
         return true;
     }

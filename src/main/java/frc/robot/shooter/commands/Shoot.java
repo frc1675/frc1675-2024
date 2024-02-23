@@ -29,7 +29,7 @@ public class Shoot extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        subsystem.setTargetShooterSpeed(0);
+        //subsystem.setTargetShooterSpeed(0);
         subsystem.setTargetIndexerSpeed(0);
     }
 

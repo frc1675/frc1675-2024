@@ -7,8 +7,8 @@ import frc.robot.shooter.ShooterSubsystem;
 public class SpinUpAndShoot extends SequentialCommandGroup {
     public SpinUpAndShoot(ShooterSubsystem subsystem) {
         addCommands(
-            new SpinUp(subsystem, Constants.Shooter.TARGET_SHOOTER_SPEED).withTimeout(Constants.Shooter.WAIT_UNTIL_END_SECS), // TODO: remove first withTimeout after PID is setup
-            new Shoot(subsystem, Constants.Shooter.TARGET_INDEXER_SPEED).withTimeout(Constants.Shooter.WAIT_UNTIL_END_SECS)
+            new SpinUp(subsystem, .3).withTimeout(Constants.Shooter.WAIT_UNTIL_END_SECS), // TODO: remove first withTimeout after PID is setup
+            new Shoot(subsystem, .3).withTimeout(Constants.Shooter.WAIT_UNTIL_END_SECS)
         );
     }
 }
