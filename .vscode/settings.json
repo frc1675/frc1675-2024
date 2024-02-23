@@ -25,5 +25,25 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests"
+  "java.test.defaultConfig": "WPIlibUnitTests",
+  "cSpell.words": [
+    "backleft",
+    "backright",
+    "canbus",
+    "cancoder",
+    "Deadband",
+    "DEADZONE",
+    "DRIVEBASE",
+    "frontleft",
+    "frontright",
+    "Holonomic",
+    "navx",
+    "Odometry",
+    "PATHING",
+    "Pidf",
+    "sparkmax",
+    "teleop",
+    "traj",
+    "Uper"
+  ]
 }
