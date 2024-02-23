@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.undertaker.IUndertaker;
+import frc.robot.undertaker.IntakeNote;
 import frc.robot.undertaker.RealUndertaker;
 import frc.robot.undertaker.SimUndertaker;
+import frc.robot.Constants.Undertaker;
+import frc.robot.cmdGroup.NoteToShooter;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
@@ -20,6 +23,9 @@ import frc.robot.util.AutoGenerator;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.MathUtils;
 import frc.robot.shooter.*;
+import frc.robot.shooter.commands.Shoot;
+import frc.robot.shooter.commands.SpinUp;
+import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.IVision;
 import frc.robot.vision.RealVision;
@@ -68,6 +74,7 @@ public class RobotContainer {
     }
 
     shooter = new ShooterSubsystem(shooterIO);
+       
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }
@@ -83,22 +90,23 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)
         )
     );
+    operatorController.x().onTrue(new NoteToShooter(shooter, undertakerSubsystem));
 
-    operatorController.y().onTrue(new InstantCommand(() -> {
-        shooter.setTargetIndexerSpeed(Constants.Shooter.TARGET_INDEXER_SPEED);
-    }));
+    // shoot (indexer)
+    operatorController.y().whileTrue(new Shoot(shooter, 1));
 
-    operatorController.y().onFalse(new InstantCommand(() -> {
-        shooter.setTargetIndexerSpeed(0);
-    }));
+    // spinup and hold speed
+    operatorController.a().onTrue(new SpinUp(shooter, .3));
 
-    operatorController.x().onTrue(new InstantCommand(() -> {
-        shooter.setTargetShooterSpeed(Constants.Shooter.TARGET_SHOOTER_SPEED);
-    }));
+    // operatorController.b().onTrue(new SpinUpAndShoot(shooter));
 
-    operatorController.x().onFalse(new InstantCommand(() -> {
-        shooter.setTargetShooterSpeed(0);
-    }));
+    // operatorController.x().whileTrue(new InstantCommand(() -> {
+    //     shooter.setTargetShooterSpeed(Constants.Shooter.TARGET_SHOOTER_SPEED);
+    // }));
+
+    // operatorController.x().onFalse(new InstantCommand(() -> {
+    //     shooter.setTargetShooterSpeed(0);
+    // }));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {

@@ -2,7 +2,13 @@ package frc.robot.shooter;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
+
+import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.LaserCan.RangingMode;
+import au.grapplerobotics.LaserCan.RegionOfInterest;
+import au.grapplerobotics.LaserCan.TimingBudget;
 import frc.robot.Constants;
 
 public class RealShooterIO implements IShooterIO {
@@ -17,7 +23,7 @@ public class RealShooterIO implements IShooterIO {
     private RelativeEncoder indexerMotorOneEncoder;
     private RelativeEncoder indexerMotorTwoEncoder;
 
-    //private LaserCan laserCAN;
+    private LaserCan laserCAN;
 
     public RealShooterIO() {
         shooterMotorOne = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
@@ -25,15 +31,29 @@ public class RealShooterIO implements IShooterIO {
         indexerMotorOne = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
         indexerMotorTwo = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
 
+        indexerMotorOne.setIdleMode(IdleMode.kBrake);
+        indexerMotorTwo.setIdleMode(IdleMode.kBrake);
+
         shooterMotorOne.setInverted(true);
         shooterMotorTwo.setInverted(true);
+
+        indexerMotorOne.setInverted(false);
+        indexerMotorTwo.setInverted(false);
 
         shooterMotorOneEncoder = shooterMotorOne.getEncoder();
         shooterMotorTwoEncoder = shooterMotorTwo.getEncoder();
         indexerMotorOneEncoder = indexerMotorOne.getEncoder();
         indexerMotorTwoEncoder = indexerMotorTwo.getEncoder();
 
-        //laserCAN = new LaserCan(Constants.Shooter.LASER_CAN);
+        laserCAN = new LaserCan(Constants.Shooter.LASER_CAN);
+        
+        // configure the laserCAN sensor
+        try {
+            laserCAN.setRangingMode(RangingMode.SHORT);
+            laserCAN.setTimingBudget(TimingBudget.TIMING_BUDGET_100MS);
+        } catch (ConfigurationFailedException e) {
+        	e.printStackTrace();
+        }
     }
 
     @Override
@@ -50,9 +70,12 @@ public class RealShooterIO implements IShooterIO {
 
     @Override
     public boolean isIndexerLoaded() {
-        return false;
-        //LaserCan.Measurement measurement = laserCAN.getMeasurement();
-        //return measurement.distance_mm < Constants.Shooter.INDEXER_NOTE_DETECTION_RANGE;
+        LaserCan.Measurement measurement = laserCAN.getMeasurement();
+        return measurement.distance_mm < Constants.Shooter.INDEXER_NOTE_DETECTION_RANGE;
+    }
+
+    public double getMeasurement() {
+        return laserCAN.getMeasurement() == null ? 0 : laserCAN.getMeasurement().distance_mm;
     }
 
     @Override

@@ -41,6 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
         tab.addDouble("Indexer 1 Speed", () -> shooterIO.getIndexerSpeeds()[0]).withPosition(2, 1);
         tab.addDouble("Indexer 2 Speed", () -> shooterIO.getIndexerSpeeds()[1]).withPosition(3, 1);
         tab.addDouble("Indexer Speed Dif.", () -> shooterIO.getIndexerSpeeds()[0] - shooterIO.getIndexerSpeeds()[1]).withPosition(4, 1).withSize(2, 1);
+        tab.addDouble("sensor mesurment", () -> shooterIO.getMeasurement());
         //tab.add(pidController).withWidget(BuiltInWidgets.kPIDController).withPosition(5, 1);
         //tab.addDouble("PID Input", () -> pidOutput).withPosition(4, 1);
     }
@@ -73,8 +74,8 @@ public class ShooterSubsystem extends SubsystemBase {
         indexerFfOutput = indexerFeedForward.calculate(targetIndexerSpeed);
         shooterIO.setIndexerOutput(indexerPidOutput + indexerFfOutput);
 */
-        shooterIO.setShooterOutput(targetShooterSpeed > 0 ? 0.9 : 0);
-        shooterIO.setIndexerOutput(targetIndexerSpeed > 0 ? 0.5 : 0);
+        shooterIO.setShooterOutput(targetShooterSpeed);
+        shooterIO.setIndexerOutput(targetIndexerSpeed);
 
         shooterIO.periodic();
     }
