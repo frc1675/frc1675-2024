@@ -64,6 +64,10 @@ public class Constants {
         public static final int RIGHT_TRIGGER = 3;
     }
 
+    public class LEDController {
+        public static final int LED_CONTROLLER_CHANNEL = 0;
+    }
+
     public class Undertaker {
         public static final int INTAKE_MOTOR_ONE = 13;
         public static final int INTAKE_MOTOR_TWO = 14;

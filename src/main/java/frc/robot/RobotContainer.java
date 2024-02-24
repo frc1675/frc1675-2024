@@ -12,6 +12,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.notification.ChangeColor;
+import frc.robot.notification.LEDSubsystem;
+import frc.robot.notification.RealLedIO;
+import frc.robot.notification.ILedIO;
+import frc.robot.notification.LEDStateEnum;
+import frc.robot.notification.SimLedIO;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.undertaker.IUndertaker;
 import frc.robot.undertaker.RealUndertaker;
@@ -28,6 +34,7 @@ import frc.robot.vision.VisionSubsystem;
 public class RobotContainer {
   private final PoseScheduler poseScheduler = new PoseScheduler();
   private final DriveSubsystem drive = new DriveSubsystem(poseScheduler);
+  private final LEDSubsystem ledSubsystem;
   private final UndertakerSubsystem undertakerSubsystem;
   private final AutoGenerator autoGenerator = new AutoGenerator(drive);
   private final VisionSubsystem visionSubsystem;
@@ -41,17 +48,21 @@ public class RobotContainer {
 
     drive.setMotorBrakeMode(true);
   
+    ILedIO ledIO; 
     IVision vision;
     IUndertaker undertaker;
     if(Robot.isSimulation()){
       vision = new SimVision();
+      ledIO = new SimLedIO(); 
       undertaker = new SimUndertaker();
     }else{
       vision = new RealVision();
+      ledIO = new RealLedIO();
       undertaker = new RealUndertaker();
     }
   
     visionSubsystem = new VisionSubsystem(vision);
+    ledSubsystem = new LEDSubsystem(ledIO); 
     undertakerSubsystem = new UndertakerSubsystem(undertaker);
 
     configureBindings();
@@ -69,6 +80,7 @@ public class RobotContainer {
         )
     );
 
+    driverController.a().toggleOnTrue(new ChangeColor(ledSubsystem, LEDStateEnum.YELLOW));
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     
     //driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
