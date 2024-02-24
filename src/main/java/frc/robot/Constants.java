@@ -80,6 +80,8 @@ public class Constants {
         public static final double GEARING = 0.5;
         public static final double SHOOTER_MOI = .001; // Joules * kg / m^2
         public static final double INDEXER_MOI = 1;
+
+        public static final double INDEXER_INTAKE_POWER = 4.0 / 9.0;
     }
 
     public class Dashboard {
