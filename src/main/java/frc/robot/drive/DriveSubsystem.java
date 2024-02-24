@@ -59,7 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     headingPidfConfig = swerve.swerveController.config.headingPIDF;
     swerve.chassisVelocityCorrection = false;    
-    swerve.setHeadingCorrection(true);
+    swerve.setHeadingCorrection(false);
     initDashboard();
   }
 
