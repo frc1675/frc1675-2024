@@ -50,7 +50,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public boolean isShooterReady() {
         double[] speeds = shooterIO.getShooterSpeeds();
-        return Math.abs(targetShooterSpeed - speeds[0]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN && Math.abs(targetShooterSpeed - speeds[1]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
+        return Math.abs(targetShooterSpeed - speeds[0]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN && Math.abs(targetShooterSpeed * 0.9 - speeds[1]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
     }
 
     public void setTargetShooterSpeed(double targetSpeed) {
