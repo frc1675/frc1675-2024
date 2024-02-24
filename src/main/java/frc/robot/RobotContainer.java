@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.IArmIO;
 import frc.robot.arm.RealArmIO;
@@ -16,13 +15,8 @@ import frc.robot.arm.SimArmIO;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.cmdGroup.SpeakerScore;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.undertaker.EjectNote;
 import frc.robot.undertaker.IUndertaker;
-import frc.robot.undertaker.IntakeNote;
 import frc.robot.undertaker.RealUndertaker;
 import frc.robot.undertaker.SimUndertaker;
 import frc.robot.drive.DefaultDrive;
@@ -36,7 +30,6 @@ import frc.robot.vision.IVision;
 import frc.robot.vision.RealVision;
 import frc.robot.vision.SimVision;
 import frc.robot.vision.VisionSubsystem;
-import frc.robot.vision.VisionTestCommand;
 
 public class RobotContainer {
   private final PoseScheduler poseScheduler = new PoseScheduler();
@@ -77,10 +70,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Joystick operatorController = new Joystick(Constants.Controller.OPERATOR_CONTROLLER);
-    JoystickButton operatorAButton = new JoystickButton(operatorController, Constants.Controller.A_BUTTON);
-    JoystickButton operatorXButton = new JoystickButton(operatorController, Constants.Controller.X_BUTTON);
-    JoystickButton operatorYButton = new JoystickButton(operatorController, Constants.Controller.Y_BUTTON);
+    CommandXboxController operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
     CommandXboxController driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
 
     drive.setDefaultCommand(
@@ -91,17 +81,18 @@ public class RobotContainer {
         )
     );
 
-    operatorAButton.onTrue(
+    operatorController.a().onTrue(
       new MoveToPosition(arm, Constants.Arm.LOW_SCORE_POSITION)
     );
 
-    operatorYButton.onTrue(
+    operatorController.y().onTrue(
       new MoveToPosition(arm, Constants.Arm.HIGH_SCORE_POSITION)
     );
 
-    operatorXButton.onTrue(
+    operatorController.b().onTrue(
       new MoveToHome(arm)
     );
+
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     
     //driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
