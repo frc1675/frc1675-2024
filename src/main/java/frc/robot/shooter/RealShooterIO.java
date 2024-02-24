@@ -13,8 +13,8 @@ import frc.robot.Constants;
 
 public class RealShooterIO implements IShooterIO {
    
-    private CANSparkMax shooterMotorOne;
-    private CANSparkMax shooterMotorTwo;
+    private CANSparkMax shooterMotorTop;
+    private CANSparkMax shooterMotorBottom;
     private CANSparkMax indexerMotorOne;
     private CANSparkMax indexerMotorTwo;
 
@@ -26,22 +26,22 @@ public class RealShooterIO implements IShooterIO {
     private LaserCan laserCAN;
 
     public RealShooterIO() {
-        shooterMotorOne = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
-        shooterMotorTwo = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
+        shooterMotorTop = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_TOP, CANSparkMax.MotorType.kBrushless);
+        shooterMotorBottom = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_BOTTOM, CANSparkMax.MotorType.kBrushless);
         indexerMotorOne = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
         indexerMotorTwo = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
 
         indexerMotorOne.setIdleMode(IdleMode.kBrake);
         indexerMotorTwo.setIdleMode(IdleMode.kBrake);
 
-        shooterMotorOne.setInverted(true);
-        shooterMotorTwo.setInverted(true);
+        shooterMotorTop.setInverted(true);
+        shooterMotorBottom.setInverted(true);
 
         indexerMotorOne.setInverted(false);
         indexerMotorTwo.setInverted(false);
 
-        shooterMotorOneEncoder = shooterMotorOne.getEncoder();
-        shooterMotorTwoEncoder = shooterMotorTwo.getEncoder();
+        shooterMotorOneEncoder = shooterMotorTop.getEncoder();
+        shooterMotorTwoEncoder = shooterMotorBottom.getEncoder();
         indexerMotorOneEncoder = indexerMotorOne.getEncoder();
         indexerMotorTwoEncoder = indexerMotorTwo.getEncoder();
 
@@ -64,8 +64,8 @@ public class RealShooterIO implements IShooterIO {
 
     @Override
     public void setShooterOutput(double power) {
-        shooterMotorOne.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
-        shooterMotorTwo.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
+        shooterMotorTop.setVoltage(power * 12);
+        shooterMotorBottom.setVoltage((power * .9) * 12);
     }
 
     @Override
