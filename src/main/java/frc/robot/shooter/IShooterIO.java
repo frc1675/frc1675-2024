@@ -4,7 +4,7 @@ public interface IShooterIO {
 
     public void setIndexerOutput(double power);
 
-    public void setShooterOutput(double power);
+    public void setShooterOutput(double topPower, double bottomPower);
 
     public boolean isIndexerLoaded();
 

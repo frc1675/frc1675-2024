@@ -18,8 +18,8 @@ public class SimShooterIO implements IShooterIO {
     }
 
     @Override
-    public void setShooterOutput(double power) {
-        shooterVoltage = Math.min(1, Math.max(power, -1)) * 12;
+    public void setShooterOutput(double topPower, double bottomPower) {
+        shooterVoltage = Math.min(1, Math.max(topPower, -1)) * 12;
     }
 
     @Override
