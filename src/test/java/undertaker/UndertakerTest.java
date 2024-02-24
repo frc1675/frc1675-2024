@@ -1,3 +1,5 @@
+package undertaker;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -22,7 +24,6 @@ public class UndertakerTest {
 
   @Test
   public void setsTargetSpeed() {
-    boolean[] livingMotors = { true, true };
     undertaker.run(targetSpeed);
     assertTrue(undertakerIO.getDesiredSpeed() == targetSpeed);
   }
