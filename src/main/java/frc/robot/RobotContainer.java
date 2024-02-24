@@ -90,13 +90,16 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)
         )
     );
+
+    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+
     operatorController.x().onTrue(new NoteToShooter(shooter, undertakerSubsystem));
 
     // shoot (indexer)
-    operatorController.y().whileTrue(new Shoot(shooter, 1));
+    operatorController.y().whileTrue(new Shoot(shooter, 1)); // run indexer at 100% to shoot
 
     // spinup and hold speed
-    operatorController.a().onTrue(new SpinUp(shooter, .3));
+    operatorController.a().onTrue(new SpinUp(shooter));
 
     // operatorController.b().onTrue(new SpinUpAndShoot(shooter));
 

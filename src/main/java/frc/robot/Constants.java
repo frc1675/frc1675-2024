@@ -48,12 +48,14 @@ public class Constants {
     }
 
     public class Shooter {
+        public static final double OUTTAKE_SPEED = .4;
+
         public static final int INDEXER_MOTOR_ONE = 18;
         public static final int INDEXER_MOTOR_TWO = 19;
         public static final int SHOOTER_MOTOR_ONE = 17;
         public static final int SHOOTER_MOTOR_TWO = 20;
-        public static final int LASER_CAN = 0;
-        public static final int INDEXER_NOTE_DETECTION_RANGE = 200; // PLACEHOLDER
+        public static final int LASER_CAN = 21;
+        public static final int INDEXER_NOTE_DETECTION_RANGE = 275; // PLACEHOLDER
         public static final double TARGET_SPEED_ERROR_MARGIN = 0.1; // PLACEHOLDER
 
         public static final double SHOOTER_PID_P = 0.005;
@@ -105,7 +107,8 @@ public class Constants {
         public static final int INTAKE_MOTOR_ONE = 13;
         public static final int INTAKE_MOTOR_TWO = 14;
 
-        public static final double INTAKE_SPEED = 1;
+        public static final double INTAKE_SPEED = .8;
+
         public static final double EJECT_SPEED = -0.5;
 
     }    

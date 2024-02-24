@@ -25,14 +25,14 @@ public class ShooterEject extends Command {
     @Override
     public void execute() {
         if (subsystem.isIndexerLoaded()) {
-            subsystem.setTargetIndexerSpeed(-Math.abs(targetSpeed));
+            subsystem.setIndexerSpeed(-Math.abs(targetSpeed));
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        subsystem.setTargetIndexerSpeed(0);
+        subsystem.setIndexerSpeed(0);
     }
 
     // Returns true when the command should end.
