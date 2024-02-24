@@ -48,7 +48,7 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final double SHOOT_SPEED = .35;
+        public static final double SHOOT_SPEED = 1700;
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .10;
 
         public static final int INDEXER_MOTOR_TOP = 18;
@@ -59,16 +59,15 @@ public class Constants {
 
         public static final int LASER_CAN = 21;
         public static final int INDEXER_NOTE_DETECTION_RANGE = 275; // PLACEHOLDER
-        public static final double TARGET_SPEED_ERROR_MARGIN = 0.1; // PLACEHOLDER
+        public static final double TARGET_SPEED_ERROR_MARGIN = 75; // PLACEHOLDER
 
-        public static final double SHOOTER_PID_P = 0.005;
-        public static final double SHOOTER_PID_I = 0;
+        public static final double SHOOTER_PID_P = 0.0002;
+        public static final double SHOOTER_PID_I = 0.0001;
         public static final double SHOOTER_PID_D = 0;
 
-        public static final double SHOOTER_FF_V = 0.000174;
+        public static final double SHOOTER_FF_V = 0.00015;
         public static final double SHOOTER_FF_S = 0;
 
-        public static final double TARGET_SHOOTER_SPEED = 1500;
         public static final double WAIT_UNTIL_END_SECS = 0.5;
 
         public static final String SHUFFLEBOARD_TAB = "Shooter";
