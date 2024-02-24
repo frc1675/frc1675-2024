@@ -7,11 +7,10 @@ package frc.robot.undertaker;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
-public class IntakeNote extends Command {
-
+public class UndertakerIntake extends Command {
   private final UndertakerSubsystem undertaker;
   
-  public IntakeNote(UndertakerSubsystem undertaker) {
+  public UndertakerIntake(UndertakerSubsystem undertaker) {
     addRequirements(undertaker);
     this.undertaker = undertaker;
   }

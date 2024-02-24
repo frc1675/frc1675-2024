@@ -8,18 +8,16 @@ import frc.robot.shooter.ShooterSubsystem;
 
 public class Shoot extends Command {
     private ShooterSubsystem subsystem;
-    private double targetSpeed;
 
-    public Shoot(ShooterSubsystem subsystem, double targetSpeed) {
+    public Shoot(ShooterSubsystem subsystem) {
         this.subsystem = subsystem;
-        this.targetSpeed = targetSpeed;
         addRequirements(subsystem);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        subsystem.setIndexerSpeed(targetSpeed);
+        subsystem.setIndexerSpeed(1); // FULL POWER!!!!!
     }
 
     // Called every time the scheduler runs while the comm0and is scheduled.
@@ -29,7 +27,6 @@ public class Shoot extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        //subsystem.setTargetShooterSpeed(0);
         subsystem.setIndexerSpeed(0);
     }
 
