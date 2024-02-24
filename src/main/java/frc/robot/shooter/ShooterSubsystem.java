@@ -13,8 +13,12 @@ public class ShooterSubsystem extends SubsystemBase {
     private IShooterIO shooterIO;
     private double targetShooterSpeed = 0;
     private double targetIndexerSpeed = 0;
-    private PIDController shooterPidController = new PIDController(Constants.Shooter.SHOOTER_PID_P, Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
-    private SimpleMotorFeedforward shooterFeedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S, Constants.Shooter.SHOOTER_FF_V);
+    
+    private PIDController topPidController = new PIDController(Constants.Shooter.SHOOTER_PID_P, Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
+    private SimpleMotorFeedforward topFeedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S, Constants.Shooter.SHOOTER_FF_V);
+
+    private PIDController bottomPidController = new PIDController(Constants.Shooter.SHOOTER_PID_P, Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
+    private SimpleMotorFeedforward bottomFeedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S, Constants.Shooter.SHOOTER_FF_V);
 
     public ShooterSubsystem(IShooterIO shooterIO) {
         this.shooterIO = shooterIO;
@@ -50,7 +54,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setTargetShooterSpeed(double targetSpeed) {
-        //pidController.setSetpoint(targetSpeed);
         targetShooterSpeed = targetSpeed;
     }
 
@@ -61,15 +64,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        /*shooterPidOutput = shooterPidController.calculate(shooterIO.getShooterSpeeds()[0], targetShooterSpeed);
-        shooterFfOutput = shooterFeedForward.calculate(targetShooterSpeed);
-        shooterIO.setShooterOutput(shooterPidOutput + shooterFfOutput);*/
-  /*       
-        indexerPidOutput = indexerPidController.calculate(shooterIO.getIndexerSpeeds()[0], targetIndexerSpeed);
-        indexerFfOutput = indexerFeedForward.calculate(targetIndexerSpeed);
-        shooterIO.setIndexerOutput(indexerPidOutput + indexerFfOutput);
-*/
-        shooterIO.setShooterOutput(targetShooterSpeed);
+        shooterIO.setShooterOutput(
+            topPidController.calculate(shooterIO.getShooterSpeeds()[0], targetShooterSpeed)
+            + topFeedForward.calculate(targetShooterSpeed),
+            bottomPidController.calculate(shooterIO.getShooterSpeeds()[1], targetShooterSpeed * 0.9)
+            + bottomFeedForward.calculate(targetShooterSpeed * 0.9));
+
+        //shooterIO.setShooterOutput(targetShooterSpeed);
 
         shooterIO.periodic();
     }
