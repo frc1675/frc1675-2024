@@ -19,7 +19,7 @@ public class Shoot extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        subsystem.setTargetIndexerSpeed(targetSpeed);
+        subsystem.setIndexerSpeed(targetSpeed);
     }
 
     // Called every time the scheduler runs while the comm0and is scheduled.
@@ -30,7 +30,7 @@ public class Shoot extends Command {
     @Override
     public void end(boolean interrupted) {
         //subsystem.setTargetShooterSpeed(0);
-        subsystem.setTargetIndexerSpeed(0);
+        subsystem.setIndexerSpeed(0);
     }
 
     // Returns true when the command should end.

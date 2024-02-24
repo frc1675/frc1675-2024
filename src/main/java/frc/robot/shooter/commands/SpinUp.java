@@ -4,15 +4,14 @@
 package frc.robot.shooter.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.shooter.ShooterSubsystem;
 
 public class SpinUp extends Command {
     private final ShooterSubsystem subsystem;
-    private final double targetSpeed;
 
-    public SpinUp(ShooterSubsystem subsystem, double targetSpeed) {
+    public SpinUp(ShooterSubsystem subsystem) {
         this.subsystem = subsystem;
-        this.targetSpeed = targetSpeed;  
         
         addRequirements(subsystem);
     }
@@ -20,7 +19,7 @@ public class SpinUp extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        subsystem.setTargetShooterSpeed(targetSpeed);
+        subsystem.setTargetShooterSpeed(Constants.Shooter.OUTTAKE_SPEED);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

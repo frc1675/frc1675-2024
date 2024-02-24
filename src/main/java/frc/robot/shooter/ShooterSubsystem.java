@@ -10,17 +10,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
-    private double shooterPidOutput = 0;
-    private double shooterFfOutput = 0;
-    private double indexerFfOutput = 0;
-    private double indexerPidOutput = 0;
     private IShooterIO shooterIO;
     private double targetShooterSpeed = 0;
     private double targetIndexerSpeed = 0;
     private PIDController shooterPidController = new PIDController(Constants.Shooter.SHOOTER_PID_P, Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
-    private PIDController indexerPidController = new PIDController(Constants.Shooter.INDEXER_PID_P, Constants.Shooter.INDEXER_PID_I, Constants.Shooter.INDEXER_PID_D);
     private SimpleMotorFeedforward shooterFeedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S, Constants.Shooter.SHOOTER_FF_V);
-    private SimpleMotorFeedforward indexerFeedForward = new SimpleMotorFeedforward(Constants.Shooter.INDEXER_FF_S, Constants.Shooter.INDEXER_FF_V);
 
     public ShooterSubsystem(IShooterIO shooterIO) {
         this.shooterIO = shooterIO;
@@ -60,8 +54,9 @@ public class ShooterSubsystem extends SubsystemBase {
         targetShooterSpeed = targetSpeed;
     }
 
-    public void setTargetIndexerSpeed(double targetSpeed) {
+    public void setIndexerSpeed(double targetSpeed) {
         targetIndexerSpeed = targetSpeed;
+        shooterIO.setIndexerOutput(targetIndexerSpeed);
     }
 
     @Override
@@ -75,7 +70,6 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterIO.setIndexerOutput(indexerPidOutput + indexerFfOutput);
 */
         shooterIO.setShooterOutput(targetShooterSpeed);
-        shooterIO.setIndexerOutput(targetIndexerSpeed);
 
         shooterIO.periodic();
     }
