@@ -26,8 +26,8 @@ public class Constants {
         //Home switch constants
         public static final int HOMESWITCH_CHANNEL = 30;
         //Motor constants
-        public static final int ARM_MOTOR_ONE = 15;
-        public static final int ARM_MOTOR_TWO = 16;
+        public static final int ARM_MOTOR_RIGHT = 15;
+        public static final int ARM_MOTOR_LEFT = 16;
         //PID constants
         public static final double PID_P_COEFFICIENT = 0.075;
         public static final double PID_I_COEFFICIENT = 0;

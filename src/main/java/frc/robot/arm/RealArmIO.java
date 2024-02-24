@@ -8,23 +8,24 @@ import frc.robot.Constants;
 
 public class RealArmIO implements IArmIO {
 
-    private CANSparkMax motorOne;
-    private CANSparkMax motorTwo;
+    private CANSparkMax armMotorRight;
+    private CANSparkMax armMotorLeft;
     private Encoder encoder;
     private DigitalInput homeSwitch;
 
     public RealArmIO() {
-        motorOne = new CANSparkMax(Constants.Arm.ARM_MOTOR_ONE, MotorType.kBrushless);
-        motorTwo = new CANSparkMax(Constants.Arm.ARM_MOTOR_TWO, MotorType.kBrushless);
+        armMotorRight = new CANSparkMax(Constants.Arm.ARM_MOTOR_RIGHT, MotorType.kBrushless);
+        armMotorLeft = new CANSparkMax(Constants.Arm.ARM_MOTOR_LEFT, MotorType.kBrushless);
+        armMotorRight.setInverted(true);
+        armMotorLeft.setInverted(false);
         encoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A, Constants.Arm.ENCODER_CHANNEL_B);
         homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_CHANNEL);
-        motorOne.setInverted(true);
     }
 
     @Override
     public void setMotorPower(double power){
-        motorOne.setVoltage(power*12);
-        motorTwo.setVoltage(power*12);
+        armMotorRight.setVoltage(power*12);
+        armMotorLeft.setVoltage(power*12);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class RealArmIO implements IArmIO {
 
     @Override
     public double getMotorSpeed(){
-        return motorOne.get();
+        return armMotorRight.get();
     }
 
     @Override
