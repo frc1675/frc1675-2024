@@ -16,6 +16,7 @@ import frc.robot.notification.ChangeColor;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.notification.RealLedIO;
 import frc.robot.notification.ILedIO;
+import frc.robot.notification.LEDStateEnum;
 import frc.robot.notification.SimLedIO;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.undertaker.IUndertaker;
@@ -79,7 +80,7 @@ public class RobotContainer {
         )
     );
 
-    driverController.a().onTrue(new ChangeColor(ledSubsystem));
+    driverController.a().toggleOnTrue(new ChangeColor(ledSubsystem, LEDStateEnum.YELLOW));
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     
     //driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
