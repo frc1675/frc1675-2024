@@ -10,7 +10,7 @@ public class IntakeNote extends ParallelRaceGroup {
     public IntakeNote(ShooterSubsystem shooter, UndertakerSubsystem undertaker) {
         addCommands(
             new UndertakerIntake(undertaker),
-            new ShooterIntake(shooter) // run indexer at 10% of undertaker speed
+            new ShooterIntake(shooter)
         );
     }
 }

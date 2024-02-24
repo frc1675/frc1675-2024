@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.LaserCan.RangingMode;
-import au.grapplerobotics.LaserCan.RegionOfInterest;
 import au.grapplerobotics.LaserCan.TimingBudget;
 import frc.robot.Constants;
 
@@ -64,8 +63,8 @@ public class RealShooterIO implements IShooterIO {
 
     @Override
     public void setShooterOutput(double power) {
-        shooterMotorTop.setVoltage(power * 12);
-        shooterMotorBottom.setVoltage((power * .9) * 12);
+        shooterMotorTop.setVoltage(Math.min(1, Math.max(power, -1) * 12));
+        shooterMotorBottom.setVoltage((Math.min(1, Math.max(power, -1)) * .9) * 12);
     }
 
     @Override
