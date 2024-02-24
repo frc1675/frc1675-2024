@@ -48,11 +48,11 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final double OUTTAKE_SPEED = .35;
+        public static final double SHOOT_SPEED = .35;
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .10;
 
-        public static final int INDEXER_MOTOR_ONE = 18;
-        public static final int INDEXER_MOTOR_TWO = 19;
+        public static final int INDEXER_MOTOR_TOP = 18;
+        public static final int INDEXER_MOTOR_BOTTOM = 19;
 
         public static final int SHOOTER_MOTOR_TOP = 17; // might be wrong
         public static final int SHOOTER_MOTOR_BOTTOM = 20;
@@ -67,26 +67,15 @@ public class Constants {
 
         public static final double SHOOTER_FF_V = 0.000174;
         public static final double SHOOTER_FF_S = 0;
-        
-        public static final double INDEXER_PID_P = 0.005;
-        public static final double INDEXER_PID_I = 0;
-        public static final double INDEXER_PID_D = 0;
 
-        public static final double INDEXER_FF_V = 0.000174;
-        public static final double INDEXER_FF_S = 0;
-
-        public static final double SHOOTER_PID_OUTPUT_RANGE = 3000.0; // PLACEHOLDER
-    
-        public static final double TARGET_INDEXER_SPEED = 2000;
         public static final double TARGET_SHOOTER_SPEED = 1500;
         public static final double WAIT_UNTIL_END_SECS = 0.5;
 
         public static final String SHUFFLEBOARD_TAB = "Shooter";
         public static final double GEARING = 0.5;
+
         public static final double SHOOTER_MOI = .001; // Joules * kg / m^2
         public static final double INDEXER_MOI = 1;
-
-        public static final double INDEXER_INTAKE_POWER = 4.0 / 9.0;
     }
 
     public class Dashboard {

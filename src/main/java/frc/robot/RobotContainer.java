@@ -23,6 +23,7 @@ import frc.robot.util.MathUtils;
 import frc.robot.shooter.*;
 import frc.robot.shooter.commands.Shoot;
 import frc.robot.shooter.commands.SpinUp;
+import frc.robot.shooter.commands.SpinDown;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.IVision;
 import frc.robot.vision.RealVision;
@@ -32,7 +33,7 @@ import frc.robot.vision.VisionSubsystem;
 public class RobotContainer {
   private final PoseScheduler poseScheduler = new PoseScheduler();
   private final DriveSubsystem drive = new DriveSubsystem(poseScheduler);
-  private ShooterSubsystem shooter;
+  private final ShooterSubsystem shooter;
   private final UndertakerSubsystem undertakerSubsystem;
   private final AutoGenerator autoGenerator = new AutoGenerator(drive);
   private final VisionSubsystem visionSubsystem;
@@ -90,11 +91,12 @@ public class RobotContainer {
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
 
-    // SHOOTER [leftTrigger -> intakes note; rightTriigger -> shoots]
+    // SHOOTER [leftTrigger -> intakes note; rightTrigger -> shoots]
     driverController.leftTrigger().whileTrue(new IntakeNote(shooter, undertakerSubsystem));
     driverController.rightTrigger().onTrue(new Shoot(shooter).withTimeout(Constants.Shooter.WAIT_UNTIL_END_SECS));
     // toggle if shooter is spinning @DeprecateMe
-    driverController.b().toggleOnTrue(new SpinUp(shooter));
+    driverController.b().onTrue(new SpinUp(shooter));
+    driverController.back().onTrue(new SpinDown(shooter));
     
   }
 
