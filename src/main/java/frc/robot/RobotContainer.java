@@ -23,6 +23,7 @@ import frc.robot.util.MathUtils;
 import frc.robot.shooter.*;
 import frc.robot.shooter.commands.Shoot;
 import frc.robot.shooter.commands.SpinUp;
+import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.shooter.commands.SpinDown;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.IVision;
@@ -93,10 +94,11 @@ public class RobotContainer {
 
     // SHOOTER [leftTrigger -> intakes note; rightTrigger -> shoots]
     driverController.leftTrigger().whileTrue(new IntakeNote(shooter, undertakerSubsystem));
-    driverController.rightTrigger().onTrue(new Shoot(shooter).withTimeout(Constants.Shooter.WAIT_UNTIL_END_SECS));
+    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter));
+    
     // toggle if shooter is spinning @DeprecateMe
-    driverController.b().onTrue(new SpinUp(shooter));
-    driverController.back().onTrue(new SpinDown(shooter));
+    // driverController.b().onTrue(new SpinUp(shooter));
+    // driverController.back().onTrue(new SpinDown(shooter));
     
   }
 
