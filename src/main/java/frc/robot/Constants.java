@@ -49,6 +49,7 @@ public class Constants {
 
     public class Shooter {
         public static final double OUTTAKE_SPEED = .35;
+        public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .10;
 
         public static final int INDEXER_MOTOR_ONE = 18;
         public static final int INDEXER_MOTOR_TWO = 19;
@@ -78,7 +79,7 @@ public class Constants {
     
         public static final double TARGET_INDEXER_SPEED = 2000;
         public static final double TARGET_SHOOTER_SPEED = 1500;
-        public static final double WAIT_UNTIL_END_SECS = 2;
+        public static final double WAIT_UNTIL_END_SECS = 0.5;
 
         public static final String SHUFFLEBOARD_TAB = "Shooter";
         public static final double GEARING = 0.5;

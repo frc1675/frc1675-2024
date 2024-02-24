@@ -11,11 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.undertaker.IUndertaker;
-import frc.robot.undertaker.IntakeNote;
 import frc.robot.undertaker.RealUndertaker;
 import frc.robot.undertaker.SimUndertaker;
-import frc.robot.Constants.Undertaker;
-import frc.robot.cmdGroup.NoteToShooter;
+import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
@@ -25,7 +23,6 @@ import frc.robot.util.MathUtils;
 import frc.robot.shooter.*;
 import frc.robot.shooter.commands.Shoot;
 import frc.robot.shooter.commands.SpinUp;
-import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.IVision;
 import frc.robot.vision.RealVision;
@@ -93,23 +90,12 @@ public class RobotContainer {
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
 
-    operatorController.x().onTrue(new NoteToShooter(shooter, undertakerSubsystem));
-
-    // shoot (indexer)
-    operatorController.y().whileTrue(new Shoot(shooter, 1)); // run indexer at 100% to shoot
-
-    // spinup and hold speed
-    operatorController.a().onTrue(new SpinUp(shooter));
-
-    // operatorController.b().onTrue(new SpinUpAndShoot(shooter));
-
-    // operatorController.x().whileTrue(new InstantCommand(() -> {
-    //     shooter.setTargetShooterSpeed(Constants.Shooter.TARGET_SHOOTER_SPEED);
-    // }));
-
-    // operatorController.x().onFalse(new InstantCommand(() -> {
-    //     shooter.setTargetShooterSpeed(0);
-    // }));
+    // SHOOTER [leftTrigger -> intakes note; rightTriigger -> shoots]
+    driverController.leftTrigger().whileTrue(new IntakeNote(shooter, undertakerSubsystem));
+    driverController.rightTrigger().onTrue(new Shoot(shooter).withTimeout(Constants.Shooter.WAIT_UNTIL_END_SECS));
+    // toggle if shooter is spinning @DepreciateMe
+    driverController.b().toggleOnTrue(new SpinUp(shooter));
+    
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {

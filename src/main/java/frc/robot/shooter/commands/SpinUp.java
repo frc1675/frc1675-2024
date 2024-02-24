@@ -12,7 +12,6 @@ public class SpinUp extends Command {
 
     public SpinUp(ShooterSubsystem subsystem) {
         this.subsystem = subsystem;
-        
         addRequirements(subsystem);
     }
 
@@ -29,13 +28,12 @@ public class SpinUp extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        // if (interrupted)
-        //     subsystem.setTargetShooterSpeed(0);
+        subsystem.setTargetShooterSpeed(0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return subsystem.isShooterReady();
+        return false;
     }
 }
