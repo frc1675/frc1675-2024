@@ -6,10 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.ChangeColor;
@@ -17,6 +17,11 @@ import frc.robot.notification.LEDSubsystem;
 import frc.robot.notification.RealLedIO;
 import frc.robot.notification.ILedIO;
 import frc.robot.notification.SimLedIO;
+import frc.robot.poseScheduler.PoseScheduler;
+import frc.robot.undertaker.IUndertaker;
+import frc.robot.undertaker.RealUndertaker;
+import frc.robot.undertaker.SimUndertaker;
+import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
@@ -24,42 +29,48 @@ import frc.robot.vision.IVision;
 import frc.robot.vision.RealVision;
 import frc.robot.vision.SimVision;
 import frc.robot.vision.VisionSubsystem;
-import frc.robot.vision.VisionTestCommand;
 
 public class RobotContainer {
-
-  private final DriveSubsystem drive = new DriveSubsystem();
+  private final PoseScheduler poseScheduler = new PoseScheduler();
+  private final DriveSubsystem drive = new DriveSubsystem(poseScheduler);
   private final LEDSubsystem ledSubsystem;
+  private final UndertakerSubsystem undertakerSubsystem;
   private final AutoGenerator autoGenerator = new AutoGenerator(drive);
-  private final Joystick driverController = new Joystick(Constants.Controller.DRIVER_CONTROLLER);
-  private final JoystickButton driverControllerAButton = new JoystickButton(driverController, Constants.Controller.A_BUTTON);
-  private final JoystickButton driverControllerStartButton = new JoystickButton(driverController, Constants.Controller.START_BUTTON);
-  private final JoystickButton driverControllerLeftStickButton = new JoystickButton(driverController, Constants.Controller.LEFT_JOYSTICK_BUTTON);
   private final VisionSubsystem visionSubsystem;
 
   public RobotContainer() {
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
     DataLogManager.log("Data log started.");
+
+    //poseScheduler.registerCommand(Constants.Field.FRIENDLY_ALLIANCE_AREA, new PrintCommand("I just spun up the motors"));
+
+    drive.setMotorBrakeMode(true);
+  
+    ILedIO ledIO; 
     IVision vision;
+    IUndertaker undertaker;
     if(Robot.isSimulation()){
       vision = new SimVision();
+      ledIO = new SimLedIO(); 
+      undertaker = new SimUndertaker();
     }else{
       vision = new RealVision();
-    }
-    visionSubsystem = new VisionSubsystem(vision);
-     ILedIO ledIO; 
-    if(Robot.isSimulation()){
-      ledIO = new SimLedIO(); 
-    }else{
       ledIO = new RealLedIO();
+      undertaker = new RealUndertaker();
     }
+  
+    visionSubsystem = new VisionSubsystem(vision);
     ledSubsystem = new LEDSubsystem(ledIO); 
+    undertakerSubsystem = new UndertakerSubsystem(undertaker);
+
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }
 
   private void configureBindings() {
+    CommandXboxController driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
+
     drive.setDefaultCommand(
         new DefaultDrive(drive,
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
@@ -68,12 +79,13 @@ public class RobotContainer {
         )
     );
 
-    driverControllerAButton.onTrue(new ChangeColor(ledSubsystem));
-    driverControllerStartButton.onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverControllerLeftStickButton.toggleOnTrue(new VisionTestCommand(visionSubsystem));
+    driverController.a().onTrue(new ChangeColor(ledSubsystem));
+    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    
+    //driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
   }
 
-  private double getJoystickInput(Joystick stick, int axe) {
+  private double getJoystickInput(CommandXboxController stick, int axe) {
     return -MathUtils.getDeadzoneAdjustedInput(stick.getRawAxis(axe));
   }
 
@@ -83,6 +95,12 @@ public class RobotContainer {
 
   public void updateFieldMap() {
     autoGenerator.updateMap();
+  }
+
+  public void onDisabled() {
+    Timer.delay(10); // Wait so that any momentum from the match is absorbed by the brakes before setting to coast. 
+
+    drive.setMotorBrakeMode(false);
   }
 
 }

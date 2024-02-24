@@ -1,11 +1,12 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.VisionSubsystem.LEDMode;
 
 public class SimVision implements IVision {
 
-  private Pose2d botPose;
+  private Pose2d botPose = new Pose2d(0, 0, new Rotation2d(0));
   private boolean hasTarget = false;
   private int targetId = 0;
   private LEDMode currentMode;
