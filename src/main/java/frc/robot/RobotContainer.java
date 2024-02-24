@@ -93,7 +93,7 @@ public class RobotContainer {
     // SHOOTER [leftTrigger -> intakes note; rightTriigger -> shoots]
     driverController.leftTrigger().whileTrue(new IntakeNote(shooter, undertakerSubsystem));
     driverController.rightTrigger().onTrue(new Shoot(shooter).withTimeout(Constants.Shooter.WAIT_UNTIL_END_SECS));
-    // toggle if shooter is spinning @DepreciateMe
+    // toggle if shooter is spinning @DeprecateMe
     driverController.b().toggleOnTrue(new SpinUp(shooter));
     
   }
