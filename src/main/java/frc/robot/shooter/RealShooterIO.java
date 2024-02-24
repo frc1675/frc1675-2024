@@ -14,35 +14,35 @@ public class RealShooterIO implements IShooterIO {
    
     private CANSparkMax shooterMotorTop;
     private CANSparkMax shooterMotorBottom;
-    private CANSparkMax indexerMotorOne;
-    private CANSparkMax indexerMotorTwo;
+    private CANSparkMax indexerMotorTop;
+    private CANSparkMax indexerMotorBottom;
 
-    private RelativeEncoder shooterMotorOneEncoder;
-    private RelativeEncoder shooterMotorTwoEncoder;
-    private RelativeEncoder indexerMotorOneEncoder;
-    private RelativeEncoder indexerMotorTwoEncoder;
+    private RelativeEncoder shooterMotorTopEncoder;
+    private RelativeEncoder shooterMotorBottomEncoder;
+    private RelativeEncoder indexerMotorTopEncoder;
+    private RelativeEncoder indexerMotorBottomEncoder;
 
     private LaserCan laserCAN;
 
     public RealShooterIO() {
         shooterMotorTop = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_TOP, CANSparkMax.MotorType.kBrushless);
         shooterMotorBottom = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_BOTTOM, CANSparkMax.MotorType.kBrushless);
-        indexerMotorOne = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_ONE, CANSparkMax.MotorType.kBrushless);
-        indexerMotorTwo = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TWO, CANSparkMax.MotorType.kBrushless);
+        indexerMotorTop = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TOP, CANSparkMax.MotorType.kBrushless);
+        indexerMotorBottom = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_BOTTOM, CANSparkMax.MotorType.kBrushless);
 
-        indexerMotorOne.setIdleMode(IdleMode.kBrake);
-        indexerMotorTwo.setIdleMode(IdleMode.kBrake);
+        indexerMotorTop.setIdleMode(IdleMode.kBrake);
+        indexerMotorBottom.setIdleMode(IdleMode.kBrake);
 
         shooterMotorTop.setInverted(true);
         shooterMotorBottom.setInverted(true);
 
-        indexerMotorOne.setInverted(false);
-        indexerMotorTwo.setInverted(false);
+        indexerMotorTop.setInverted(false);
+        indexerMotorBottom.setInverted(false);
 
-        shooterMotorOneEncoder = shooterMotorTop.getEncoder();
-        shooterMotorTwoEncoder = shooterMotorBottom.getEncoder();
-        indexerMotorOneEncoder = indexerMotorOne.getEncoder();
-        indexerMotorTwoEncoder = indexerMotorTwo.getEncoder();
+        shooterMotorTopEncoder = shooterMotorTop.getEncoder();
+        shooterMotorBottomEncoder = shooterMotorBottom.getEncoder();
+        indexerMotorTopEncoder = indexerMotorTop.getEncoder();
+        indexerMotorBottomEncoder = indexerMotorBottom.getEncoder();
 
         laserCAN = new LaserCan(Constants.Shooter.LASER_CAN);
         
@@ -57,13 +57,13 @@ public class RealShooterIO implements IShooterIO {
 
     @Override
     public void setIndexerOutput(double power) {
-        indexerMotorOne.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
-        indexerMotorTwo.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
+        indexerMotorTop.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
+        indexerMotorBottom.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
     }
 
     @Override
     public void setShooterOutput(double power) {
-        shooterMotorTop.setVoltage(Math.min(1, Math.max(power, -1) * 12));
+        shooterMotorTop.setVoltage(Math.min(1, Math.max(power, -1)) * 12);
         shooterMotorBottom.setVoltage((Math.min(1, Math.max(power, -1)) * .9) * 12);
     }
 
@@ -79,12 +79,12 @@ public class RealShooterIO implements IShooterIO {
 
     @Override
     public double[] getShooterSpeeds() {
-        return new double[] { shooterMotorOneEncoder.getVelocity(), shooterMotorTwoEncoder.getVelocity() };
+        return new double[] { shooterMotorTopEncoder.getVelocity(), shooterMotorBottomEncoder.getVelocity() };
     }
 
     @Override
     public double[] getIndexerSpeeds() {
-        return new double[] { indexerMotorOneEncoder.getVelocity(), indexerMotorTwoEncoder.getVelocity() };
+        return new double[] { indexerMotorTopEncoder.getVelocity(), indexerMotorBottomEncoder.getVelocity() };
     }
 
     @Override
