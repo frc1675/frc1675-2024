@@ -15,12 +15,14 @@ public class UperTunerSendable implements Sendable{
 
     public UperTunerSendable(double defaultValue) {
         this.defaultValue = defaultValue;
+        this.currentValue = defaultValue;
         this.max = 100.0;
         this.min = 0.0;
     }
 
     public UperTunerSendable(double defaultValue, double min, double max) {
         this.defaultValue = defaultValue;
+        this.currentValue = defaultValue;
         this.max = max;
         this.min = min;
     }
