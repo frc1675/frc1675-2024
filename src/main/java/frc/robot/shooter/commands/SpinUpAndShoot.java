@@ -9,7 +9,7 @@ public class SpinUpAndShoot extends SequentialCommandGroup {
     public SpinUpAndShoot(ShooterSubsystem subsystem) {
         addCommands(
             new SpinUp(subsystem),
-            new Shoot(subsystem).withTimeout(Constants.Shooter.WAIT_UNTIL_END_SECS),
+            new Shoot(subsystem).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME),
             new SpinDown(subsystem)
         );
     }

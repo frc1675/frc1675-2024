@@ -68,7 +68,7 @@ public class Constants {
         public static final double SHOOTER_FF_V = 0.00015;
         public static final double SHOOTER_FF_S = 0;
 
-        public static final double WAIT_UNTIL_END_SECS = 0.5;
+        public static final double SHOOTER_SHOOT_TIME = 0.5;
 
         public static final String SHUFFLEBOARD_TAB = "Shooter";
         public static final double GEARING = 0.5;

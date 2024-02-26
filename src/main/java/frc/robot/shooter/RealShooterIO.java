@@ -46,7 +46,6 @@ public class RealShooterIO implements IShooterIO {
 
         laserCAN = new LaserCan(Constants.Shooter.LASER_CAN);
         
-        // configure the laserCAN sensor
         try {
             laserCAN.setRangingMode(RangingMode.SHORT);
             laserCAN.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);

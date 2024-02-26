@@ -30,7 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
         tab.addDouble("Target Shooter Speed", () -> targetShooterSpeed).withPosition(0, 0).withSize(2, 1);
         tab.addDouble("Shooter 1 Speed", () -> shooterIO.getShooterSpeeds()[0]).withPosition(2, 0);
         tab.addDouble("Shooter 2 Speed", () -> shooterIO.getShooterSpeeds()[1]).withPosition(3, 0);
-        tab.addDouble("Shooter Speed Dif.", () -> shooterIO.getShooterSpeeds()[0] - shooterIO.getShooterSpeeds()[1]).withPosition(4, 0).withSize(2, 1);
+        tab.addDouble("Shooter Speed Diff.", () -> shooterIO.getShooterSpeeds()[0] - shooterIO.getShooterSpeeds()[1]).withPosition(4, 0).withSize(2, 1);
 
         tab.addBoolean("Shooter Ready?", () -> isShooterReady()).withPosition(6, 0);
         tab.addBoolean("Has Note?", () -> isIndexerLoaded()).withPosition(6, 1);
@@ -38,10 +38,8 @@ public class ShooterSubsystem extends SubsystemBase {
         tab.addDouble("Target Indexer Speed", () -> targetIndexerSpeed).withPosition(0, 1).withSize(2, 1);
         tab.addDouble("Indexer 1 Speed", () -> shooterIO.getIndexerSpeeds()[0]).withPosition(2, 1);
         tab.addDouble("Indexer 2 Speed", () -> shooterIO.getIndexerSpeeds()[1]).withPosition(3, 1);
-        tab.addDouble("Indexer Speed Dif.", () -> shooterIO.getIndexerSpeeds()[0] - shooterIO.getIndexerSpeeds()[1]).withPosition(4, 1).withSize(2, 1);
-        tab.addDouble("sensor mesurment", () -> shooterIO.getMeasurement());
-        //tab.add(pidController).withWidget(BuiltInWidgets.kPIDController).withPosition(5, 1);
-        //tab.addDouble("PID Input", () -> pidOutput).withPosition(4, 1);
+        tab.addDouble("Indexer Speed Diff.", () -> shooterIO.getIndexerSpeeds()[0] - shooterIO.getIndexerSpeeds()[1]).withPosition(4, 1).withSize(2, 1);
+        tab.addDouble("LaserCAN Measurement", () -> shooterIO.getMeasurement());
     }
 
     public boolean isIndexerLoaded() {
@@ -68,13 +66,10 @@ public class ShooterSubsystem extends SubsystemBase {
             topPidController.calculate(shooterIO.getShooterSpeeds()[0], targetShooterSpeed)
             + topFeedForward.calculate(targetShooterSpeed),
             bottomPidController.calculate(shooterIO.getShooterSpeeds()[1], targetShooterSpeed * 0.9)
-            + bottomFeedForward.calculate(targetShooterSpeed * 0.9));
-
-        //shooterIO.setShooterOutput(targetShooterSpeed);
+            + bottomFeedForward.calculate(targetShooterSpeed * 0.9)
+        );
 
         shooterIO.periodic();
     }
 
-    @Override
-    public void simulationPeriodic() {}
 }
