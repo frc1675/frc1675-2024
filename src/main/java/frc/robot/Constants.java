@@ -24,7 +24,7 @@ public class Constants {
         public static final int ENCODER_CHANNEL_B = 29;
         public static final int ENCODER_COUNT = 8192;
         //Home switch constants
-        public static final int HOMESWITCH_CHANNEL = 30;
+        public static final int HOMESWITCH_CHANNEL = 8;
         //Motor constants
         public static final int ARM_MOTOR_RIGHT = 15;
         public static final int ARM_MOTOR_LEFT = 16;

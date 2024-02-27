@@ -19,8 +19,7 @@ public class RealArmIO implements IArmIO {
         armMotorRight.setInverted(true);
         armMotorLeft.setInverted(false);
         encoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A, Constants.Arm.ENCODER_CHANNEL_B);
-        homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_CHANNEL);
-    }
+        homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_CHANNEL);    }
 
     @Override
     public void setMotorPower(double power){
@@ -40,7 +39,7 @@ public class RealArmIO implements IArmIO {
 
     @Override
     public boolean atFrontLimit(){
-        return homeSwitch.get();
+        return !(homeSwitch.get());
     }
 
     @Override

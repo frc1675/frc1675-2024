@@ -72,6 +72,7 @@ public class Arm extends SubsystemBase {
         dashboard.addBoolean("On Target", () -> isOnTarget());
         dashboard.addString("Target", () -> armTargetName());
         dashboard.addDouble("Motor Speed", () -> armIO.getMotorSpeed());
+        dashboard.addBoolean("Home Switch", () -> isAtHomePostion());
         dashboard.add(pid).withWidget(BuiltInWidgets.kPIDController); 
     }
 
