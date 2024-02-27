@@ -47,6 +47,36 @@ public class Constants {
         public static final FieldArea2d FRIENDLY_ALLIANCE_AREA = new FieldArea2d(0, 0, 5.85, 8.21);
     }
 
+    public class Shooter {
+        public static final double SHOOT_SPEED = 1700;
+        public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .10;
+
+        public static final int INDEXER_MOTOR_TOP = 18;
+        public static final int INDEXER_MOTOR_BOTTOM = 19;
+
+        public static final int SHOOTER_MOTOR_TOP = 17; // might be wrong
+        public static final int SHOOTER_MOTOR_BOTTOM = 20;
+
+        public static final int LASER_CAN = 21;
+        public static final int INDEXER_NOTE_DETECTION_RANGE = 275; // PLACEHOLDER
+        public static final double TARGET_SPEED_ERROR_MARGIN = 75; // PLACEHOLDER
+
+        public static final double SHOOTER_PID_P = 0.0002;
+        public static final double SHOOTER_PID_I = 0.0001;
+        public static final double SHOOTER_PID_D = 0;
+
+        public static final double SHOOTER_FF_V = 0.00015;
+        public static final double SHOOTER_FF_S = 0;
+
+        public static final double SHOOTER_SHOOT_TIME = 0.5;
+
+        public static final String SHUFFLEBOARD_TAB = "Shooter";
+        public static final double GEARING = 0.5;
+
+        public static final double SHOOTER_MOI = .001; // Joules * kg / m^2
+        public static final double INDEXER_MOI = 1;
+    }
+
     public class Dashboard {
         public static final boolean DISABLE_TUNER = false;
         public static final String VERSION_FILE_NAME = "version/.robotVersionMini";
@@ -72,7 +102,8 @@ public class Constants {
         public static final int INTAKE_MOTOR_ONE = 13;
         public static final int INTAKE_MOTOR_TWO = 14;
 
-        public static final double INTAKE_SPEED = 0.5;
+        public static final double INTAKE_SPEED = 0.8;
+
         public static final double EJECT_SPEED = -0.5;
 
     }    
