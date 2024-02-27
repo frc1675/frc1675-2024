@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
-    private double targetAngle;
+    private double targetAngle = Constants.Arm.HOME_POSITION;
     private ProfiledPIDController pid;
     private boolean broken;
     private ShuffleboardTab dashboard;
@@ -19,7 +19,7 @@ public class Arm extends SubsystemBase {
     public Arm(IArmIO armIO) {
         this.armIO = armIO;
         //pid = new PIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT);
-        profileConstraints = new TrapezoidProfile.Constraints(130, 650);
+        profileConstraints = new TrapezoidProfile.Constraints(25, 25);
         pid = new ProfiledPIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT, profileConstraints);
         broken = false;
         initDashboard();
@@ -38,7 +38,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void setTarget(double inputTarget) {
-        if (inputTarget >= Constants.Arm.MAX_ARM_RANGE_DEGREES) {
+        if (inputTarget <= Constants.Arm.MAX_ARM_RANGE_DEGREES) {
             targetAngle = Constants.Arm.MAX_ARM_RANGE_DEGREES;
         } else {
             targetAngle = inputTarget;
@@ -56,8 +56,6 @@ public class Arm extends SubsystemBase {
     private String armTargetName() {
         if (targetAngle == Constants.Arm.HIGH_SCORE_POSITION){
             return "High Goal";
-        } else if (targetAngle == Constants.Arm.LOW_SCORE_POSITION){
-            return "Low Goal";
         } else if (targetAngle == Constants.Arm.HOME_POSITION) {
             return "Home";
         } else{
@@ -73,21 +71,28 @@ public class Arm extends SubsystemBase {
         dashboard.addString("Target", () -> armTargetName());
         dashboard.addDouble("Motor Speed", () -> armIO.getMotorSpeed());
         dashboard.addBoolean("Home Switch", () -> isAtHomePostion());
-        dashboard.add(pid).withWidget(BuiltInWidgets.kPIDController); 
+        dashboard.addBoolean("Is Broken", () -> isBroken());
+        //dashboard.add(pid).withWidget(BuiltInWidgets.kPIDController); 
+    }
+
+    public void setMotorManual(double power){
+        armIO.setMotorPower(power);
     }
 
     @Override
+    //arm moves up as angle decreases and vice versa
     public void periodic() {
+    
         armIO.periodic();
         double motorPower = pid.calculate(getAngle(), targetAngle);
 
         if (armIO.atFrontLimit()) {
             // Check if encoder and home switch disagree
-            if (getAngle() > Constants.Arm.HOME_POSITION + Constants.Arm.TARGET_RANGE) {
+            if (getAngle() < Constants.Arm.HOME_POSITION - Constants.Arm.TARGET_RANGE) {
                 // Assume a sensor is broken, do not move arm.
                 armIO.setMotorPower(0);
                 broken = true;
-            } else if (motorPower > 0) {
+            } else if (motorPower < 0) {
                 // Only allow the motors to move away from the switch
                 armIO.setMotorPower(motorPower);
             } else {
@@ -95,7 +100,7 @@ public class Arm extends SubsystemBase {
                 armIO.setMotorPower(0);
             }
         } else {
-            if (getAngle() > Constants.Arm.MAX_ARM_RANGE_DEGREES) {
+            if (getAngle() < Constants.Arm.MAX_ARM_RANGE_DEGREES) {
                 // Arm is outside of desired range, only let it go back in.
                 if (motorPower < 0) {
                     armIO.setMotorPower(motorPower);
@@ -107,7 +112,7 @@ public class Arm extends SubsystemBase {
                 // Arm within safe range, do what it wants
                 armIO.setMotorPower(motorPower);
             }
-
+    
         }
     }
 }

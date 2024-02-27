@@ -12,6 +12,7 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.IArmIO;
 import frc.robot.arm.RealArmIO;
 import frc.robot.arm.SimArmIO;
+import frc.robot.arm.commands.ManualMotorTest;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -92,17 +93,15 @@ public class RobotContainer {
         )
     );
 
-    operatorController.a().onTrue(
-      new MoveToPosition(arm, Constants.Arm.LOW_SCORE_POSITION)
-    );
-
     operatorController.y().onTrue(
-      new MoveToPosition(arm, Constants.Arm.HIGH_SCORE_POSITION)
+      //new MoveToPosition(arm, Constants.Arm.HIGH_SCORE_POSITION)
+      new ManualMotorTest(arm, 0.1)
     );
-
+/*
     operatorController.x().onTrue(
       new MoveToHome(arm)
     );
+*/
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     
     //driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
