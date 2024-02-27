@@ -16,11 +16,12 @@ import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.cmdGroup.SpeakerScore;
-import frc.robot.undertaker.EjectNote;
-import frc.robot.undertaker.IntakeNote;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.notification.LEDSubsystem;
+import frc.robot.notification.RealLedIO;
+import frc.robot.notification.ILedIO;
+import frc.robot.notification.SimLedIO;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.undertaker.IUndertaker;
 import frc.robot.undertaker.RealUndertaker;
@@ -37,6 +38,7 @@ import frc.robot.vision.VisionSubsystem;
 public class RobotContainer {
   private final PoseScheduler poseScheduler = new PoseScheduler();
   private final DriveSubsystem drive = new DriveSubsystem(poseScheduler);
+  private final LEDSubsystem ledSubsystem;
   private final UndertakerSubsystem undertakerSubsystem;
   private final AutoGenerator autoGenerator = new AutoGenerator(drive);
   private final VisionSubsystem visionSubsystem;
@@ -53,21 +55,25 @@ public class RobotContainer {
     drive.setMotorBrakeMode(true);
   
     IArmIO armIO;
+    ILedIO ledIO; 
     IVision vision;
     IUndertaker undertaker;
     
     if(Robot.isSimulation()){
       vision = new SimVision();
+      ledIO = new SimLedIO(); 
       undertaker = new SimUndertaker();
       armIO = new SimArmIO();
     }else{
       vision = new RealVision();
+      ledIO = new RealLedIO();
       undertaker = new RealUndertaker();
       armIO = new RealArmIO();
     }
 
     arm = new Arm(armIO);
     visionSubsystem = new VisionSubsystem(vision);
+    ledSubsystem = new LEDSubsystem(ledIO); 
     undertakerSubsystem = new UndertakerSubsystem(undertaker);
 
     configureBindings();
