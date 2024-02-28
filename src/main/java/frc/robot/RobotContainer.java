@@ -39,7 +39,7 @@ import frc.robot.vision.VisionSubsystem;
 
 public class RobotContainer {
   private final PoseScheduler poseScheduler = new PoseScheduler();
-  private DriveSubsystem drive = null;
+  private final DriveSubsystem drive;
   private final LEDSubsystem ledSubsystem;
   private final UndertakerSubsystem undertakerSubsystem;
   private AutoGenerator autoGenerator = null;
@@ -69,11 +69,11 @@ public class RobotContainer {
       ledIO = new RealLedIO();
       undertaker = new RealUndertaker();
       armIO = new RealArmIO();
-      drive = new DriveSubsystem(poseScheduler);
-      drive.setMotorBrakeMode(true);
-
-      autoGenerator = new AutoGenerator(drive);
     }
+
+    drive = new DriveSubsystem(poseScheduler);
+    drive.setMotorBrakeMode(true);
+    autoGenerator = new AutoGenerator(drive);
 
     arm = new Arm(armIO);
     visionSubsystem = new VisionSubsystem(vision);
@@ -88,16 +88,13 @@ public class RobotContainer {
     CommandXboxController operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
     CommandXboxController driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
 
-    if (drive != null) {
-      drive.setDefaultCommand(
-          new DefaultDrive(drive,
-              () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
-              () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
-              () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)));
+    drive.setDefaultCommand(
+        new DefaultDrive(drive,
+            () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
+            () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
+            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)));
 
-      driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-
-    }
+    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
 
     operatorController.y().onTrue(
         new MoveToPosition(arm, Constants.Arm.HIGH_SCORE_POSITION)
@@ -114,15 +111,11 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    if (autoGenerator != null)
-      return autoGenerator.getAutoCommand();
-    else
-      return new WaitCommand(1);
+    return autoGenerator.getAutoCommand();
   }
 
   public void updateFieldMap() {
-    if (autoGenerator != null)
-      autoGenerator.updateMap();
+    autoGenerator.updateMap();
   }
 
   public void onDisabled() {

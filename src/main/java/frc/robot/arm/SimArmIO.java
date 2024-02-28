@@ -44,7 +44,7 @@ public class SimArmIO implements IArmIO {
             new MechanismLigament2d(
                     "Arm",
                     30,
-                    Units.radiansToDegrees(armSim.getAngleRads()),
+                    domainSwap(Constants.Arm.HOME_POSITION),
                     6,
                     new Color8Bit(Color.kYellow)));
 
