@@ -32,7 +32,6 @@ import frc.robot.vision.SimVision;
 import frc.robot.vision.VisionSubsystem;
 
 import frc.robot.shooter.*;
-import frc.robot.shooter.commands.*;
 import frc.robot.cmdGroup.*;
 
 public class RobotContainer {
@@ -99,7 +98,7 @@ public class RobotContainer {
     
     // SHOOTER [leftTrigger -> intakes note; rightTrigger -> shoots]
     driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem));
-    new IntakeNote(shooter, undertakerSubsystem).schedule();
+    new IntakeNote(shooter, undertakerSubsystem).schedule(); // should schedule command by default
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
