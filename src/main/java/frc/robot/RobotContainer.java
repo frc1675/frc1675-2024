@@ -33,7 +33,7 @@ import frc.robot.vision.VisionSubsystem;
 
 import frc.robot.shooter.*;
 import frc.robot.shooter.commands.*;
-import frc.robot.cmdGroup.IntakeNote;
+import frc.robot.cmdGroup.*;
 
 public class RobotContainer {
   private final PoseScheduler poseScheduler = new PoseScheduler();
@@ -98,8 +98,8 @@ public class RobotContainer {
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     
     // SHOOTER [leftTrigger -> intakes note; rightTrigger -> shoots]
-    driverController.leftTrigger().whileTrue(new IntakeNote(shooter, undertakerSubsystem));
-    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter));
+    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem));
+    new IntakeNote(shooter, undertakerSubsystem).schedule();
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
