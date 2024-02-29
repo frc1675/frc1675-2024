@@ -36,9 +36,14 @@ import frc.robot.vision.RealVision;
 import frc.robot.vision.SimVision;
 import frc.robot.vision.VisionSubsystem;
 
+import frc.robot.shooter.*;
+import frc.robot.shooter.commands.*;
+import frc.robot.cmdGroup.IntakeNote;
+
 public class RobotContainer {
   private final PoseScheduler poseScheduler = new PoseScheduler();
   private final DriveSubsystem drive;
+  private final ShooterSubsystem shooter;
   private final LEDSubsystem ledSubsystem;
   private final UndertakerSubsystem undertakerSubsystem;
   private AutoGenerator autoGenerator = null;
@@ -79,6 +84,15 @@ public class RobotContainer {
     ledSubsystem = new LEDSubsystem(ledIO);
     undertakerSubsystem = new UndertakerSubsystem(undertaker);
 
+    IShooterIO shooterIO;
+    if (Robot.isSimulation()) {
+        shooterIO = new SimShooterIO();
+    } else {
+        shooterIO = new RealShooterIO();
+    }
+
+    shooter = new ShooterSubsystem(shooterIO);
+
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }
@@ -101,6 +115,10 @@ public class RobotContainer {
     operatorController.x().onTrue(new MoveToHome(arm));
 
     // driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
+    
+    // SHOOTER [leftTrigger -> intakes note; rightTrigger -> shoots]
+    driverController.leftTrigger().whileTrue(new IntakeNote(shooter, undertakerSubsystem));
+    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {

@@ -29,11 +29,16 @@
   "cSpell.words": [
     "backleft",
     "backright",
+    "Botpose",
+    "Brushless",
     "canbus",
     "cancoder",
+    "CANRX",
+    "CANTX",
     "Deadband",
     "DEADZONE",
     "DRIVEBASE",
+    "Feedforward",
     "frontleft",
     "frontright",
     "Holonomic",
@@ -44,6 +49,8 @@
     "sparkmax",
     "teleop",
     "traj",
-    "Uper"
+    "Uper",
+    "wpiblue",
+    "wpired"
   ]
 }

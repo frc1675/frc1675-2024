@@ -28,7 +28,7 @@ public class RealUndertaker implements IUndertaker {
     if(motorStatus[0] && motorStatus[1]){
       desiredSpeed = speed;
       intakeMotorOne.setVoltage(speed * 12.0);
-      intakeMotorTwo.setVoltage(speed * 12.0);
+      intakeMotorTwo.setVoltage(speed * 8.0);
     }
   }
 
