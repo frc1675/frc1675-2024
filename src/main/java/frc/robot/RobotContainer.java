@@ -95,9 +95,6 @@ public class RobotContainer {
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
 
-    operatorController.y().onTrue(
-        new MoveToPosition(arm, Constants.Arm.HIGH_SCORE_POSITION));
-
     operatorController.b().onTrue(
         new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
 
