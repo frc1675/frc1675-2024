@@ -30,18 +30,20 @@ public class Constants {
         public static final int ARM_MOTOR_RIGHT = 15;
         public static final int ARM_MOTOR_LEFT = 16;
         // PID constants
-        public static final double PID_P_COEFFICIENT = 0.075;
+        public static final double PID_P_COEFFICIENT = 0.02;
         public static final double PID_I_COEFFICIENT = 0;
         public static final double PID_D_COEFFICIENT = 0;
         // Arm movment lmits constants
-        public static final double TARGET_RANGE = 5.0;
+        public static final double TARGET_RANGE = 1.0;
         public static final double DEBOUNCE_TIME = 0.5;
         // Position constnats
         public static final double HOME_POSITION = 138;
         public static final double HIGH_SCORE_POSITION = 60;
-        public static final double AMP_POSITION = 5.5;
-        public static final double MAX_ARM_RANGE_DEGREES = AMP_POSITION - 45.0;
-
+        public static final double AMP_POSITION = 35;
+        public static final double MAX_ARM_RANGE_DEGREES = 20; // 13 degrees is vertical
+        // PID Profile constants
+        public static final double MAXIMUM_VELOCITY = 150; // degrees per second
+        public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
     }
 
     public class PathPlanner {

@@ -20,7 +20,8 @@ public class Arm extends SubsystemBase {
         this.armIO = armIO;
         // pid = new PIDController(Constants.Arm.PID_P_COEFFICIENT,
         // Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT);
-        profileConstraints = new TrapezoidProfile.Constraints(25, 25);
+        profileConstraints = new TrapezoidProfile.Constraints(Constants.Arm.MAXIMUM_VELOCITY,
+                Constants.Arm.MAXIMUM_ACCELERATION);
         pid = new ProfiledPIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT,
                 Constants.Arm.PID_D_COEFFICIENT, profileConstraints);
         pid.reset(armIO.getMeasurement());
@@ -78,7 +79,7 @@ public class Arm extends SubsystemBase {
         dashboard.addDouble("Motor Speed", () -> armIO.getMotorSpeed());
         dashboard.addBoolean("Home Switch", () -> isAtHomePostion());
         dashboard.addBoolean("Is Broken", () -> isBroken());
-        // dashboard.add(pid).withWidget(BuiltInWidgets.kPIDController);
+        dashboard.add(pid);
     }
 
     public double getPositionSetpoint() {
@@ -86,11 +87,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getVelocitySetpoint() {
-        return pid.getSetpoint().velocity;
-    }
-
-    public void setMotorManual(double power) {
-        armIO.setMotorPower(power);
+        return -1.0 * pid.getSetpoint().velocity;
     }
 
     @Override
@@ -114,16 +111,16 @@ public class Arm extends SubsystemBase {
                 armIO.setMotorPower(0);
             }
         } else {
-            if (getAngle() > Constants.Arm.MAX_ARM_RANGE_DEGREES) {
+            if (getAngle() < Constants.Arm.MAX_ARM_RANGE_DEGREES) {
                 // Arm is outside of desired range, only let it go back in.
-                if (motorPower > 0) {
+                if (motorPower < 0) {
                     armIO.setMotorPower(motorPower);
                 } else {
                     // Stop arm if already moving in incorrect direction
                     armIO.setMotorPower(0);
                 }
             } else {
-                // Arm within safe range, do what it wants
+                // Arm within safe range, do what it wants (vast majority of time)
                 armIO.setMotorPower(motorPower);
             }
 
