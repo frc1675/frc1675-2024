@@ -21,12 +21,17 @@ public class ShooterIntake extends Command {
     }
 
     @Override
+    public void execute() {
+    	subsystem.setIndexerSpeed(subsystem.isIndexerLoaded() ? 0: Constants.Shooter.INTAKE_SPEED);
+    }
+
+    @Override
     public void end(boolean interrupted) {
-        subsystem.setIndexerSpeed(0);
+        // subsystem.setIndexerSpeed(0);
     }
 
     @Override
     public boolean isFinished() {
-        return subsystem.isIndexerLoaded();
+        return false;
     }
 }

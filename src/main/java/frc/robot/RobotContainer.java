@@ -77,6 +77,7 @@ public class RobotContainer {
     }
 
     shooter = new ShooterSubsystem(shooterIO);
+    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem));
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
@@ -96,9 +97,7 @@ public class RobotContainer {
     driverController.a().toggleOnTrue(new ChangeColor(ledSubsystem, LEDStateEnum.YELLOW));
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     
-    // SHOOTER [leftTrigger -> intakes note; rightTrigger -> shoots]
     driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem));
-    new IntakeNote(shooter, undertakerSubsystem).schedule(); // should schedule command by default
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {

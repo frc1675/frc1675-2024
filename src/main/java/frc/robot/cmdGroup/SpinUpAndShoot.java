@@ -10,8 +10,7 @@ public class SpinUpAndShoot extends SequentialCommandGroup {
     public SpinUpAndShoot(ShooterSubsystem shooter, UndertakerSubsystem undertaker) {
         addCommands(
             new SpinUp(shooter),
-            new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME),
-            new IntakeNote(shooter, undertaker)
+            new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME)
         );
     }
 }
