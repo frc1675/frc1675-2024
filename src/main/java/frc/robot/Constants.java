@@ -7,10 +7,10 @@ import frc.robot.poseScheduler.FieldArea2d;
 public class Constants {
 
     public class Drive {
-        public static final double MAXIMUM_VELOCITY = 5.0; //meters per second
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 10; //radians per second
+        public static final double MAXIMUM_VELOCITY = 5.0; // meters per second
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 10; // radians per second
 
-        public static final double MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE = 1.0; //meters
+        public static final double MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE = 1.0; // meters
 
         public static final double DRIVE_GEAR_RATIO = 6.12;
         public static final double STEER_GEAR_RATIO = 12.8;
@@ -19,16 +19,43 @@ public class Constants {
 
     }
 
+    public class Arm {
+        // Encoder constants
+        public static final int ENCODER_CHANNEL = 7;
+        public static final int ENCODER_CHANNEL_B = 29;
+        public static final int ENCODER_COUNT = 1024;
+        // Home switch constants
+        public static final int HOMESWITCH_CHANNEL = 8;
+        // Motor constants
+        public static final int ARM_MOTOR_RIGHT = 15;
+        public static final int ARM_MOTOR_LEFT = 16;
+        // PID constants
+        public static final double PID_P_COEFFICIENT = 0.02;
+        public static final double PID_I_COEFFICIENT = 0;
+        public static final double PID_D_COEFFICIENT = 0;
+        // Arm movment lmits constants
+        public static final double TARGET_RANGE = 1.0;
+        public static final double DEBOUNCE_TIME = 0.5;
+        // Position constnats
+        public static final double HOME_POSITION = 138;
+        public static final double HIGH_SCORE_POSITION = 60;
+        public static final double AMP_POSITION = 35;
+        public static final double MAX_ARM_RANGE_DEGREES = 20; // 13 degrees is vertical
+        // PID Profile constants
+        public static final double MAXIMUM_VELOCITY = 150; // degrees per second
+        public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
+    }
+
     public class PathPlanner {
-        //TODO tune constants if necessary
-        public static final double MAXIMUM_VELOCITY= 2.5; //meters per second
-        public static final double MAXIMUM_ACCELERATION = 1.25; //meters per second squared
+        // TODO tune constants if necessary
+        public static final double MAXIMUM_VELOCITY = 2.5; // meters per second
+        public static final double MAXIMUM_ACCELERATION = 1.25; // meters per second squared
 
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 7.5; //radians per second
-        public static final double MAXIMUM_ANGULAR_ACCELERATION = 3.75; //radians per second squared
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 7.5; // radians per second
+        public static final double MAXIMUM_ANGULAR_ACCELERATION = 3.75; // radians per second squared
 
-        //TODO measure on robot
-        public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); //meters
+        // TODO measure on robot
+        public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); // meters
 
         public static final double TRANSLATION_P = 1000;
         public static final double TRANSLATION_I = 0;
@@ -38,7 +65,7 @@ public class Constants {
         public static final double ROTATION_I = 0;
         public static final double ROTATION_D = 0;
 
-        public static final double DYNAMIC_PATHING_MAX_DISTANCE = 5; //meters
+        public static final double DYNAMIC_PATHING_MAX_DISTANCE = 5; // meters
     }
 
     public class Field {
@@ -106,5 +133,5 @@ public class Constants {
 
         public static final double EJECT_SPEED = -0.5;
 
-    }    
+    }
 }
