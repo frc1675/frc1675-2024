@@ -41,12 +41,12 @@ import frc.robot.vision.SimVision;
 import frc.robot.vision.VisionSubsystem;
 
 public class RobotContainer {
-  private final PoseScheduler poseScheduler = new PoseScheduler();
+  private final PoseScheduler poseScheduler;
   private final DriveSubsystem drive;
   private final ShooterSubsystem shooter;
   private final LEDSubsystem ledSubsystem;
   private final UndertakerSubsystem undertakerSubsystem;
-  private AutoGenerator autoGenerator = null;
+  private final AutoGenerator autoGenerator;
   private final VisionSubsystem visionSubsystem;
   private final Arm arm;
 
@@ -55,26 +55,27 @@ public class RobotContainer {
     DriverStation.startDataLog(DataLogManager.getLog());
     DataLogManager.log("Data log started.");
 
-    // poseScheduler.registerCommand(Constants.Field.FRIENDLY_ALLIANCE_AREA, new
-    // PrintCommand("I just spun up the motors"));
-
     IArmIO armIO;
     ILedIO ledIO;
     IVision vision;
     IUndertaker undertaker;
+    IShooterIO shooterIO;
 
     if (Robot.isSimulation()) {
       vision = new SimVision();
       ledIO = new SimLedIO();
       undertaker = new SimUndertaker();
       armIO = new SimArmIO();
+      shooterIO = new SimShooterIO();
     } else {
       vision = new RealVision();
       ledIO = new RealLedIO();
       undertaker = new RealUndertaker();
       armIO = new RealArmIO();
+      shooterIO = new RealShooterIO();
     }
 
+    poseScheduler = new PoseScheduler();
     drive = new DriveSubsystem(poseScheduler);
     drive.setMotorBrakeMode(true);
     autoGenerator = new AutoGenerator(drive);
@@ -83,14 +84,6 @@ public class RobotContainer {
     visionSubsystem = new VisionSubsystem(vision);
     ledSubsystem = new LEDSubsystem(ledIO);
     undertakerSubsystem = new UndertakerSubsystem(undertaker);
-
-    IShooterIO shooterIO;
-    if (Robot.isSimulation()) {
-        shooterIO = new SimShooterIO();
-    } else {
-        shooterIO = new RealShooterIO();
-    }
-
     shooter = new ShooterSubsystem(shooterIO);
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem));
 
@@ -106,18 +99,14 @@ public class RobotContainer {
         new DefaultDrive(drive,
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
-            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)));
+            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS))
+    );
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-
-    operatorController.b().onTrue(
-        new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
-
-    operatorController.x().onTrue(new MoveToHome(arm));
-
-    // driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
-    
     driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem));
+
+    operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
+    operatorController.rightTrigger().onTrue(new MoveToHome(arm));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
