@@ -4,37 +4,37 @@
 
 package frc.robot.undertaker;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
 public class UndertakerIntake extends Command {
 
-  private final UndertakerSubsystem undertaker;
-  
-  public UndertakerIntake(UndertakerSubsystem undertaker) {
-    addRequirements(undertaker);
-    this.undertaker = undertaker;
-  }
+    private final UndertakerSubsystem undertaker;
+    private BooleanSupplier readyToIntake;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    undertaker.run(Constants.Undertaker.INTAKE_SPEED);
-  }
+    public UndertakerIntake(UndertakerSubsystem undertaker, BooleanSupplier readyToIntake) {
+        addRequirements(undertaker);
+        this.undertaker = undertaker;
+        this.readyToIntake = readyToIntake;
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
+    @Override
+    public void initialize() {
+        undertaker.run(Constants.Undertaker.INTAKE_SPEED);
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    undertaker.run(0);
-  }
+    @Override
+    public void execute() {
+        undertaker.run(readyToIntake.getAsBoolean() ? Constants.Undertaker.INTAKE_SPEED : 0);
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public void end(boolean interrupted) {}
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

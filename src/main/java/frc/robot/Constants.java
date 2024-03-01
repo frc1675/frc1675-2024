@@ -17,6 +17,7 @@ public class Constants {
         public static final double PULSE_PER_ROTATION = 1;
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
 
+        public static final double SLOW_DRIVE_SCALE = 0.5;
     }
 
     public class Arm {
@@ -76,7 +77,7 @@ public class Constants {
 
     public class Shooter {
         public static final double SHOOT_SPEED = 1700;
-        public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .10;
+        public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .14;
 
         public static final int INDEXER_MOTOR_TOP = 18;
         public static final int INDEXER_MOTOR_BOTTOM = 19;
@@ -102,6 +103,8 @@ public class Constants {
 
         public static final double SHOOTER_MOI = .001; // Joules * kg / m^2
         public static final double INDEXER_MOI = 1;
+
+        public static final double AMP_SHOOT_SCALE = 0.4;
     }
 
     public class Dashboard {

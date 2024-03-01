@@ -14,13 +14,14 @@ public class DefaultDrive extends Command {
   private DoubleSupplier x;
   private DoubleSupplier y;
   private DoubleSupplier rotation;
+  private DoubleSupplier speedScale;
 
-  public DefaultDrive(DriveSubsystem drive, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotation) {
+  public DefaultDrive(DriveSubsystem drive, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotation, DoubleSupplier speedScale) {
     this.drive = drive;
     this.x = x;
     this.y = y;
     this.rotation = rotation;
-
+    this.speedScale = speedScale;
     addRequirements(drive);
   }
 
@@ -29,7 +30,11 @@ public class DefaultDrive extends Command {
 
   @Override
   public void execute() {
-    drive.drive(x.getAsDouble(), y.getAsDouble(), rotation.getAsDouble());
+    drive.drive(
+      x.getAsDouble() * speedScale.getAsDouble(), 
+      y.getAsDouble() * speedScale.getAsDouble(), 
+      rotation.getAsDouble() * speedScale.getAsDouble()
+    );
   }
 
   @Override

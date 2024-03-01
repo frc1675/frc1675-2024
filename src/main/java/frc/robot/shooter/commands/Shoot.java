@@ -22,6 +22,7 @@ public class Shoot extends Command {
     @Override
     public void end(boolean interrupted) {
         subsystem.setIndexerSpeed(0);
+        subsystem.setTargetShooterSpeed(0);
     }
 
     @Override
