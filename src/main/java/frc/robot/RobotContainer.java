@@ -6,24 +6,27 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.IArmIO;
 import frc.robot.arm.RealArmIO;
 import frc.robot.arm.SimArmIO;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.notification.ILedIO;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.notification.RealLedIO;
-import frc.robot.notification.ILedIO;
 import frc.robot.notification.SimLedIO;
 import frc.robot.poseScheduler.PoseScheduler;
+import frc.robot.shooter.IShooterIO;
+import frc.robot.shooter.RealShooterIO;
+import frc.robot.shooter.ShooterSubsystem;
+import frc.robot.shooter.SimShooterIO;
+import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.IUndertaker;
 import frc.robot.undertaker.RealUndertaker;
 import frc.robot.undertaker.SimUndertaker;
@@ -36,17 +39,13 @@ import frc.robot.vision.RealVision;
 import frc.robot.vision.SimVision;
 import frc.robot.vision.VisionSubsystem;
 
-import frc.robot.shooter.*;
-import frc.robot.shooter.commands.*;
-import frc.robot.cmdGroup.IntakeNote;
-
 public class RobotContainer {
-  private final PoseScheduler poseScheduler = new PoseScheduler();
+  private final PoseScheduler poseScheduler;
   private final DriveSubsystem drive;
   private final ShooterSubsystem shooter;
   private final LEDSubsystem ledSubsystem;
   private final UndertakerSubsystem undertakerSubsystem;
-  private AutoGenerator autoGenerator = null;
+  private final AutoGenerator autoGenerator;
   private final VisionSubsystem visionSubsystem;
   private final Arm arm;
 
@@ -55,26 +54,27 @@ public class RobotContainer {
     DriverStation.startDataLog(DataLogManager.getLog());
     DataLogManager.log("Data log started.");
 
-    // poseScheduler.registerCommand(Constants.Field.FRIENDLY_ALLIANCE_AREA, new
-    // PrintCommand("I just spun up the motors"));
-
     IArmIO armIO;
     ILedIO ledIO;
     IVision vision;
     IUndertaker undertaker;
+    IShooterIO shooterIO;
 
     if (Robot.isSimulation()) {
       vision = new SimVision();
       ledIO = new SimLedIO();
       undertaker = new SimUndertaker();
       armIO = new SimArmIO();
+      shooterIO = new SimShooterIO();
     } else {
       vision = new RealVision();
       ledIO = new RealLedIO();
       undertaker = new RealUndertaker();
       armIO = new RealArmIO();
+      shooterIO = new RealShooterIO();
     }
 
+    poseScheduler = new PoseScheduler();
     drive = new DriveSubsystem(poseScheduler);
     drive.setMotorBrakeMode(true);
     autoGenerator = new AutoGenerator(drive);
@@ -83,14 +83,6 @@ public class RobotContainer {
     visionSubsystem = new VisionSubsystem(vision);
     ledSubsystem = new LEDSubsystem(ledIO);
     undertakerSubsystem = new UndertakerSubsystem(undertaker);
-
-    IShooterIO shooterIO;
-    if (Robot.isSimulation()) {
-        shooterIO = new SimShooterIO();
-    } else {
-        shooterIO = new RealShooterIO();
-    }
-
     shooter = new ShooterSubsystem(shooterIO);
 
     configureBindings();
@@ -105,20 +97,14 @@ public class RobotContainer {
         new DefaultDrive(drive,
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
-            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS)));
+            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS))
+    );
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-
-    operatorController.b().onTrue(
-        new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
-
-    operatorController.x().onTrue(new MoveToHome(arm));
-
-    // driverController.a().onTrue(new SpeakerScore(drive, autoGenerator));
-    
-    // SHOOTER [leftTrigger -> intakes note; rightTrigger -> shoots]
-    driverController.leftTrigger().whileTrue(new IntakeNote(shooter, undertakerSubsystem));
     driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter));
+
+    operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
+    operatorController.rightTrigger().onTrue(new MoveToHome(arm));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
