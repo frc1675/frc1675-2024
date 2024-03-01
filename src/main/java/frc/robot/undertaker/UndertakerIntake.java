@@ -12,12 +12,12 @@ import frc.robot.Constants;
 public class UndertakerIntake extends Command {
 
     private final UndertakerSubsystem undertaker;
-    private BooleanSupplier isIndexerLoaded;
+    private BooleanSupplier readyToIntake;
 
-    public UndertakerIntake(UndertakerSubsystem undertaker, BooleanSupplier isIndexerLoaded) {
+    public UndertakerIntake(UndertakerSubsystem undertaker, BooleanSupplier readyToIntake) {
         addRequirements(undertaker);
         this.undertaker = undertaker;
-        this.isIndexerLoaded = isIndexerLoaded;
+        this.readyToIntake = readyToIntake;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class UndertakerIntake extends Command {
 
     @Override
     public void execute() {
-        undertaker.run(isIndexerLoaded.getAsBoolean() ? 0 : Constants.Undertaker.INTAKE_SPEED);
+        undertaker.run(readyToIntake.getAsBoolean() ? Constants.Undertaker.INTAKE_SPEED : 0);
     }
 
     @Override

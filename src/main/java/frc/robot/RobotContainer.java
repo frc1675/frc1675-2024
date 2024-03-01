@@ -50,6 +50,8 @@ public class RobotContainer {
   private final VisionSubsystem visionSubsystem;
   private final Arm arm;
 
+  private boolean intakeEnabled = true;
+
   public RobotContainer() {
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
@@ -85,7 +87,6 @@ public class RobotContainer {
     ledSubsystem = new LEDSubsystem(ledIO);
     undertakerSubsystem = new UndertakerSubsystem(undertaker);
     shooter = new ShooterSubsystem(shooterIO);
-    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem));
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
@@ -99,18 +100,30 @@ public class RobotContainer {
         new DefaultDrive(drive,
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
-            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS))
+            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
+            () -> getDriveSpeedScale()
+
+            )
     );
 
+    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, () -> arm.isAtHomePostion() && intakeEnabled));
+
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem));
+    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem, () -> arm.isAtAmpPosition()));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
+
+    operatorController.a().onTrue(new InstantCommand(() -> intakeEnabled = true));
+    operatorController.y().onTrue(new InstantCommand(() -> intakeEnabled = false));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
     return -MathUtils.getDeadzoneAdjustedInput(stick.getRawAxis(axe));
+  }
+
+  private double getDriveSpeedScale() {
+    return arm.getAngle() <= Constants.Arm.HIGH_SCORE_POSITION ? Constants.Drive.SLOW_DRIVE_SCALE : 1;
   }
 
   public Command getAutonomousCommand() {

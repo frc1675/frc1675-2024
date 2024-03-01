@@ -2,7 +2,6 @@ package frc.robot.arm;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -54,6 +53,10 @@ public class Arm extends SubsystemBase {
         return armIO.atFrontLimit();
     }
 
+    public boolean isAtAmpPosition() {
+        return isOnTarget() && armTargetName().equals("Amp");
+    }
+
     public boolean isBroken() {
         return broken;
     }
@@ -63,6 +66,8 @@ public class Arm extends SubsystemBase {
             return "High Goal";
         } else if (targetAngle == Constants.Arm.HOME_POSITION) {
             return "Home";
+        } else if (targetAngle == Constants.Arm.AMP_POSITION) {
+            return "Amp";
         } else {
             return "Undefined Target";
         }
