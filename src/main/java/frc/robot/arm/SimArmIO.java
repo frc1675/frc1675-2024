@@ -86,4 +86,14 @@ public class SimArmIO implements IArmIO {
     private double domainSwap(double angleDeg) {
         return Constants.Arm.HOME_POSITION + SIM_HOME - angleDeg;
     }
+
+    @Override
+    public boolean getRightHomeSwitch() {
+        return false;
+    }
+
+    @Override
+    public boolean getLeftHomeSwitch() {
+        return false;
+    }
 }

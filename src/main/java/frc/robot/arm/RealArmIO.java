@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.units.Current;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants;
@@ -14,7 +13,8 @@ public class RealArmIO implements IArmIO {
     private CANSparkMax armMotorRight;
     private CANSparkMax armMotorLeft;
     private DutyCycleEncoder encoder;
-    private DigitalInput homeSwitch;
+    private DigitalInput homeSwitchLeft;
+    private DigitalInput homeSwitchRight;
     private double motorPower;
 
     public RealArmIO() {
@@ -25,12 +25,13 @@ public class RealArmIO implements IArmIO {
         armMotorRight.setInverted(true);
         armMotorLeft.setInverted(false);
         encoder = new DutyCycleEncoder(Constants.Arm.ENCODER_CHANNEL);
-        homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_CHANNEL);
+        homeSwitchLeft = new DigitalInput(Constants.Arm.RIGHT_HOMESWITCH_CHANNEL);
+        homeSwitchRight = new DigitalInput(Constants.Arm.LEFT_HOMESWITCH_CHANNEL);
     }
 
     @Override
     public void setMotorPower(double power) {
-        // postive power makes arm move away from home
+        // positive power makes arm move away from home
         motorPower = power;
         armMotorRight.setVoltage(power * 12);
         armMotorLeft.setVoltage(power * 12);
@@ -48,7 +49,17 @@ public class RealArmIO implements IArmIO {
 
     @Override
     public boolean atFrontLimit() {
-        return !(homeSwitch.get());
+        return (getLeftHomeSwitch() || getRightHomeSwitch());
+    }
+
+    @Override
+    public boolean getLeftHomeSwitch() {
+        return !homeSwitchLeft.get();
+    }
+
+    @Override
+    public boolean getRightHomeSwitch() {
+        return !homeSwitchRight.get();
     }
 
     @Override
