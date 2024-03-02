@@ -87,7 +87,7 @@ public class Constants {
         public static final int SHOOTER_MOTOR_BOTTOM = 20;
 
         public static final int LASER_CAN = 21;
-        public static final int INDEXER_NOTE_DETECTION_RANGE = 275; // PLACEHOLDER
+        public static final int INDEXER_NOTE_DETECTION_RANGE = 150; // PLACEHOLDER
         public static final double TARGET_SPEED_ERROR_MARGIN = 75; // PLACEHOLDER
 
         public static final double SHOOTER_PID_P = 0.0002;
