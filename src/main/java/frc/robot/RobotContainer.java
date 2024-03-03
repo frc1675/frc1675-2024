@@ -33,6 +33,7 @@ import frc.robot.undertaker.RealUndertaker;
 import frc.robot.undertaker.SimUndertaker;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AutoGenerator;
+import frc.robot.util.CommandController;
 import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.IVision;
@@ -49,8 +50,8 @@ public class RobotContainer {
   private final AutoGenerator autoGenerator;
   private final VisionSubsystem visionSubsystem;
   private final Arm arm;
-
-  private boolean intakeEnabled = true;
+  
+  private final CommandController commandController;
 
   public RobotContainer() {
     DataLogManager.start();
@@ -88,6 +89,8 @@ public class RobotContainer {
     undertakerSubsystem = new UndertakerSubsystem(undertaker);
     shooter = new ShooterSubsystem(shooterIO);
 
+    commandController = new CommandController(arm);
+
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }
@@ -101,29 +104,24 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
-            () -> getDriveSpeedScale()
-
+            commandController::getDriveSpeedScale
             )
     );
 
-    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, () -> arm.isAtHomePostion() && intakeEnabled));
+    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, commandController::getReadyToIntake));
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem, () -> arm.isAtAmpPosition()));
+    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem, commandController::shouldSlowShoot));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
 
-    operatorController.a().onTrue(new InstantCommand(() -> intakeEnabled = true));
-    operatorController.y().onTrue(new InstantCommand(() -> intakeEnabled = false));
+    operatorController.a().onTrue(new InstantCommand(() -> commandController.setIntakeEnabledOverride(true)));
+    operatorController.y().onTrue(new InstantCommand(() -> commandController.setIntakeEnabledOverride(false)));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
     return -MathUtils.getDeadzoneAdjustedInput(stick.getRawAxis(axe));
-  }
-
-  private double getDriveSpeedScale() {
-    return arm.getAngle() <= Constants.Arm.HIGH_SCORE_POSITION ? Constants.Drive.SLOW_DRIVE_SCALE : 1;
   }
 
   public Command getAutonomousCommand() {
