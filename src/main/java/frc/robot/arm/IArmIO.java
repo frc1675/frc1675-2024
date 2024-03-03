@@ -14,6 +14,10 @@ public interface IArmIO {
     // returns whether or not the home switch is hit
     public boolean atFrontLimit();
 
+    public boolean getRightHomeSwitch();
+
+    public boolean getLeftHomeSwitch();
+
     // periodic loop to keep IO logic up to date
     public void periodic();
 }

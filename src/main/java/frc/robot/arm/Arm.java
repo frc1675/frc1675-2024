@@ -83,6 +83,8 @@ public class Arm extends SubsystemBase {
         dashboard.addString("Target", () -> armTargetName());
         dashboard.addDouble("Motor Speed", () -> armIO.getMotorSpeed());
         dashboard.addBoolean("Home Switch", () -> isAtHomePostion());
+        dashboard.addBoolean("Right home switch: ", () -> armIO.getRightHomeSwitch());
+        dashboard.addBoolean("Left home switch: ", () -> armIO.getLeftHomeSwitch());
         dashboard.addBoolean("Is Broken", () -> isBroken());
         dashboard.add(pid);
     }
