@@ -17,6 +17,7 @@ import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.cmdGroup.SpinUpAndShoot;
+import frc.robot.cmdGroup.SpitNote;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.ILedIO;
@@ -116,6 +117,7 @@ public class RobotContainer {
 
     operatorController.a().onTrue(new InstantCommand(() -> intakeEnabled = true));
     operatorController.y().onTrue(new InstantCommand(() -> intakeEnabled = false));
+    operatorController.x().onTrue(new SpitNote(shooter, arm, undertakerSubsystem));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {

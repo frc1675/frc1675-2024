@@ -40,6 +40,7 @@ public class Constants {
         // Position constnats
         public static final double HOME_POSITION = 138;
         public static final double HIGH_SCORE_POSITION = 60;
+        public static final double EJECT_POSITION = 120;
         public static final double AMP_POSITION = 35;
         public static final double MAX_ARM_RANGE_DEGREES = 20; // 13 degrees is vertical
         // PID Profile constants
@@ -78,6 +79,7 @@ public class Constants {
     public class Shooter {
         public static final double SHOOT_SPEED = 1700;
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .14;
+        public static final double EJECT_SPEED = 0.5;
 
         public static final int INDEXER_MOTOR_TOP = 18;
         public static final int INDEXER_MOTOR_BOTTOM = 19;
