@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,7 +34,6 @@ import frc.robot.undertaker.RealUndertaker;
 import frc.robot.undertaker.SimUndertaker;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AutoGenerator;
-import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.IVision;
 import frc.robot.vision.RealVision;
@@ -119,7 +119,7 @@ public class RobotContainer {
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
-    return -MathUtils.getDeadzoneAdjustedInput(stick.getRawAxis(axe));
+    return MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
   }
 
   private double getDriveSpeedScale() {
