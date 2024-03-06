@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class ArmSubsystem extends SubsystemBase {
     private double targetAngle = Constants.Arm.HOME_POSITION;
@@ -14,6 +15,11 @@ public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab dashboard;
     private IArmIO armIO;
     private TrapezoidProfile.Constraints profileConstraints;
+
+
+    public static ArmSubsystem create() {
+        return new ArmSubsystem(Robot.isReal() ? new RealArmIO() : new SimArmIO());
+    }
 
     public ArmSubsystem(IArmIO armIO) {
         this.armIO = armIO;
