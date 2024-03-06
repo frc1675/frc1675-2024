@@ -3,13 +3,13 @@ package frc.robot.util;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
 
-public class CommandController {
+public class RobotContext {
     
     private final Arm arm;
 
     private boolean intakeEnabled = true;
 
-    public CommandController(Arm arm) {
+    public RobotContext(Arm arm) {
         this.arm = arm;
     }
 
