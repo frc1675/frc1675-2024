@@ -1,49 +1,69 @@
 package frc.robot.arm;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants;
 
 public class RealArmIO implements IArmIO {
 
-    private CANSparkMax motorOne;
-    private CANSparkMax motorTwo;
-    private Encoder encoder;
-    private DigitalInput homeSwitch;
+    private CANSparkMax armMotorRight;
+    private CANSparkMax armMotorLeft;
+    private DutyCycleEncoder encoder;
+    private DigitalInput homeSwitchLeft;
+    private DigitalInput homeSwitchRight;
+    private double motorPower;
 
     public RealArmIO() {
-        motorOne = new CANSparkMax(Constants.Arm.ARM_MOTOR_ONE, MotorType.kBrushless);
-        motorTwo = new CANSparkMax(Constants.Arm.ARM_MOTOR_TWO, MotorType.kBrushless);
-        encoder = new Encoder(Constants.Arm.ENCODER_CHANNEL_A, Constants.Arm.ENCODER_CHANNEL_B);
-        homeSwitch = new DigitalInput(Constants.Arm.HOMESWITCH_CHANNEL);
-        motorOne.setInverted(true);
+        armMotorRight = new CANSparkMax(Constants.Arm.ARM_MOTOR_RIGHT, MotorType.kBrushless);
+        armMotorLeft = new CANSparkMax(Constants.Arm.ARM_MOTOR_LEFT, MotorType.kBrushless);
+        armMotorRight.setIdleMode(IdleMode.kBrake);
+        armMotorLeft.setIdleMode(IdleMode.kBrake);
+        armMotorRight.setInverted(true);
+        armMotorLeft.setInverted(false);
+        encoder = new DutyCycleEncoder(Constants.Arm.ENCODER_CHANNEL);
+        homeSwitchLeft = new DigitalInput(Constants.Arm.RIGHT_HOMESWITCH_CHANNEL);
+        homeSwitchRight = new DigitalInput(Constants.Arm.LEFT_HOMESWITCH_CHANNEL);
     }
 
     @Override
-    public void setMotorPower(double power){
-        motorOne.setVoltage(power*12);
-        motorTwo.setVoltage(power*12);
+    public void setMotorPower(double power) {
+        // positive power makes arm move away from home
+        motorPower = power;
+        armMotorRight.setVoltage(power * 12);
+        armMotorLeft.setVoltage(power * 12);
     }
 
     @Override
-    public double getMeasurement(){
-        return ((double) encoder.get() / Constants.Arm.ENCODER_COUNT) * 360;
+    public double getMeasurement() {
+        return encoder.get() * 360;
     }
 
     @Override
-    public double getMotorSpeed(){
-        return motorOne.get();
+    public double getMotorSpeed() {
+        return motorPower;
     }
 
     @Override
-    public boolean atFrontLimit(){
-        return homeSwitch.get();
+    public boolean atFrontLimit() {
+        return (getLeftHomeSwitch() || getRightHomeSwitch());
     }
 
     @Override
-    public void periodic(){
+    public boolean getLeftHomeSwitch() {
+        return !homeSwitchLeft.get();
+    }
+
+    @Override
+    public boolean getRightHomeSwitch() {
+        return !homeSwitchRight.get();
+    }
+
+    @Override
+    public void periodic() {
 
     }
 }
