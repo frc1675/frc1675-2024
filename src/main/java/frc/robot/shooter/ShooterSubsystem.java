@@ -2,7 +2,6 @@ package frc.robot.shooter;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +22,9 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(IShooterIO shooterIO) {
         this.shooterIO = shooterIO;
         ShuffleboardInit();
+
+        topPidController.setTolerance(Constants.Shooter.TARGET_SPEED_ERROR_MARGIN);
+        bottomPidController.setTolerance(Constants.Shooter.TARGET_SPEED_ERROR_MARGIN);
     }
 
     private void ShuffleboardInit() {
@@ -47,8 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isShooterReady() {
-        double[] speeds = shooterIO.getShooterSpeeds();
-        return Math.abs(targetShooterSpeed - speeds[0]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN && Math.abs(targetShooterSpeed * 0.9 - speeds[1]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
+        return topPidController.atSetpoint() && bottomPidController.atSetpoint();
     }
 
     public void setTargetShooterSpeed(double targetSpeed) {
