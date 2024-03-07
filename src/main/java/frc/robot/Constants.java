@@ -49,7 +49,7 @@ public class Constants {
 
     public class Shooter {
         public static final double SHOOT_SPEED = 1700;
-        public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .10;
+        public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 
         public static final int INDEXER_MOTOR_TOP = 18;
         public static final int INDEXER_MOTOR_BOTTOM = 19;
