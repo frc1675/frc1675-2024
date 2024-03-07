@@ -47,7 +47,7 @@ public class Constants {
         public static final double MAXIMUM_VELOCITY = 150; // degrees per second
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
     }
-
+   
     public class PathPlanner {
         // TODO tune constants if necessary
         public static final double MAXIMUM_VELOCITY = 2.5; // meters per second

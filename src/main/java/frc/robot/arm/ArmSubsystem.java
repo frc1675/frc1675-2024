@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Arm extends SubsystemBase {
+public class ArmSubsystem extends SubsystemBase {
     private double targetAngle = Constants.Arm.HOME_POSITION;
     private ProfiledPIDController pid;
     private boolean broken;
@@ -15,7 +15,7 @@ public class Arm extends SubsystemBase {
     private IArmIO armIO;
     private TrapezoidProfile.Constraints profileConstraints;
 
-    public Arm(IArmIO armIO) {
+    public ArmSubsystem(IArmIO armIO) {
         this.armIO = armIO;
         // pid = new PIDController(Constants.Arm.PID_P_COEFFICIENT,
         // Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT);
