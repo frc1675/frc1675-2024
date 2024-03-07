@@ -59,7 +59,7 @@ public class Constants {
         // TODO measure on robot
         public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); // meters
 
-        public static final double TRANSLATION_P = 1000;
+        public static final double TRANSLATION_P = 10;
         public static final double TRANSLATION_I = 0;
         public static final double TRANSLATION_D = 0;
 

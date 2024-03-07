@@ -27,10 +27,19 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.arm.Arm;
+import frc.robot.arm.commands.MoveToHome;
+import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.shooter.ShooterSubsystem;
+import frc.robot.shooter.commands.Shoot;
+import frc.robot.shooter.commands.SpinDown;
+import frc.robot.shooter.commands.SpinUp;
+import frc.robot.undertaker.UndertakerIntake;
+import frc.robot.undertaker.UndertakerSubsystem;
 
 public class AutoGenerator {
 
@@ -45,11 +54,20 @@ public class AutoGenerator {
     private Field2d fieldMap = new Field2d();
 
     private final DriveSubsystem drive;
+    private final Arm arm;
+    private final ShooterSubsystem shooter;
+    private final UndertakerSubsystem undertaker;
+    private final RobotContext robotContext;
 
     private String previousPath = "";
 
-    public AutoGenerator(DriveSubsystem drive) {
+    public AutoGenerator(DriveSubsystem drive, Arm arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
         this.drive = drive;
+        this.arm = arm;
+        this.shooter = shooter;
+        this.undertaker = undertaker;
+        this.robotContext = robotContext;
+
         AutoBuilder.configureHolonomic(
             drive::getPose,
             drive::resetOdometry,
@@ -60,9 +78,9 @@ public class AutoGenerator {
                 new PIDConstants(Constants.PathPlanner.ROTATION_P),
                 Constants.PathPlanner.MAXIMUM_VELOCITY, 
                 Constants.PathPlanner.DRIVEBASE_RADIUS, 
-                new ReplanningConfig(false, false)
+                new ReplanningConfig(true, false)
             ),
-            () -> allianceIsRed(),
+            () -> Robot.isSimulation() ? false : DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red),
             drive
         );
 
@@ -70,21 +88,20 @@ public class AutoGenerator {
         initShuffleboardTab();
     }
 
-    private boolean allianceIsRed() {
-        if(Robot.isSimulation()) {
-            return false;
-        }
-        return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
-    }
-
     private void registerCommands() {
-        NamedCommands.registerCommand("notePickup", new PrintCommand("Note pickup command triggered!"));
-        NamedCommands.registerCommand("scoreHigh", new PrintCommand("Score high command triggered!"));
+        NamedCommands.registerCommand("armHome", new MoveToHome(arm));
+        NamedCommands.registerCommand("armAmp", new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
+        NamedCommands.registerCommand("spinUp", new SpinUp(shooter, robotContext::shouldSlowShoot));
+        NamedCommands.registerCommand("shoot", new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME));
+        NamedCommands.registerCommand("spinDown", new SpinDown(shooter));
+        NamedCommands.registerCommand("runUndertaker", new UndertakerIntake(undertaker, robotContext::getReadyToIntake));
+        NamedCommands.registerCommand("disableUndertaker", new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
+        NamedCommands.registerCommand("enableUndertaker", new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     }
 
     private void initShuffleboardTab() {
         ShuffleboardTab tab = Shuffleboard.getTab("Auto");
-        
+
         autoSelector = AutoBuilder.buildAutoChooser();
 
         tab.add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
@@ -186,7 +203,7 @@ public class AutoGenerator {
                     states.get(i).timeSeconds, 
                     states.get(i).velocityMps, 
                     states.get(i).accelerationMpsSq, 
-                    new Pose2d(states.get(i).positionMeters.plus(new Translation2d(1, 0)), states.get(i).targetHolonomicRotation),
+                    new Pose2d(states.get(i).positionMeters, states.get(i).targetHolonomicRotation),
                     states.get(i).curvatureRadPerMeter
                 )
             );

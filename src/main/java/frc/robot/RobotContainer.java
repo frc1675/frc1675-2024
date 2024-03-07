@@ -81,7 +81,6 @@ public class RobotContainer {
     poseScheduler = new PoseScheduler();
     drive = new DriveSubsystem(poseScheduler);
     drive.setMotorBrakeMode(true);
-    autoGenerator = new AutoGenerator(drive);
 
     arm = new Arm(armIO);
     visionSubsystem = new VisionSubsystem(vision);
@@ -90,6 +89,7 @@ public class RobotContainer {
     shooter = new ShooterSubsystem(shooterIO);
 
     robotContext = new RobotContext(arm);
+    autoGenerator = new AutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext);
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
