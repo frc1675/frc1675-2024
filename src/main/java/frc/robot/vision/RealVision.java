@@ -25,17 +25,17 @@ public class RealVision implements IVision {
 
   @Override
   public Pose2d getBotpose(){
-	if(botpose instanceof NetworkTableEntry){
-      double[] botposeArray = botpose.getDoubleArray(new double[6]);
-      return new Pose2d(botposeArray[0], botposeArray[1], Rotation2d.fromDegrees(botposeArray[5]));
-	}
+    if(botpose instanceof NetworkTableEntry){
+        double[] botposeArray = botpose.getDoubleArray(new double[6]);
+        return new Pose2d(botposeArray[0], botposeArray[1], Rotation2d.fromDegrees(botposeArray[5]));
+    }
     if(DriverStation.getAlliance().isPresent()){
-      if(DriverStation.getAlliance().get() == Alliance.Red){
-        botpose = table.getEntry("botpose_wpired");
-      }else{
-        botpose = table.getEntry("botpose_wpiblue");
-      }
-	  double[] botposeArray = botpose.getDoubleArray(new double[6]);
+        if(DriverStation.getAlliance().get() == Alliance.Red){
+          botpose = table.getEntry("botpose_wpired");
+        }else{
+          botpose = table.getEntry("botpose_wpiblue");
+        }
+      double[] botposeArray = botpose.getDoubleArray(new double[6]);
       return new Pose2d(botposeArray[0], botposeArray[1], Rotation2d.fromDegrees(botposeArray[5]));
     }
     return new Pose2d(-1000, -1000, Rotation2d.fromDegrees(0)); // Out of Bounds Default Pose for Drive Subsystem to Ignore
