@@ -15,7 +15,6 @@ import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.arm.Arm;
 import frc.robot.arm.IArmIO;
 import frc.robot.arm.RealArmIO;
 import frc.robot.arm.SimArmIO;
@@ -54,7 +53,7 @@ public class RobotContainer {
   private final UndertakerSubsystem undertakerSubsystem;
   private final AutoGenerator autoGenerator;
   private final VisionSubsystem visionSubsystem;
-  private final Arm arm;
+  private final ArmSubsystem arm;
 
   private boolean intakeEnabled = true;
 
@@ -88,7 +87,7 @@ public class RobotContainer {
     drive.setMotorBrakeMode(true);
     autoGenerator = new AutoGenerator(drive);
 
-    arm = new Arm(armIO);
+    arm = new ArmSubsystem(armIO);
     visionSubsystem = new VisionSubsystem(vision);
     ledSubsystem = new LEDSubsystem(ledIO);
     undertakerSubsystem = new UndertakerSubsystem(undertaker);
