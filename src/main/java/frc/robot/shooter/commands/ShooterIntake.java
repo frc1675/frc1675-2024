@@ -8,25 +8,25 @@ import frc.robot.Constants;
 import frc.robot.shooter.ShooterSubsystem;
 
 public class ShooterIntake extends Command {
-    private final ShooterSubsystem subsystem;
+  private final ShooterSubsystem subsystem;
 
-    public ShooterIntake(ShooterSubsystem subsystem) {
-        this.subsystem = subsystem;
-        addRequirements(subsystem);
-    }
+  public ShooterIntake(ShooterSubsystem subsystem) {
+    this.subsystem = subsystem;
+    addRequirements(subsystem);
+  }
 
-    @Override
-    public void initialize() {
-        subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
-    }
+  @Override
+  public void initialize() {
+    subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
+  }
 
-    @Override
-    public void end(boolean interrupted) {
-        subsystem.setIndexerSpeed(0);
-    }
+  @Override
+  public void end(boolean interrupted) {
+    subsystem.setIndexerSpeed(0);
+  }
 
-    @Override
-    public boolean isFinished() {
-        return subsystem.isIndexerLoaded();
-    }
+  @Override
+  public boolean isFinished() {
+    return subsystem.isIndexerLoaded();
+  }
 }

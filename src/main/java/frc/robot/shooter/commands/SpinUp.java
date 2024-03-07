@@ -8,23 +8,24 @@ import frc.robot.Constants;
 import frc.robot.shooter.ShooterSubsystem;
 
 public class SpinUp extends Command {
-    private final ShooterSubsystem subsystem;
+  private final ShooterSubsystem subsystem;
 
-    public SpinUp(ShooterSubsystem subsystem) {
-        this.subsystem = subsystem;
-        addRequirements(subsystem);
-    }
+  public SpinUp(ShooterSubsystem subsystem) {
+    this.subsystem = subsystem;
+    addRequirements(subsystem);
+  }
 
-    @Override
-    public void initialize() {
-        subsystem.setTargetShooterSpeed(Constants.Shooter.SHOOT_SPEED);
-    }
+  @Override
+  public void initialize() {
+    subsystem.setTargetShooterSpeed(Constants.Shooter.SHOOT_SPEED);
+  }
 
-    @Override
-    public void end(boolean interrupted) {}
+  @Override
+  public void end(boolean interrupted) {
+  }
 
-    @Override
-    public boolean isFinished() {
-        return subsystem.isShooterReady();
-    }
+  @Override
+  public boolean isFinished() {
+    return subsystem.isShooterReady();
+  }
 }
