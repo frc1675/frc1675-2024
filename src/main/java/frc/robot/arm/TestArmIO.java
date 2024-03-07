@@ -12,6 +12,14 @@ public class TestArmIO implements IArmIO {
     return motorPower;
   }
 
+  public boolean getLeftHomeSwitch(){
+    return true;
+  }
+
+  public boolean getRightHomeSwitch(){
+    return true;
+  }
+
   public void setMotorPower(double powerLevel){
     motorPower = powerLevel;
   }

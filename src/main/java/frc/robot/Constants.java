@@ -47,29 +47,6 @@ public class Constants {
         public static final double MAXIMUM_VELOCITY = 150; // degrees per second
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
     }
-    public class Arm{
-        //Encoder constants
-        public static final int ENCODER_CHANNEL_A = 28;
-        public static final int ENCODER_CHANNEL_B = 29;
-        public static final int ENCODER_COUNT = 8192;
-        //Home switch constants
-        public static final int HOMESWITCH_CHANNEL = 30;
-        //Motor constants
-        public static final int ARM_MOTOR_ONE = 15;
-        public static final int ARM_MOTOR_TWO = 16;
-        //PID constants
-        public static final double PID_P_COEFFICIENT = 0.075;
-        public static final double PID_I_COEFFICIENT = 0;
-        public static final double PID_D_COEFFICIENT = 0;
-        //Arm movment lmits constants
-        public static final double MAX_ARM_RANGE_DEGREES = 90;
-        public static final double TARGET_RANGE = 5.0;
-        public static final double DEBOUNCE_TIME = 0.5;
-        //Position constants
-        public static final double HOME_POSITION = 0;
-        public static final double HIGH_SCORE_POSITION = 60;
-        public static final double LOW_SCORE_POSITION = 50;
-    }
    
     public class PathPlanner {
         // TODO tune constants if necessary
