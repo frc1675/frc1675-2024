@@ -119,7 +119,7 @@ public class RobotContainer {
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
-    return MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
+    return -MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
   }
 
   private double getDriveSpeedScale() {
