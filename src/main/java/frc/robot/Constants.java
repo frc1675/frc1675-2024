@@ -36,7 +36,7 @@ public class Constants {
         public static final double PID_I_COEFFICIENT = 0;
         public static final double PID_D_COEFFICIENT = 0;
         // Arm movment lmits constants
-        public static final double TARGET_RANGE = 1.0;
+        public static final double TARGET_RANGE = 4.0;
         public static final double DEBOUNCE_TIME = 0.5;
         // Position constnats
         public static final double HOME_POSITION = 138;
