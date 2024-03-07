@@ -6,21 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import frc.robot.undertaker.TestUndertakerIO;
 import frc.robot.undertaker.UndertakerSubsystem;
-import frc.robot.undertaker.SimUndertaker;
 
 public class UndertakerTest {
 
   private static UndertakerSubsystem undertaker;
-  private static SimUndertaker undertakerIO;
+  private static TestUndertakerIO undertakerIO;
   private static final double targetSpeed = 5;
 
   @BeforeAll
-  public static void setup(){
-    undertakerIO = new SimUndertaker();
+  public static void setup() {
+    undertakerIO = new TestUndertakerIO();
     undertaker = new UndertakerSubsystem(undertakerIO);
   }
-
 
   @Test
   public void setsTargetSpeed() {
@@ -44,6 +43,4 @@ public class UndertakerTest {
     undertaker.run(targetSpeed);
     assertFalse(undertakerIO.getHasRun());
   }
-
-
 }
