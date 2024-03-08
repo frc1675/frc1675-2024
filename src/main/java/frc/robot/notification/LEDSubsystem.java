@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDSubsystem extends SubsystemBase { 
-  private final ShuffleboardTab tab;
-
   private final Stack<LEDState> stack = new Stack<LEDState>();
 
   private final ILedIO ledIO;
@@ -18,11 +16,11 @@ public class LEDSubsystem extends SubsystemBase {
     this.ledIO = ledIO; 
     stack.push(LEDState.NOTHING);
 
-    ledIO.changeColor(stack.get(0));
+    ledIO.changeColor(stack.peek());
 
-    tab = Shuffleboard.getTab("LEDStatus");
+    ShuffleboardTab tab = Shuffleboard.getTab("LEDStatus");
     tab.addBoolean("Connection", () -> ledIO.getIsAlive());
-    tab.addString("Status:", () -> stack.get(0).getStatusMessage());
+    tab.addString("Status", () -> stack.peek().getStatusMessage());
   }
 
   public void addColor(LEDState status){
