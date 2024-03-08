@@ -13,7 +13,7 @@ public class SimLedIO implements ILedIO{
   }
 
   @Override
-  public void changeColor(LEDStateEnum color){
+  public void changeColor(LEDState color){
     ledSparkValue = color.getSparkValue();
     uiLED.setBackgroundColor(new Color8Bit(color.getHexCode()));
   }

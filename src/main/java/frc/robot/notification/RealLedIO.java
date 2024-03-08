@@ -9,7 +9,7 @@ public class RealLedIO implements ILedIO{
   public RealLedIO(){}
   
   @Override
-  public void changeColor(LEDStateEnum color){
+  public void changeColor(LEDState color){
     ledController.set(color.getSparkValue());  
   }
 
