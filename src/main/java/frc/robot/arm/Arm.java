@@ -33,10 +33,6 @@ public class Arm extends SubsystemBase {
     public boolean isOnTarget() {
         pid.setTolerance(Constants.Arm.TARGET_RANGE);
         return pid.atGoal();
-        /*
-        return ((getAngle() >= targetAngle - Constants.Arm.TARGET_RANGE)
-                && (getAngle() <= targetAngle + Constants.Arm.TARGET_RANGE));
-        */
     }
 
     public double getTarget() {
@@ -56,7 +52,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isAtAmpPosition() {
-        return isOnTarget();
+        return isOnTarget() && getTarget() == Constants.Arm.AMP_POSITION;
     }
 
     public boolean isBroken() {
