@@ -1,10 +1,10 @@
 package frc.robot.notification;
 
 public enum LEDState {
-  UNDERTAKER_DISABLED(0.61, "Undertaker Disabled", "ff0000", -1), //RED
-  SPINNING_UP(0.69, "Motors spinning up", "ffff00", -1), //YELLOW
-  HAS_NOTE(0.77, "Has note", "00ff00", 2), //GREEN
-  NOTHING(-0.07 ,"Nothing", "000000", -1); //GOLD
+  UNDERTAKER_DISABLED(0.61, "Undertaker Disabled", "#ff0000", -1), //RED
+  SPINNING_UP(0.69, "Motors spinning up", "#ffff00", -1), //YELLOW
+  HAS_NOTE(0.77, "Has note", "#00ff00", 2), //GREEN
+  NOTHING(-0.07 ,"Nothing", "#ffffff", -1); //WHITE
   
   private final double spark;
   private final String message;
@@ -12,6 +12,7 @@ public enum LEDState {
   private final double timeout;
 
   private double timeAdded = -1;
+  private boolean removeImmediately = false;
 
   private LEDState(double sparkValue, String statusMessage, String hexCode, double timeout){
     this.spark = sparkValue; 
@@ -20,16 +21,26 @@ public enum LEDState {
     this.timeout = timeout;
   }
 
+  public void requestRemoval() {
+    removeImmediately = true;
+  }
+
   public void setTimeAdded(double time) {
     timeAdded = time;
   }
 
   public boolean isExpired(double time) {
+
+    if (removeImmediately) {
+      removeImmediately = false;
+      return true;
+    }
+
     if (timeAdded < 0 || timeout < 0) {
       return false;
     }
 
-    return (timeAdded - time) >= timeout;
+    return (time - timeAdded) >= timeout;
   }
 
   public double getSparkValue(){

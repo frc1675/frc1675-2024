@@ -19,6 +19,7 @@ import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.cmdGroup.SpinUpAndShoot;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.notification.ContextualColor;
 import frc.robot.notification.ILedIO;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.notification.RealLedIO;
@@ -89,7 +90,7 @@ public class RobotContainer {
     undertakerSubsystem = new UndertakerSubsystem(undertaker);
     shooter = new ShooterSubsystem(shooterIO);
 
-    robotContext = new RobotContext(arm);
+    robotContext = new RobotContext(arm, shooter);
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
@@ -109,6 +110,7 @@ public class RobotContainer {
     );
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
+    ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem));
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem, robotContext::shouldSlowShoot));
