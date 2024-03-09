@@ -4,7 +4,9 @@ public enum LEDState {
   UNDERTAKER_DISABLED(0.61, "Undertaker Disabled", "#ff0000", -1), //RED
   SPINNING_UP(0.69, "Motors spinning up", "#ffff00", -1), //YELLOW
   HAS_NOTE(0.77, "Has note", "#00ff00", 2), //GREEN
-  NOTHING(-0.07 ,"Nothing", "#ffffff", -1); //WHITE
+  AT_AMP_POSITION(0.87, "At amp position", "0000ff", -1), //BLUE
+  SHOT_FIRED(-0.07,"Shot fired", "#Fdc256", 2), //GOLD
+  NOTHING(0.93 ,"Nothing", "#ffffff", -1); //WHITE
   
   private final double spark;
   private final String message;

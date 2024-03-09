@@ -30,8 +30,13 @@ public class LEDSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (stack.peek().isExpired(Timer.getFPGATimestamp())) {
-      stack.pop();
+
+    for (int i = 0; i < stack.size(); i++) {
+      if (stack.get(i).isExpired(Timer.getFPGATimestamp())) {
+
+        System.out.println(stack.remove(i).getStatusMessage());
+        i--;
+      }
     }
 
     ledIO.changeColor(stack.peek());

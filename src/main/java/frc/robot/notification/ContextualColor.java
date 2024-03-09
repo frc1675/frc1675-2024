@@ -22,29 +22,35 @@ public class ContextualColor extends Command {
 
     @Override
     public void execute() {
-        if (previousValues[0] != robotContext.hasNote() && robotContext.hasNote()) {
-            led.addColor(LEDState.HAS_NOTE);
-        }
-
-        if (previousValues[1] != robotContext.getIntakeEnabledOverride()) {
-            if (robotContext.getIntakeEnabledOverride()) {
-                LEDState.UNDERTAKER_DISABLED.requestRemoval();
-            } else {
-                led.addColor(LEDState.UNDERTAKER_DISABLED);
+        if (previousValues[0] != robotContext.hasNote()) {
+            if (robotContext.hasNote()) {
+                led.addColor(LEDState.HAS_NOTE);
+            }else {
+                led.addColor(LEDState.SHOT_FIRED);
             }
         }
+
+        handleContinuousEvent(previousValues[2], robotContext.getIntakeEnabledOverride(), LEDState.UNDERTAKER_DISABLED);
+        handleContinuousEvent(previousValues[3], robotContext.shouldSlowShoot(), LEDState.AT_AMP_POSITION);
 
         setPreviousValues();
     }
 
-    private void setPreviousValues() {
-        previousValues[0] = robotContext.hasNote();
-        previousValues[1] = robotContext.getIntakeEnabledOverride();
+    private void handleContinuousEvent(boolean previous, boolean current, LEDState state) {
+        if (previous != current) {
+            if (current) {
+                state.requestRemoval();
+            }else {
+                led.addColor(state);
+            }
+        }
     }
 
-    @Override
-    public void end(boolean interupted) {
-
+    private void setPreviousValues() {
+        previousValues[0] = robotContext.hasNote();
+        previousValues[1] = false;
+        previousValues[2] = robotContext.getIntakeEnabledOverride();
+        previousValues[3] = robotContext.shouldSlowShoot();
     }
 
     @Override
