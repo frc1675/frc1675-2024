@@ -32,11 +32,11 @@ public class Constants {
         public static final int ARM_MOTOR_RIGHT = 15;
         public static final int ARM_MOTOR_LEFT = 16;
         // PID constants
-        public static final double PID_P_COEFFICIENT = 0.02;
+        public static final double PID_P_COEFFICIENT = 0.023;
         public static final double PID_I_COEFFICIENT = 0;
         public static final double PID_D_COEFFICIENT = 0;
         // Arm movment lmits constants
-        public static final double TARGET_RANGE = 1.0;
+        public static final double TARGET_RANGE = 2.0;
         public static final double DEBOUNCE_TIME = 0.5;
         // Position constnats
         public static final double HOME_POSITION = 138;
