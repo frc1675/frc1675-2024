@@ -72,6 +72,7 @@ public class Arm extends SubsystemBase {
         dashboard.addBoolean("Right home switch: ", () -> armIO.getRightHomeSwitch());
         dashboard.addBoolean("Left home switch: ", () -> armIO.getLeftHomeSwitch());
         dashboard.addBoolean("Is Broken", () -> isBroken());
+        dashboard.add(pid);
     }
 
     public double getPositionSetpoint() {
