@@ -32,11 +32,11 @@ public class Constants {
         public static final int ARM_MOTOR_RIGHT = 15;
         public static final int ARM_MOTOR_LEFT = 16;
         // PID constants
-        public static final double PID_P_COEFFICIENT = 0.02;
+        public static final double PID_P_COEFFICIENT = 0.023;
         public static final double PID_I_COEFFICIENT = 0;
         public static final double PID_D_COEFFICIENT = 0;
         // Arm movment lmits constants
-        public static final double TARGET_RANGE = 1.0;
+        public static final double TARGET_RANGE = 2.0;
         public static final double DEBOUNCE_TIME = 0.5;
         // Position constnats
         public static final double HOME_POSITION = 138;
@@ -49,14 +49,12 @@ public class Constants {
     }
 
     public class PathPlanner {
-        // TODO tune constants if necessary
         public static final double MAXIMUM_VELOCITY = 2.5; // meters per second
         public static final double MAXIMUM_ACCELERATION = 1.25; // meters per second squared
 
         public static final double MAXIMUM_ANGULAR_VELOCITY = 7.5; // radians per second
         public static final double MAXIMUM_ANGULAR_ACCELERATION = 3.75; // radians per second squared
 
-        // TODO measure on robot
         public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); // meters
 
         public static final double TRANSLATION_P = 10;
@@ -78,7 +76,7 @@ public class Constants {
 
     public class Shooter {
         public static final double SHOOT_SPEED = 1700;
-        public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .14;
+        public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 
         public static final int INDEXER_MOTOR_TOP = 18;
         public static final int INDEXER_MOTOR_BOTTOM = 19;

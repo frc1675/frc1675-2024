@@ -17,8 +17,6 @@ public class Arm extends SubsystemBase {
 
     public Arm(IArmIO armIO) {
         this.armIO = armIO;
-        // pid = new PIDController(Constants.Arm.PID_P_COEFFICIENT,
-        // Constants.Arm.PID_I_COEFFICIENT, Constants.Arm.PID_D_COEFFICIENT);
         profileConstraints = new TrapezoidProfile.Constraints(Constants.Arm.MAXIMUM_VELOCITY,
                 Constants.Arm.MAXIMUM_ACCELERATION);
         pid = new ProfiledPIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT,
@@ -33,8 +31,8 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isOnTarget() {
-        return ((getAngle() >= targetAngle - Constants.Arm.TARGET_RANGE)
-                && (getAngle() <= targetAngle + Constants.Arm.TARGET_RANGE));
+        pid.setTolerance(Constants.Arm.TARGET_RANGE);
+        return pid.atGoal();
     }
 
     public double getTarget() {
@@ -54,24 +52,13 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isAtAmpPosition() {
-        return isOnTarget() && armTargetName().equals("Amp");
+        return isOnTarget() && getTarget() == Constants.Arm.AMP_POSITION;
     }
 
     public boolean isBroken() {
         return broken;
     }
 
-    private String armTargetName() {
-        if (targetAngle == Constants.Arm.HIGH_SCORE_POSITION) {
-            return "High Goal";
-        } else if (targetAngle == Constants.Arm.HOME_POSITION) {
-            return "Home";
-        } else if (targetAngle == Constants.Arm.AMP_POSITION) {
-            return "Amp";
-        } else {
-            return "Undefined Target";
-        }
-    }
 
     private void initDashboard() {
         dashboard = Shuffleboard.getTab("Arm");
@@ -80,7 +67,6 @@ public class Arm extends SubsystemBase {
         dashboard.addDouble("Velocity Setpoint", () -> getVelocitySetpoint());
         dashboard.addDouble("Arm Angle", () -> getAngle());
         dashboard.addBoolean("On Target", () -> isOnTarget());
-        dashboard.addString("Target", () -> armTargetName());
         dashboard.addDouble("Motor Speed", () -> armIO.getMotorSpeed());
         dashboard.addBoolean("Home Switch", () -> isAtHomePostion());
         dashboard.addBoolean("Right home switch: ", () -> armIO.getRightHomeSwitch());
@@ -102,6 +88,7 @@ public class Arm extends SubsystemBase {
     public void periodic() {
 
         armIO.periodic();
+        //Multiply by -1 to invert motorPower because positive motor power moves the arm upwards but decreases the angle read by the encoder and vice versa for negitive motor power. 
         double motorPower = -1.0 * pid.calculate(getAngle(), targetAngle);
 
         if (armIO.atFrontLimit()) {

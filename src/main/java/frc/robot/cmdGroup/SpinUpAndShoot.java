@@ -9,10 +9,9 @@ import frc.robot.shooter.commands.*;
 import frc.robot.undertaker.UndertakerSubsystem;
 
 public class SpinUpAndShoot extends SequentialCommandGroup {
-    public SpinUpAndShoot(ShooterSubsystem shooter, UndertakerSubsystem undertaker, BooleanSupplier slowShoot) {
-        addCommands(
-            new SpinUp(shooter, slowShoot),
-            new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME)
-        );
-    }
+  public SpinUpAndShoot(ShooterSubsystem shooter, UndertakerSubsystem undertaker, BooleanSupplier slowShoot) {
+    addCommands(
+        new SpinUp(shooter, slowShoot),
+        new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME));
+  }
 }
