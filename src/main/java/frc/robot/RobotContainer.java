@@ -16,7 +16,7 @@ import frc.robot.arm.SimArmIO;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.auto.generator.AbstractAutoGenerator;
-import frc.robot.auto.generator.AutoGenerator;
+import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DefaultDrive;
@@ -95,7 +95,7 @@ public class RobotContainer {
     autoGenerator = 
       Constants.PathPlanner.PATH_PLANNER_IS_ENABLED 
       ? 
-      new AutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext) 
+      new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext) 
       :
       new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
     

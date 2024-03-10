@@ -27,7 +27,7 @@ import frc.robot.undertaker.UndertakerIntake;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.RobotContext;
 
-public class AutoGenerator extends AbstractAutoGenerator {
+public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
     private SendableChooser<Command> autoSelector;
 
@@ -36,7 +36,7 @@ public class AutoGenerator extends AbstractAutoGenerator {
     private final UndertakerSubsystem undertaker;
     private final RobotContext robotContext;
 
-    public AutoGenerator(DriveSubsystem drive, Arm arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
+    public PathPlannerAutoGenerator(DriveSubsystem drive, Arm arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
         super("PathPlanner");
         this.arm = arm;
         this.shooter = shooter;
