@@ -6,7 +6,6 @@ import java.util.List;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory.State;
@@ -16,17 +15,14 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -54,7 +50,6 @@ public class AutoGenerator {
     private SendableChooser<Command> autoSelector;
     private Field2d fieldMap = new Field2d();
 
-    private final DriveSubsystem drive;
     private final Arm arm;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
@@ -63,7 +58,6 @@ public class AutoGenerator {
     private String previousPath = "";
 
     public AutoGenerator(DriveSubsystem drive, Arm arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
-        this.drive = drive;
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
@@ -111,59 +105,6 @@ public class AutoGenerator {
 
     public Command getAutoCommand() {
         return autoSelector.getSelected();
-    }
-
-    public boolean canFollowPath(Pose2d endPose, Pose2d...additionalPoses) {
-        Pose2d currentPose = drive.getPose();
-        if (endPose.getTranslation().getDistance(currentPose.getTranslation()) > Constants.PathPlanner.DYNAMIC_PATHING_MAX_DISTANCE) {
-            return false;
-        }
-
-        for (Pose2d pose : additionalPoses) {
-            if (pose.getTranslation().getDistance(currentPose.getTranslation()) > Constants.PathPlanner.DYNAMIC_PATHING_MAX_DISTANCE) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Dynamically generates a command. The command runs a path which moves through
-     * the given poses,
-     * starting at the current pose. Note that the rotation is the direction of
-     * travel, not the holonomic (swerve) rotation.
-     * 
-     * @param endRotation     the holonomic (swerve) rotation at the end of the path
-     * @param endPose         the target end pose
-     * @param additionalPoses other points the robot should travel through before
-     *                        reaching the end pose. This is optional.
-     * @return a command which moves through all of the given points, ending
-     *         at the endPose, rotated to the target endRotation, with a velocity of
-     *         zero.
-     */
-    public Command generatePathFollowCommand(Rotation2d endRotation, Pose2d endPose, Pose2d...additionalPoses) {
-        Pose2d currentPose = drive.getPose();
-
-        if (!canFollowPath(endPose, additionalPoses)) {
-            DataLogManager.log("Refused to generate path as robot too far away from goal end pose.");
-            return Commands.none();
-        }
-
-        List<Pose2d> poses = new ArrayList<Pose2d>();
-        poses.add(currentPose); //Path should start where the robot is right now
-        for (Pose2d pose : additionalPoses) {
-            poses.add(pose);
-        }
-        poses.add(endPose);
-
-        List<Translation2d> points = PathPlannerPath.bezierFromPoses(poses);
-
-        PathPlannerPath path = new PathPlannerPath(points, DEFAULT_PATH_CONSTRAINTS, new GoalEndState(0, endRotation));
-
-        path.preventFlipping = true;
-
-        return AutoBuilder.followPath(path);
     }
 
 
