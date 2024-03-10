@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.poseScheduler.FieldArea2d;
@@ -9,6 +11,9 @@ public class Constants {
     public class Drive {
         public static final double MAXIMUM_VELOCITY = 5.0; // meters per second
         public static final double MAXIMUM_ANGULAR_VELOCITY = 10; // radians per second
+
+        public static final double AUTONOMOUS_VELOCITY = MAXIMUM_VELOCITY; //meters per second
+        public static final double AUTONOMOUS_ACCELERATION = 10.0; // meters per second squared
 
         public static final double MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE = 1.0; // meters
 
@@ -72,6 +77,12 @@ public class Constants {
         public static final Translation2d SPEAKER_SCORING_POSITION = new Translation2d(1.67, 5.52);
 
         public static final FieldArea2d FRIENDLY_ALLIANCE_AREA = new FieldArea2d(0, 0, 5.85, 8.21);
+
+        public static final Pose2d SUBWOOFER_FRONT = new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(0)); 
+        
+        //Relative to the drivers
+        public static final Pose2d SUBWOOFER_LEFT = new Pose2d(0.75, 6.7, Rotation2d.fromDegrees(60));
+        public static final Pose2d SUBWOOFER_RIGHT = new Pose2d(0.75, 4.35, Rotation2d.fromDegrees(-60));
     }
 
     public class Shooter {
