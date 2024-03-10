@@ -2,9 +2,6 @@ package frc.robot.auto.generator;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -17,10 +14,9 @@ import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.RobotContext;
 
-public class SimpleAutoGenerator {
+public class SimpleAutoGenerator extends AbstractAutoGenerator {
 
     private final SendableChooser<String> autoSelector;
-    private final Field2d field;
 
     private final DriveSubsystem drive;
     private final ShooterSubsystem shooter;
@@ -28,13 +24,13 @@ public class SimpleAutoGenerator {
     private final RobotContext context;
 
     public SimpleAutoGenerator(DriveSubsystem drive, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext context) {
+        super("Simple");
         this.drive = drive;
         this.shooter = shooter;
         this.undertaker = undertaker;
         this.context = context;
 
         autoSelector = new SendableChooser<String>();
-        field = new Field2d();
 
         initShuffleboardTab();
     }
@@ -45,14 +41,12 @@ public class SimpleAutoGenerator {
         autoSelector.addOption("Start from subwoofer left, shoot preloaded, exit with undertaker running", "left");
         autoSelector.addOption("Start from subwoofer right, shoot preloaded, exit with undertaker running", "right");
 
-        ShuffleboardTab tab = Shuffleboard.getTab("Auto");
-
-        tab.add("Auto Selection", autoSelector).withPosition(0, 0).withSize(5, 1);
-        tab.add("Starting Pose", field).withPosition(0, 1).withSize(6, 4);
-
         autoSelector.onChange((String val) -> updateMap());
+
+        getTab().add("Auto Selection", autoSelector).withPosition(0, 0).withSize(5, 1);
     }
 
+    @Override
     public Command getAutoCommand() {
         switch (autoSelector.getSelected()) {
             case "front":
@@ -68,26 +62,19 @@ public class SimpleAutoGenerator {
     }
 
     private void updateMap() {
-        Pose2d pose;
         switch (autoSelector.getSelected()) {
             case "front":
-                pose = Constants.Field.SUBWOOFER_FRONT;
+                setFieldPose(Constants.Field.SUBWOOFER_FRONT);
                 break;
             case "left":
-                pose = Constants.Field.SUBWOOFER_LEFT;
+                setFieldPose(Constants.Field.SUBWOOFER_LEFT);
                 break;
             case "right":
-                pose = Constants.Field.SUBWOOFER_RIGHT;
+                setFieldPose(Constants.Field.SUBWOOFER_RIGHT);
                 break;
             default:
-                pose = new Pose2d();
+                setFieldPose(new Pose2d());
         }
-
-        field.getRobotObject().setPose(
-            pose.getX() + 1, //the field visual on shuffleboard is offset slightly (not sure why)
-            pose.getY(), 
-            pose.getRotation()
-        );
     }
 
 }

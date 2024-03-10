@@ -1,26 +1,15 @@
 package frc.robot.auto.generator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,26 +27,17 @@ import frc.robot.undertaker.UndertakerIntake;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.RobotContext;
 
-public class AutoGenerator {
-
-    public static final PathConstraints DEFAULT_PATH_CONSTRAINTS = new PathConstraints(
-        Constants.PathPlanner.MAXIMUM_VELOCITY, 
-        Constants.PathPlanner.MAXIMUM_ACCELERATION,
-        Constants.PathPlanner.MAXIMUM_ANGULAR_VELOCITY,
-        Constants.PathPlanner.MAXIMUM_ANGULAR_ACCELERATION
-    );
+public class AutoGenerator extends AbstractAutoGenerator {
 
     private SendableChooser<Command> autoSelector;
-    private Field2d fieldMap = new Field2d();
 
     private final Arm arm;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
     private final RobotContext robotContext;
 
-    private String previousPath = "";
-
     public AutoGenerator(DriveSubsystem drive, Arm arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
+        super("PathPlanner");
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
@@ -79,8 +59,28 @@ public class AutoGenerator {
             drive
         );
 
+        autoSelector = AutoBuilder.buildAutoChooser();
+        getTab().add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
+
+        autoSelector.onChange( (cmd) -> setStartingPose(cmd.getName()));
+
         registerCommands();
-        initShuffleboardTab();
+    }
+
+    private void setStartingPose(String cmdName) {
+        if (cmdName.equals("InstantCommand")) {
+            //This is the none command
+            setFieldPose(new Pose2d());
+            return;
+        }
+
+        try {
+            setFieldPose(PathPlannerAuto.getStaringPoseFromAutoFile(cmdName));
+        } catch(Exception e) {
+            DataLogManager.log("An exception occurred while setting the starting position of a path planner path: " + e.getMessage());
+            setFieldPose(new Pose2d());
+        }
+        
     }
 
     private void registerCommands() {
@@ -94,64 +94,9 @@ public class AutoGenerator {
         NamedCommands.registerCommand("enableUndertaker", new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     }
 
-    private void initShuffleboardTab() {
-        ShuffleboardTab tab = Shuffleboard.getTab("Auto");
-
-        autoSelector = AutoBuilder.buildAutoChooser();
-
-        tab.add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
-        tab.add("Selected Path", fieldMap).withPosition(0, 1).withSize(5, 3);
-    }
-
+    @Override
     public Command getAutoCommand() {
         return autoSelector.getSelected();
-    }
-
-
-    public void updateMap() {
-        List<State> allStates = new ArrayList<State>();
-        boolean selectedCommandExists = true;
-
-        try {
-            PathPlannerAuto.getPathGroupFromAutoFile(getAutoCommand().getName());
-        } catch (RuntimeException e) {
-            selectedCommandExists = false;
-        }
-        
-        if (!getAutoCommand().getName().equals(previousPath)) {
-            if(selectedCommandExists) {
-            for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(getAutoCommand().getName())) {
-                allStates.addAll(path.getTrajectory(new ChassisSpeeds(), new Rotation2d()).getStates());
-            }
-
-            Trajectory trajectory = statesToWPITrajectory(allStates);
-
-            fieldMap.setRobotPose(trajectory.getInitialPose());
-            fieldMap.getObject("traj").setTrajectory(trajectory);
-            }else {
-                fieldMap.setRobotPose(0, 0, Rotation2d.fromDegrees(0));
-                fieldMap.getObject("traj").setTrajectory(new Trajectory());
-            }
-        }
-        previousPath = getAutoCommand().getName();
-    }
-
-    private Trajectory statesToWPITrajectory(List<State> states) { 
-        List<edu.wpi.first.math.trajectory.Trajectory.State> rtn = new ArrayList<edu.wpi.first.math.trajectory.Trajectory.State>(states.size());
-
-        for (int i = 0; i < states.size(); i++) {
-            rtn.add(
-                new edu.wpi.first.math.trajectory.Trajectory.State(
-                    states.get(i).timeSeconds, 
-                    states.get(i).velocityMps, 
-                    states.get(i).accelerationMpsSq, 
-                    new Pose2d(states.get(i).positionMeters, states.get(i).targetHolonomicRotation),
-                    states.get(i).curvatureRadPerMeter
-                )
-            );
-        }
- 
-        return new Trajectory(rtn);
     }
 
 }

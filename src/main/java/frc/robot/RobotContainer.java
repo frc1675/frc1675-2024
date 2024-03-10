@@ -15,6 +15,9 @@ import frc.robot.arm.RealArmIO;
 import frc.robot.arm.SimArmIO;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
+import frc.robot.auto.generator.AbstractAutoGenerator;
+import frc.robot.auto.generator.AutoGenerator;
+import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
@@ -32,7 +35,6 @@ import frc.robot.undertaker.IUndertaker;
 import frc.robot.undertaker.RealUndertakerIO;
 import frc.robot.undertaker.SimUndertakerIO;
 import frc.robot.undertaker.UndertakerSubsystem;
-import frc.robot.util.AutoGenerator;
 import frc.robot.util.RobotContext;
 import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
@@ -47,11 +49,11 @@ public class RobotContainer {
   private final ShooterSubsystem shooter;
   private final LEDSubsystem ledSubsystem;
   private final UndertakerSubsystem undertakerSubsystem;
-  private final AutoGenerator autoGenerator;
   private final VisionSubsystem visionSubsystem;
   private final Arm arm;
   
   private final RobotContext robotContext;
+  private final AbstractAutoGenerator autoGenerator;
 
   public RobotContainer() {
     DataLogManager.start();
@@ -89,7 +91,14 @@ public class RobotContainer {
     shooter = new ShooterSubsystem(shooterIO);
 
     robotContext = new RobotContext(arm);
-    autoGenerator = new AutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext);
+
+    autoGenerator = 
+      Constants.PathPlanner.PATH_PLANNER_IS_ENABLED 
+      ? 
+      new AutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext) 
+      :
+      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
+    
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
@@ -111,7 +120,7 @@ public class RobotContainer {
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem, robotContext::shouldSlowShoot));
+    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, robotContext::shouldSlowShoot));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
@@ -126,18 +135,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoGenerator.getAutoCommand();
-  }
-
-  public void updateFieldMap() {
-    autoGenerator.updateMap();
-  }
-
-  public void onDisabled() {
-    // Timer.delay(10); // Wait so that any momentum from the match is absorbed by
-    // the brakes before
-    // setting to coast.
-    // if (drive != null)
-    // drive.setMotorBrakeMode(false);
   }
 
 }
