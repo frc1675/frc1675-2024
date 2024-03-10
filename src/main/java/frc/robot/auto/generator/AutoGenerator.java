@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.robot.auto.generator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +40,7 @@ import frc.robot.shooter.commands.SpinDown;
 import frc.robot.shooter.commands.SpinUp;
 import frc.robot.undertaker.UndertakerIntake;
 import frc.robot.undertaker.UndertakerSubsystem;
+import frc.robot.util.RobotContext;
 
 public class AutoGenerator {
 

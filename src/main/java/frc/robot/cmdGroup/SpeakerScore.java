@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.auto.generator.AutoGenerator;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.drive.TrajectoryDrive;
-import frc.robot.util.AutoGenerator;
 
 public class SpeakerScore extends ConditionalCommand {
     public SpeakerScore(DriveSubsystem drive, AutoGenerator auto) {
