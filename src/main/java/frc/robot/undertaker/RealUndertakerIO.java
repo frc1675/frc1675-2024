@@ -6,14 +6,14 @@ import com.revrobotics.CANSparkBase.FaultID;
 import frc.robot.Constants;
 
 
-public class RealUndertaker implements IUndertaker {
+public class RealUndertakerIO implements IUndertaker {
 
   private boolean[] motorStatus = { true, true };
   private CANSparkMax intakeMotorOne = new CANSparkMax(Constants.Undertaker.INTAKE_MOTOR_ONE, MotorType.kBrushless);
   private CANSparkMax intakeMotorTwo = new CANSparkMax(Constants.Undertaker.INTAKE_MOTOR_TWO, MotorType.kBrushless);
   private double desiredSpeed;
 
-  public RealUndertaker(){}
+  public RealUndertakerIO() {}
 
   @Override
   public double[] getMotorsOutput(){

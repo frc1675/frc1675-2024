@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,15 +14,15 @@ import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.cmdGroup.IntakeNote;
-import frc.robot.cmdGroup.SpinUpAndShoot;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
+import frc.robot.cmdGroup.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AutoGenerator;
-import frc.robot.util.MathUtils;
+import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.VisionSubsystem;
 
@@ -34,8 +35,8 @@ public class RobotContainer {
   private final AutoGenerator autoGenerator;
   private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
-
-  private boolean intakeEnabled = true;
+  
+  private final RobotContext robotContext;
 
   public RobotContainer() {
     DataLogManager.start();
@@ -44,14 +45,15 @@ public class RobotContainer {
 
     poseScheduler = new PoseScheduler();
     drive = new DriveSubsystem(poseScheduler);
-    drive.setMotorBrakeMode(true);
-    autoGenerator = new AutoGenerator(drive);
 
-    arm = ArmSubsystem.create();
     visionSubsystem = VisionSubsystem.create();
     ledSubsystem = LEDSubsystem.create();
     undertakerSubsystem = UndertakerSubsystem.create();
     shooter = ShooterSubsystem.create();
+    arm = ArmSubsystem.create();
+
+    robotContext = new RobotContext(arm);
+    autoGenerator = new AutoGenerator(drive);
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
@@ -66,29 +68,24 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
-            () -> getDriveSpeedScale()
-
+            robotContext::getDriveSpeedScale
             )
     );
 
-    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, () -> arm.isAtHomePostion() && intakeEnabled));
+    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem, () -> arm.isAtAmpPosition()));
+    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, undertakerSubsystem, robotContext::shouldSlowShoot));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
 
-    operatorController.a().onTrue(new InstantCommand(() -> intakeEnabled = true));
-    operatorController.y().onTrue(new InstantCommand(() -> intakeEnabled = false));
+    operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
+    operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
-    return -MathUtils.getDeadzoneAdjustedInput(stick.getRawAxis(axe));
-  }
-
-  private double getDriveSpeedScale() {
-    return arm.getAngle() <= Constants.Arm.HIGH_SCORE_POSITION ? Constants.Drive.SLOW_DRIVE_SCALE : 1;
+    return -MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
   }
 
   public Command getAutonomousCommand() {
