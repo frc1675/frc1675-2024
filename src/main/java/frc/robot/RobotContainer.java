@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,7 +17,6 @@ import frc.robot.arm.SimArmIO;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.cmdGroup.IntakeNote;
-import frc.robot.cmdGroup.SpinUpAndShoot;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.ILedIO;
@@ -28,13 +28,13 @@ import frc.robot.shooter.IShooterIO;
 import frc.robot.shooter.RealShooterIO;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.SimShooterIO;
+import frc.robot.cmdGroup.SpinUpAndShoot;
 import frc.robot.undertaker.IUndertaker;
-import frc.robot.undertaker.RealUndertaker;
-import frc.robot.undertaker.SimUndertaker;
+import frc.robot.undertaker.RealUndertakerIO;
+import frc.robot.undertaker.SimUndertakerIO;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AutoGenerator;
 import frc.robot.util.RobotContext;
-import frc.robot.util.MathUtils;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.IVision;
 import frc.robot.vision.RealVision;
@@ -67,13 +67,13 @@ public class RobotContainer {
     if (Robot.isSimulation()) {
       vision = new SimVision();
       ledIO = new SimLedIO();
-      undertaker = new SimUndertaker();
+      undertaker = new SimUndertakerIO();
       armIO = new SimArmIO();
       shooterIO = new SimShooterIO();
     } else {
       vision = new RealVision();
       ledIO = new RealLedIO();
-      undertaker = new RealUndertaker();
+      undertaker = new RealUndertakerIO();
       armIO = new RealArmIO();
       shooterIO = new RealShooterIO();
     }
@@ -121,7 +121,7 @@ public class RobotContainer {
   }
 
   private double getJoystickInput(CommandXboxController stick, int axe) {
-    return -MathUtils.getDeadzoneAdjustedInput(stick.getRawAxis(axe));
+    return -MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
   }
 
   public Command getAutonomousCommand() {
