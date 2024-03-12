@@ -11,7 +11,7 @@ public class UndertakerSubsystem extends SubsystemBase {
     private final ShuffleboardTab undertakerTab; 
 
     public static UndertakerSubsystem create() {
-      return new UndertakerSubsystem(Robot.isReal() ? new RealUndertaker() : new SimUndertaker());
+      return new UndertakerSubsystem(Robot.isReal() ? new RealUndertakerIO() : new SimUndertakerIO());
     }
 
     public UndertakerSubsystem(IUndertaker undertakerLogic){
