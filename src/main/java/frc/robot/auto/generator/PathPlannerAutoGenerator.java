@@ -86,7 +86,7 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     private void registerCommands() {
         NamedCommands.registerCommand("armHome", new MoveToHome(arm));
         NamedCommands.registerCommand("armAmp", new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
-        NamedCommands.registerCommand("spinUp", new SpinUp(shooter, Constants.Shooter.SHOOT_SPEED, robotContext::shouldSlowShoot));
+        NamedCommands.registerCommand("spinUp", new SpinUp(shooter, Constants.Shooter.SHOOT_SPEED, Constants.Shooter.SHOOT_SPEED * 0.9, robotContext::shouldSlowShoot));
         NamedCommands.registerCommand("shoot", new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME));
         NamedCommands.registerCommand("spinDown", new SpinDown(shooter));
         NamedCommands.registerCommand("runUndertaker", new UndertakerIntake(undertaker, robotContext::getReadyToIntake));

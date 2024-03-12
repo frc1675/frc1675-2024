@@ -12,7 +12,7 @@ public class LongShot extends SequentialCommandGroup {
   public LongShot(ShooterSubsystem shooter, ArmSubsystem arm) {
     addCommands(
         new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE),
-        new SpinUp(shooter, Constants.Arm.LONG_SHOT_SPEED),
+        new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED),
         new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME));
   }
 }

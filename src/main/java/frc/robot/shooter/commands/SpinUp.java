@@ -9,26 +9,29 @@ import frc.robot.shooter.ShooterSubsystem;
 public class SpinUp extends Command {
   private final ShooterSubsystem subsystem;
   private final BooleanSupplier slowShoot;
-  private final double targetSpeed;
+  private final double targetTopSpeed;
+  private final double targetBottomSpeed;
 
-  public SpinUp(ShooterSubsystem subsystem, double targetSpeed, BooleanSupplier slowShoot) {
+  public SpinUp(ShooterSubsystem subsystem, double targetTopSpeed, double targetBottomSpeed, BooleanSupplier slowShoot) {
     this.subsystem = subsystem;
     this.slowShoot = slowShoot;
-    this.targetSpeed = targetSpeed;
+    this.targetTopSpeed = targetTopSpeed;
+    this.targetBottomSpeed = targetBottomSpeed;
     addRequirements(subsystem);
   }
 
-  public SpinUp(ShooterSubsystem subsystem, double targetSpeed) {
+  public SpinUp(ShooterSubsystem subsystem, double targetTopSpeed, double targetBottomSpeed) {
     this.subsystem = subsystem;
     this.slowShoot = () -> false;
-    this.targetSpeed = targetSpeed;
+    this.targetTopSpeed = targetTopSpeed;
+    this.targetBottomSpeed = targetBottomSpeed;
     addRequirements(subsystem);
   }
 
   @Override
   public void initialize() {
     double scale = slowShoot.getAsBoolean() ? Constants.Shooter.AMP_SHOOT_SCALE : 1;
-    subsystem.setTargetShooterSpeed(targetSpeed * scale);
+    subsystem.setTargetShooterSpeeds(targetTopSpeed * scale, targetBottomSpeed * scale);
   }
 
   @Override
