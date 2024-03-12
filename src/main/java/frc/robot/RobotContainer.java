@@ -22,7 +22,7 @@ import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
-import frc.robot.cmdGroup.SpinUpAndShoot;
+import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
