@@ -24,6 +24,7 @@ import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
+import frc.robot.util.DriverDashboard;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
 import frc.robot.vision.VisionSubsystem;
@@ -36,9 +37,9 @@ public class RobotContainer {
   private final UndertakerSubsystem undertakerSubsystem;
   private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
+  private final DriverDashboard dashboard;
   
   private final AbstractAutoGenerator autoGenerator;
-  
   private final RobotContext robotContext;
 
   public RobotContainer() {
@@ -65,6 +66,8 @@ public class RobotContainer {
       new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
     
 
+    dashboard = new DriverDashboard(robotContext); 
+      
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }
