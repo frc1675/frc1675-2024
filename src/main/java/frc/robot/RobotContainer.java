@@ -17,6 +17,7 @@ import frc.robot.auto.generator.AbstractAutoGenerator;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
+import frc.robot.cmdGroup.LongShot;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.LEDSubsystem;
@@ -36,9 +37,9 @@ public class RobotContainer {
   private final UndertakerSubsystem undertakerSubsystem;
   private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
-  
+
   private final AbstractAutoGenerator autoGenerator;
-  
+
   private final RobotContext robotContext;
 
   public RobotContainer() {
@@ -57,13 +58,10 @@ public class RobotContainer {
 
     robotContext = new RobotContext(arm);
 
-    autoGenerator = 
-      Constants.PathPlanner.PATH_PLANNER_IS_ENABLED 
-      ? 
-      new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext) 
-      :
-      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
-    
+    autoGenerator = Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
+
+        ? new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext)
+        : new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
@@ -78,9 +76,7 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
-            robotContext::getDriveSpeedScale
-            )
-    );
+            robotContext::getDriveSpeedScale));
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
 
@@ -89,6 +85,8 @@ public class RobotContainer {
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
+
+    operatorController.x().onTrue(new LongShot(shooter, arm));
 
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));

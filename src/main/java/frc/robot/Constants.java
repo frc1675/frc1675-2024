@@ -51,6 +51,9 @@ public class Constants {
         // PID Profile constants
         public static final double MAXIMUM_VELOCITY = 150; // degrees per second
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
+
+    		public static final double LONG_SHOT_ANGLE = 94;
+    		public static final double LONG_SHOT_SPEED = 8000;
     }
 
     public class PathPlanner {
