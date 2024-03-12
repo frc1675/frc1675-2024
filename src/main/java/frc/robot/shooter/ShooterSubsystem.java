@@ -2,12 +2,12 @@ package frc.robot.shooter;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class ShooterSubsystem extends SubsystemBase {
   private IShooterIO shooterIO;
@@ -18,15 +18,20 @@ public class ShooterSubsystem extends SubsystemBase {
       Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
   private SimpleMotorFeedforward topFeedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S,
       Constants.Shooter.SHOOTER_FF_V);
-
+      
   private PIDController bottomPidController = new PIDController(Constants.Shooter.SHOOTER_PID_P,
       Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
   private SimpleMotorFeedforward bottomFeedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S,
       Constants.Shooter.SHOOTER_FF_V);
 
+
+  public static ShooterSubsystem create() {
+      return new ShooterSubsystem(Robot.isReal() ? new RealShooterIO() : new SimShooterIO());
+  }
+
   public ShooterSubsystem(IShooterIO shooterIO) {
-    this.shooterIO = shooterIO;
-    ShuffleboardInit();
+      this.shooterIO = shooterIO;
+      ShuffleboardInit();
   }
 
   private void ShuffleboardInit() {

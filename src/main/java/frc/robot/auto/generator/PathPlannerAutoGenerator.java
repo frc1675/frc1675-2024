@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.arm.Arm;
+import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.drive.DriveSubsystem;
@@ -31,12 +31,12 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
     private SendableChooser<Command> autoSelector;
 
-    private final Arm arm;
+    private final ArmSubsystem arm;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
     private final RobotContext robotContext;
 
-    public PathPlannerAutoGenerator(DriveSubsystem drive, Arm arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
+    public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
         super("PathPlanner");
         this.arm = arm;
         this.shooter = shooter;
