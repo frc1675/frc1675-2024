@@ -1,6 +1,7 @@
 package frc.robot.undertaker;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
@@ -8,6 +9,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class UndertakerSubsystem extends SubsystemBase { 
     private final IUndertaker undertakerLogic;
     private final ShuffleboardTab undertakerTab; 
+
+    public static UndertakerSubsystem create() {
+      return new UndertakerSubsystem(Robot.isReal() ? new RealUndertakerIO() : new SimUndertakerIO());
+    }
 
     public UndertakerSubsystem(IUndertaker undertakerLogic){
       this.undertakerLogic = undertakerLogic;    
