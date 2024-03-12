@@ -54,7 +54,7 @@ public class Constants {
     }
 
     public class PathPlanner {
-        public static final boolean PATH_PLANNER_IS_ENABLED = true;
+        public static final boolean PATH_PLANNER_IS_ENABLED = false;
 
         public static final double MAXIMUM_VELOCITY = 2.5; // meters per second
         public static final double MAXIMUM_ACCELERATION = 1.25; // meters per second squared

@@ -17,7 +17,7 @@ public class SubwooferLeftScore extends SequentialCommandGroup {
             new AutoDriveReset(drive, Constants.Field.SUBWOOFER_LEFT),
             new SpinUpAndShoot(shooter, () -> false),
             new ParallelDeadlineGroup(
-                new SimpleAutoDrive(drive, 2, true, -1), 
+                new SimpleAutoDrive(drive, 4, true, -1), 
                 new IntakeNote(shooter, undertaker, context::getReadyToIntake)
             )
         );
