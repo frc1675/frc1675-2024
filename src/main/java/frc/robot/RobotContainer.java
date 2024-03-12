@@ -58,10 +58,12 @@ public class RobotContainer {
 
     robotContext = new RobotContext(arm);
 
-    autoGenerator = Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
-
-        ? new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext)
-        : new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
+    autoGenerator = 
+      Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
+      ?
+      new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext)
+      :
+      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
 
     configureBindings();
     VersionFile.getInstance().putToDashboard();
