@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class VisionSubsystem extends SubsystemBase {
 
@@ -15,6 +16,10 @@ public class VisionSubsystem extends SubsystemBase {
 
   private final IVision visionImplementation;
   private final ShuffleboardTab tab;
+
+  public static VisionSubsystem create() {
+    return new VisionSubsystem(Robot.isReal() ? new RealVision() : new SimVision());
+  }
     
   public VisionSubsystem(IVision implementation){
     visionImplementation = implementation;

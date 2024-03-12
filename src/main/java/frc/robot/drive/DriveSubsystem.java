@@ -8,9 +8,10 @@ import java.io.File;
 import java.io.IOException;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -18,11 +19,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.poseScheduler.PoseScheduler;
-import frc.robot.util.UperTunerSendable;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
-import swervelib.parser.PIDFConfig;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
@@ -30,16 +29,8 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class DriveSubsystem extends SubsystemBase {
 
   private SwerveDrive swerve;
-  private double[] controllerInput = { 0, 0, 0 }; // [x, y, rotation]
 
-  private UperTunerSendable velocityScale = new UperTunerSendable(1.0, 0.0, 1.0);
   private PoseScheduler poseScheduler;
-
-  private UperTunerSendable headingTuneableP;
-  private UperTunerSendable headingTuneableI;
-  private UperTunerSendable headingTuneableD;
-
-  private PIDFConfig headingPidfConfig;
 
   private ShuffleboardTab dashboard;
 
@@ -57,7 +48,6 @@ public class DriveSubsystem extends SubsystemBase {
       e.printStackTrace();
     }
 
-    headingPidfConfig = swerve.swerveController.config.headingPIDF;
     swerve.chassisVelocityCorrection = false;    
     swerve.setHeadingCorrection(true);
     initDashboard();
@@ -65,17 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private void initDashboard() {
     dashboard = Shuffleboard.getTab("Drive");
-    SendableRegistry.add(new UperTunerSendable(0), "UperTuner");
     dashboard.addString("Current Command", this::getCommandName);
-    dashboard.add("Velocity Scaler", velocityScale).withWidget("UperTuner").withSize(2, 2).withPosition(5, 1);
-
-    headingTuneableP = new UperTunerSendable(headingPidfConfig.p, 0, 5);
-    headingTuneableI = new UperTunerSendable(headingPidfConfig.i, 0, 5);
-    headingTuneableD = new UperTunerSendable(headingPidfConfig.d, 0, 5);
-
-    dashboard.add("Heading P", headingTuneableP).withWidget("UperTuner").withSize(2, 2).withPosition(5, 3);
-    dashboard.add("Heading I", headingTuneableI).withWidget("UperTuner").withSize(2, 2).withPosition(7, 3);
-    dashboard.add("Heading D", headingTuneableD).withWidget("UperTuner").withSize(2, 2).withPosition(9, 3);
 
     dashboard.add(swerve.field).withPosition(0, 1).withSize(5, 3);
     int position = 0;
@@ -101,8 +81,14 @@ public class DriveSubsystem extends SubsystemBase {
     swerve.zeroGyro();
   }
 
+  public void zeroGyroscope(double degreesOffset) {
+    Rotation3d current = this.swerve.getGyroRotation3d();
+
+    swerve.setGyro(new Rotation3d(current.getX(), current.getY(), current.getZ() + Units.degreesToRadians(degreesOffset)));
+  }
+
   /**
-   * Used for auto building via path planner
+   * Used for autonomous
    * 
    * @return robot relative chassis speeds
    */
@@ -111,16 +97,36 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Used for auto building via path planner
+   * Used for autonomous
    */
   public void setRobotRelativeChassisSpeeds(ChassisSpeeds speeds) {
     swerve.drive(new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond), speeds.omegaRadiansPerSecond, false, false);
   }
 
+  /**
+   * Drive the drivetrain in a single direction
+   * @param velocity The desired velocity. Will be capped at the max velocity
+   * @param isX True if the drivetrain should drive in the x direction, false otherwise
+   */
+  public void singleDirectionDrive(double velocity, boolean isX) {
+    velocity = Math.min(velocity, Constants.Drive.MAXIMUM_VELOCITY);
+
+    if (isX) {
+      swerve.drive(new Translation2d(velocity, 0), 0, true, false);
+    }else  {
+      swerve.drive(new Translation2d(0, velocity), 0, true, false);
+    }
+  }
+
   public void drive(double x, double y, double rotation) {
-    controllerInput[0] = x * Constants.Drive.MAXIMUM_VELOCITY * velocityScale.getCurrentValue();
-    controllerInput[1] = y * Constants.Drive.MAXIMUM_VELOCITY * velocityScale.getCurrentValue();
-    controllerInput[2] = rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY * velocityScale.getCurrentValue();
+    swerve.drive(
+        new Translation2d(
+          x * Constants.Drive.MAXIMUM_VELOCITY, 
+          y * Constants.Drive.MAXIMUM_VELOCITY
+        ),
+        rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY,
+        true, false
+      );
   }
 
   public Pose2d getPose() {
@@ -142,7 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Used for auto building via path planner
+   * Used for autonomous
    * 
    * @param override new pose
    */
@@ -160,18 +166,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    swerve.drive(
-        new Translation2d(controllerInput[0], controllerInput[1]),
-        controllerInput[2],
-        true, false
-      );
-
     poseScheduler.updatePose(getPose());
-
-    if (headingPidfConfig != null) {
-      headingPidfConfig.p = headingTuneableP.getCurrentValue();
-      headingPidfConfig.i = headingTuneableI.getCurrentValue();
-      headingPidfConfig.d = headingTuneableD.getCurrentValue();
-    }
   }
 }

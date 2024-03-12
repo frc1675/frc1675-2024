@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.robot.shooter.commands;
 
 import java.util.function.BooleanSupplier;
@@ -10,35 +7,34 @@ import frc.robot.Constants;
 import frc.robot.shooter.ShooterSubsystem;
 
 public class ShooterIntake extends Command {
-    private final ShooterSubsystem subsystem;
-    private final BooleanSupplier readyToIntake;
+  private final ShooterSubsystem subsystem;
+  private final BooleanSupplier readyToIntake;
 
-    public ShooterIntake(ShooterSubsystem subsystem, BooleanSupplier readyToIntake) {
-        this.subsystem = subsystem;
-        this.readyToIntake = readyToIntake;
-        addRequirements(subsystem);
+  public ShooterIntake(ShooterSubsystem subsystem, BooleanSupplier readyToIntake) {
+    this.subsystem = subsystem;
+    this.readyToIntake = readyToIntake;
+    addRequirements(subsystem);
+  }
+
+  @Override
+  public void initialize() {
+    subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
+  }
+
+  @Override
+  public void execute() {
+    if (readyToIntake.getAsBoolean() && !subsystem.isIndexerLoaded()) {
+      subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
+    } else {
+      subsystem.setIndexerSpeed(0);
     }
+  }
 
-    @Override
-    public void initialize() {
-        subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
-    }
+  @Override
+  public void end(boolean interrupted) {}
 
-    @Override
-    public void execute() {
-        if (readyToIntake.getAsBoolean() && !subsystem.isIndexerLoaded()) {
-            subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
-        }else {
-            subsystem.setIndexerSpeed(0);
-        }
-    	
-    }
-
-    @Override
-    public void end(boolean interrupted) {}
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }
