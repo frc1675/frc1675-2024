@@ -8,6 +8,7 @@ import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.Shoot;
 import frc.robot.shooter.commands.SpinUp;
 
+// TODO rename to PodiumShot
 public class LongShot extends SequentialCommandGroup {
   public LongShot(ShooterSubsystem shooter, ArmSubsystem arm) {
     addCommands(
