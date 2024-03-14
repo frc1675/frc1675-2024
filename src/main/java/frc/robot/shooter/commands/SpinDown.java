@@ -16,7 +16,7 @@ public class SpinDown extends Command {
 
   @Override
   public void initialize() {
-    subsystem.setTargetShooterSpeed(0);
+    subsystem.setTargetShooterSpeeds(0, 0);
   }
 
   @Override

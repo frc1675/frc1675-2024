@@ -5,14 +5,17 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class ShooterSubsystem extends SubsystemBase {
   private IShooterIO shooterIO;
-  private double targetShooterSpeed = 0;
+  private double targetTopShooterSpeed = 0;
+  private double targetBottomShooterSpeed = 0;
   private double targetIndexerSpeed = 0;
+  
+  private double topOutput = 0;
+  private double bottomOutput = 0;
 
   private PIDController topPidController = new PIDController(Constants.Shooter.SHOOTER_PID_P,
       Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
@@ -36,7 +39,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private void ShuffleboardInit() {
     ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.SHUFFLEBOARD_TAB);
-    tab.addDouble("Target Shooter Speed", () -> targetShooterSpeed).withPosition(0, 0).withSize(2, 1);
+    tab.addDouble("Target Top Shooter Speed", () -> targetTopShooterSpeed).withPosition(0, 0).withSize(2, 1);
+    tab.addDouble("Target Bottom Shooter Speed", () -> targetBottomShooterSpeed).withPosition(1, 0).withSize(2, 1);
     tab.addDouble("Shooter 1 Speed", () -> shooterIO.getShooterSpeeds()[0]).withPosition(2, 0);
     tab.addDouble("Shooter 2 Speed", () -> shooterIO.getShooterSpeeds()[1]).withPosition(3, 0);
     tab.addDouble("Shooter Speed Diff.", () -> shooterIO.getShooterSpeeds()[0] - shooterIO.getShooterSpeeds()[1])
@@ -51,6 +55,8 @@ public class ShooterSubsystem extends SubsystemBase {
     tab.addDouble("Indexer Speed Diff.", () -> shooterIO.getIndexerSpeeds()[0] - shooterIO.getIndexerSpeeds()[1])
         .withPosition(4, 1).withSize(2, 1);
     tab.addDouble("LaserCAN Measurement", () -> shooterIO.getMeasurement());
+    tab.addDouble("Top Output", () -> topOutput);
+    tab.addDouble("Bottom Output", () -> bottomOutput);
   }
 
   public boolean isIndexerLoaded() {
@@ -59,12 +65,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean isShooterReady() {
     double[] speeds = shooterIO.getShooterSpeeds();
-    return Math.abs(targetShooterSpeed - speeds[0]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN
-        && Math.abs(targetShooterSpeed * 0.9 - speeds[1]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
+    return Math.abs(targetTopShooterSpeed - speeds[0]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN
+        && Math.abs(targetBottomShooterSpeed - speeds[1]) < Constants.Shooter.TARGET_SPEED_ERROR_MARGIN;
   }
 
-  public void setTargetShooterSpeed(double targetSpeed) {
-    targetShooterSpeed = targetSpeed;
+  public void setTargetShooterSpeeds(double targetTopSpeed, double targetBottomSpeed) {
+    targetTopShooterSpeed = targetTopSpeed;
+    targetBottomShooterSpeed = targetBottomSpeed;
   }
 
   public void setIndexerSpeed(double targetSpeed) {
@@ -74,11 +81,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    shooterIO.setShooterOutput(
-        topPidController.calculate(shooterIO.getShooterSpeeds()[0], targetShooterSpeed)
-            + topFeedForward.calculate(targetShooterSpeed),
-        bottomPidController.calculate(shooterIO.getShooterSpeeds()[1], targetShooterSpeed * 0.9)
-            + bottomFeedForward.calculate(targetShooterSpeed * 0.9));
+    topOutput = topPidController.calculate(shooterIO.getShooterSpeeds()[0], targetTopShooterSpeed)
+        + topFeedForward.calculate(targetTopShooterSpeed);
+    bottomOutput = bottomPidController.calculate(shooterIO.getShooterSpeeds()[1], targetBottomShooterSpeed)
+        + bottomFeedForward.calculate(targetBottomShooterSpeed);
+    shooterIO.setShooterOutput(topOutput, bottomOutput);
 
     shooterIO.periodic();
   }
