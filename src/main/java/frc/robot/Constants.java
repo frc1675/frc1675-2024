@@ -52,7 +52,7 @@ public class Constants {
         public static final double MAXIMUM_VELOCITY = 150; // degrees per second
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
 
-        public static final double LONG_SHOT_ANGLE = 94;
+        public static final double LONG_SHOT_ANGLE = 105;
     }
 
     public class PathPlanner {
@@ -119,7 +119,7 @@ public class Constants {
         public static final double INDEXER_MOI = 1;
 
         public static final double AMP_SHOOT_SCALE = 0.4;
-        public static final double LONG_SHOT_SPEED = 8000;
+        public static final double LONG_SHOT_SPEED = 5000;
     }
 
     public class Dashboard {

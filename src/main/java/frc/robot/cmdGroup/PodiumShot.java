@@ -8,12 +8,12 @@ import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.Shoot;
 import frc.robot.shooter.commands.SpinUp;
 
-// TODO rename to PodiumShot
-public class LongShot extends SequentialCommandGroup {
-  public LongShot(ShooterSubsystem shooter, ArmSubsystem arm) {
+public class PodiumShot extends SequentialCommandGroup {
+  public PodiumShot(ShooterSubsystem shooter, ArmSubsystem arm) {
     addCommands(
         new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE),
         new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED),
-        new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME));
+        new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME),
+        new MoveToPosition(arm, Constants.Arm.HOME_POSITION));
   }
 }

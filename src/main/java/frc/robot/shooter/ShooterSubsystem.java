@@ -13,6 +13,9 @@ public class ShooterSubsystem extends SubsystemBase {
   private double targetTopShooterSpeed = 0;
   private double targetBottomShooterSpeed = 0;
   private double targetIndexerSpeed = 0;
+  
+  private double topOutput = 0;
+  private double bottomOutput = 0;
 
   private PIDController topPidController = new PIDController(Constants.Shooter.SHOOTER_PID_P,
       Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
@@ -52,6 +55,8 @@ public class ShooterSubsystem extends SubsystemBase {
     tab.addDouble("Indexer Speed Diff.", () -> shooterIO.getIndexerSpeeds()[0] - shooterIO.getIndexerSpeeds()[1])
         .withPosition(4, 1).withSize(2, 1);
     tab.addDouble("LaserCAN Measurement", () -> shooterIO.getMeasurement());
+    tab.addDouble("Top Output", () -> topOutput);
+    tab.addDouble("Bottom Output", () -> bottomOutput);
   }
 
   public boolean isIndexerLoaded() {
@@ -76,11 +81,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    shooterIO.setShooterOutput(
-        topPidController.calculate(shooterIO.getShooterSpeeds()[0], targetTopShooterSpeed)
-            + topFeedForward.calculate(targetTopShooterSpeed),
-        bottomPidController.calculate(shooterIO.getShooterSpeeds()[1], targetBottomShooterSpeed)
-            + bottomFeedForward.calculate(targetBottomShooterSpeed));
+    topOutput = topPidController.calculate(shooterIO.getShooterSpeeds()[0], targetTopShooterSpeed)
+        + topFeedForward.calculate(targetTopShooterSpeed);
+    bottomOutput = bottomPidController.calculate(shooterIO.getShooterSpeeds()[1], targetBottomShooterSpeed)
+        + bottomFeedForward.calculate(targetBottomShooterSpeed);
+    shooterIO.setShooterOutput(topOutput, bottomOutput);
 
     shooterIO.periodic();
   }
