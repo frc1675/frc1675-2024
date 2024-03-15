@@ -20,12 +20,13 @@ import frc.robot.Robot;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
+import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.Shoot;
 import frc.robot.shooter.commands.SpinDown;
 import frc.robot.shooter.commands.SpinUp;
-import frc.robot.undertaker.UndertakerIntake;
+import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.RobotContext;
 
@@ -33,6 +34,7 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
     private SendableChooser<Command> autoSelector;
 
+    private final DriveSubsystem drive;
     private final ArmSubsystem arm;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
@@ -40,10 +42,13 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
     public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
         super("PathPlanner");
+        this.drive = drive;
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
         this.robotContext = robotContext;
+
+        registerCommands();
 
         AutoBuilder.configureHolonomic(
             drive::getPose,
@@ -65,8 +70,6 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
         getTab().add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
 
         autoSelector.onChange( (cmd) -> setStartingPose(cmd == null ? "null" : cmd.getName()));
-
-        registerCommands();
     }
 
     private void setStartingPose(String cmdName) {
@@ -88,10 +91,11 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     private void registerCommands() {
         NamedCommands.registerCommand("armHome", new MoveToHome(arm));
         NamedCommands.registerCommand("armAmp", new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
+        NamedCommands.registerCommand("spinUpAndShoot", new SpinUpAndShoot(shooter, () -> false));
         NamedCommands.registerCommand("spinUp", new SpinUp(shooter, Constants.Shooter.SHOOT_SPEED, Constants.Shooter.SHOOT_SPEED * 0.9, robotContext::shouldSlowShoot));
         NamedCommands.registerCommand("shoot", new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME));
         NamedCommands.registerCommand("spinDown", new SpinDown(shooter));
-        NamedCommands.registerCommand("runUndertaker", new UndertakerIntake(undertaker, robotContext::getReadyToIntake));
+        NamedCommands.registerCommand("runUndertaker", new IntakeNote(shooter, undertaker, robotContext::getReadyToIntake));
         NamedCommands.registerCommand("disableUndertaker", new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
         NamedCommands.registerCommand("enableUndertaker", new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     }
@@ -99,6 +103,7 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     @Override
     public Command getAutoCommand() {
         return new SequentialCommandGroup(
+            new InstantCommand(() -> drive.zeroGyroscope(180)),
             new WaitCommand(this.getDelay(0)),
             autoSelector.getSelected()
         );

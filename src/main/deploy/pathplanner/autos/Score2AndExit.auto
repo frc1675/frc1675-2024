@@ -14,19 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "spinUp"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "spinDown"
+            "name": "spinUpAndShoot"
           }
         },
         {
@@ -54,35 +42,23 @@
                       "data": {
                         "pathName": "Note2ToSubwoofer"
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "spinUp"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "shoot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "spinDown"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "SubwooferToNote2"
-                      }
                     }
                   ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "spinUpAndShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SubwooferToNote2"
           }
         }
       ]
