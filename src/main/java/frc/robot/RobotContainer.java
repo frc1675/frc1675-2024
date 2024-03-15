@@ -68,7 +68,8 @@ public class RobotContainer {
       :
       new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
 
-    dashboard = new DriverDashboard(robotContext); 
+    //dashboard = new DriverDashboard(robotContext); 
+    dashboard = null;
       
     configureBindings();
     VersionFile.getInstance().putToDashboard();

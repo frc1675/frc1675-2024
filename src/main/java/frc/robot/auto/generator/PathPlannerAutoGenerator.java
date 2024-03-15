@@ -95,7 +95,7 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     }
 
     @Override
-    public Command getAutoCommand() {
+    public Command autoCommandProvider() {
         return autoSelector.getSelected();
     }
 

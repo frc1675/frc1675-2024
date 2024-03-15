@@ -47,7 +47,7 @@ public class SimpleAutoGenerator extends AbstractAutoGenerator {
     }
 
     @Override
-    public Command getAutoCommand() {
+    public Command autoCommandProvider() {
         switch (autoSelector.getSelected()) {
             case "front":
                 return new SubwooferFrontScore(drive, shooter, undertaker, context);

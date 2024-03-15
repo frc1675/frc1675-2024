@@ -1,20 +1,25 @@
 package frc.robot.auto.generator;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public abstract class AbstractAutoGenerator {
     private final Field2d field;
     private final ShuffleboardTab tab;
+    private final GenericEntry delay;
 
     public AbstractAutoGenerator(String mode) {
         field = new Field2d();
         tab = Shuffleboard.getTab("Auto");
         tab.add("Starting Pose", field).withPosition(0, 1).withSize(6, 4);
         tab.addString("Mode", () -> mode).withPosition(5, 0);
+        delay = tab.add("Auto delay seconds", 0).withSize(2, 1).withPosition(6, 0).getEntry();
     }
 
     protected final void setFieldPose(Pose2d pose) {
@@ -29,6 +34,13 @@ public abstract class AbstractAutoGenerator {
         return tab;
     }
 
-    public abstract Command getAutoCommand();
+    public final Command getAutoCommand() {
+        return new SequentialCommandGroup(
+            new WaitCommand(delay.getDouble(0)),
+            autoCommandProvider()
+        );
+    }
+
+    public abstract Command autoCommandProvider();
 
 }
