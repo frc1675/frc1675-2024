@@ -23,9 +23,7 @@ import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.shooter.ShooterSubsystem;
-import frc.robot.shooter.commands.Shoot;
 import frc.robot.shooter.commands.SpinDown;
-import frc.robot.shooter.commands.SpinUp;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.RobotContext;
@@ -91,9 +89,10 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     private void registerCommands() {
         NamedCommands.registerCommand("armHome", new MoveToHome(arm));
         NamedCommands.registerCommand("armAmp", new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
-        NamedCommands.registerCommand("spinUpAndShoot", new SpinUpAndShoot(shooter, () -> false));
-        NamedCommands.registerCommand("spinUp", new SpinUp(shooter, Constants.Shooter.SHOOT_SPEED, Constants.Shooter.SHOOT_SPEED * 0.9, robotContext::shouldSlowShoot));
-        NamedCommands.registerCommand("shoot", new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME));
+        NamedCommands.registerCommand("spinUpAndShoot", new SpinUpAndShoot(shooter, 
+            () -> robotContext.getShooterSpeed()[0], 
+            () -> robotContext.getShooterSpeed()[1]
+        ));
         NamedCommands.registerCommand("spinDown", new SpinDown(shooter));
         NamedCommands.registerCommand("runUndertaker", new IntakeNote(shooter, undertaker, robotContext::getReadyToIntake));
         NamedCommands.registerCommand("disableUndertaker", new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));

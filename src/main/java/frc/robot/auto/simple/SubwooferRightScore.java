@@ -16,7 +16,7 @@ public class SubwooferRightScore extends SequentialCommandGroup {
     public SubwooferRightScore(double delay, DriveSubsystem drive, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext context) {
         addCommands(
             new AutoDriveReset(drive, Constants.Field.SUBWOOFER_RIGHT),
-            new SpinUpAndShoot(shooter, () -> false),
+            new SpinUpAndShoot(shooter, () -> Constants.Shooter.SHOOT_SPEED, () -> Constants.Shooter.SHOOT_SPEED * 0.9),
             new WaitCommand(delay),
             new ParallelDeadlineGroup(
                 new SimpleAutoDrive(drive, 4, true, -1), 

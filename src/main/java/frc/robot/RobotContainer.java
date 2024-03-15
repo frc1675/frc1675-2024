@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
@@ -19,7 +18,6 @@ import frc.robot.auto.generator.AbstractAutoGenerator;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
-import frc.robot.cmdGroup.PodiumShot;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.ContextualColor;
@@ -78,7 +76,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    CommandPS4Controller driverController = new CommandPS4Controller(Constants.Controller.DRIVER_CONTROLLER);
+    CommandXboxController driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
     CommandXboxController operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
 
     drive.setDefaultCommand(
@@ -93,16 +91,19 @@ public class RobotContainer {
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
     ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
 
-    driverController.options().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverController.R2().onTrue(new SpinUpAndShoot(shooter, robotContext::shouldSlowShoot));
+    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    
+    driverController.rightBumper().onTrue(new SpinUpAndShoot(shooter,
+     () -> robotContext.getShooterSpeed()[0],
+     () -> robotContext.getShooterSpeed()[1]
+    ));
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
 
-    operatorController.x().onTrue(new PodiumShot(shooter, arm));
-
+    operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE));
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
   }

@@ -91,6 +91,9 @@ public class Constants {
 
     public class Shooter {
         public static final double SHOOT_SPEED = 1700;
+        public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
+        public static final double LONG_SHOT_SPEED = 5000;
+
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 
         public static final int INDEXER_MOTOR_TOP = 18;
@@ -117,9 +120,6 @@ public class Constants {
 
         public static final double SHOOTER_MOI = .001; // Joules * kg / m^2
         public static final double INDEXER_MOI = 1;
-
-        public static final double AMP_SHOOT_SCALE = 0.4;
-        public static final double LONG_SHOT_SPEED = 5000;
     }
 
     public class Dashboard {
