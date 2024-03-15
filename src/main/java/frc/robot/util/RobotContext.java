@@ -1,17 +1,17 @@
 package frc.robot.util;
 
 import frc.robot.Constants;
-import frc.robot.arm.Arm;
+import frc.robot.arm.ArmSubsystem;
 import frc.robot.shooter.ShooterSubsystem;
 
 public class RobotContext {
     
-    private final Arm arm;
+    private final ArmSubsystem arm;
     private final ShooterSubsystem shooter;
 
     private boolean intakeEnabled = true;
 
-    public RobotContext(Arm arm, ShooterSubsystem shooter) {
+    public RobotContext(ArmSubsystem arm, ShooterSubsystem shooter) {
         this.arm = arm;
         this.shooter = shooter;
     }

@@ -6,11 +6,17 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class LEDSubsystem extends SubsystemBase { 
   private final Stack<LEDState> stack = new Stack<LEDState>();
 
   private final ILedIO ledIO;
+
+
+  public static LEDSubsystem create() {
+    return new LEDSubsystem(Robot.isReal() ? new RealLedIO() : new SimLedIO());
+  }
 
   public LEDSubsystem(ILedIO ledIO){
     this.ledIO = ledIO; 
