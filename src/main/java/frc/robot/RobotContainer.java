@@ -29,6 +29,7 @@ import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.DriverDashboard;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
+import frc.robot.util.VoltageDashboard;
 import frc.robot.vision.VisionSubsystem;
 
 public class RobotContainer {
@@ -70,6 +71,8 @@ public class RobotContainer {
 
     //dashboard = new DriverDashboard(robotContext); 
     dashboard = null;
+
+    VoltageDashboard.initVoltageDashboard();
       
     configureBindings();
     VersionFile.getInstance().putToDashboard();
