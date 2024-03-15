@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.arm.ArmSubsystem;
@@ -62,13 +64,13 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
         autoSelector = AutoBuilder.buildAutoChooser();
         getTab().add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
 
-        autoSelector.onChange( (cmd) -> setStartingPose(cmd.getName()));
+        autoSelector.onChange( (cmd) -> setStartingPose(cmd == null ? "null" : cmd.getName()));
 
         registerCommands();
     }
 
     private void setStartingPose(String cmdName) {
-        if (cmdName.equals("InstantCommand")) {
+        if (cmdName.equals("InstantCommand") || cmdName.equals("null")) {
             //This is the none command
             setFieldPose(new Pose2d());
             return;
@@ -95,8 +97,11 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     }
 
     @Override
-    public Command autoCommandProvider() {
-        return autoSelector.getSelected();
+    public Command getAutoCommand() {
+        return new SequentialCommandGroup(
+            new WaitCommand(this.getDelay(0)),
+            autoSelector.getSelected()
+        );
     }
 
 }

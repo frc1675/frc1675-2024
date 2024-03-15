@@ -50,14 +50,14 @@ public class SimpleAutoGenerator extends AbstractAutoGenerator {
     }
 
     @Override
-    public Command autoCommandProvider() {
+    public Command getAutoCommand() {
         switch (autoSelector.getSelected()) {
             case "front":
-                return new SubwooferFrontScore(drive, shooter, undertaker, arm, context);
+                return new SubwooferFrontScore(this.getDelay(0), drive, shooter, undertaker, arm, context);
             case "left":
-                return new SubwooferLeftScore(drive, shooter, undertaker, context);
+                return new SubwooferLeftScore(this.getDelay(0), drive, shooter, undertaker, context);
             case "right":
-                return new SubwooferRightScore(drive, shooter, undertaker, context);
+                return new SubwooferRightScore(this.getDelay(0), drive, shooter, undertaker, context);
             default:
                 DataLogManager.log("No autonomous routine selected. Nothing will happen during the autonomous period.");
                 return new PrintCommand("No autonomous selected");
