@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
@@ -76,8 +78,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    CommandPS4Controller driverController = new CommandPS4Controller(Constants.Controller.DRIVER_CONTROLLER);
     CommandXboxController operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
-    CommandXboxController driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
@@ -89,15 +91,12 @@ public class RobotContainer {
     );
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
-    ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem));
+    ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
 
-    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, robotContext::shouldSlowShoot));
+    driverController.options().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    driverController.R2().onTrue(new SpinUpAndShoot(shooter, robotContext::shouldSlowShoot));
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
-
-    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, robotContext::shouldSlowShoot));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
@@ -108,7 +107,7 @@ public class RobotContainer {
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
   }
 
-  private double getJoystickInput(CommandXboxController stick, int axe) {
+  private double getJoystickInput(CommandGenericHID stick, int axe) {
     return -MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
   }
 

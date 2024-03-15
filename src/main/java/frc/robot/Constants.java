@@ -9,8 +9,8 @@ import frc.robot.poseScheduler.FieldArea2d;
 public class Constants {
 
     public class Drive {
-        public static final double MAXIMUM_VELOCITY = 5.0; // meters per second
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 10; // radians per second
+        public static final double MAXIMUM_VELOCITY = 5.5; // meters per second
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 8; // radians per second
 
         public static final double AUTONOMOUS_VELOCITY = MAXIMUM_VELOCITY; //meters per second
         public static final double AUTONOMOUS_ACCELERATION = 10.0; // meters per second squared
@@ -129,6 +129,9 @@ public class Constants {
 
     public class Controller {
         public static final double DEADZONE_CONSTANT = 0.1675;
+
+        public static final double RUMBLE_POWER = 1;
+        public static final double RUMBLE_TIME = 0.5;
 
         public static final int DRIVER_CONTROLLER = 0;
         public static final int OPERATOR_CONTROLLER = 1;
