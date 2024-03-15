@@ -1,15 +1,15 @@
 package frc.robot.notification;
 
-import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
 public class RumbleController extends Command {
     
-    private final PS4Controller controller;
+    private final GenericHID controller;
 
-    public RumbleController(PS4Controller controller) {
+    public RumbleController(GenericHID controller) {
         this.controller = controller;
     }
 

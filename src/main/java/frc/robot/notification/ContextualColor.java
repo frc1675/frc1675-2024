@@ -1,6 +1,6 @@
 package frc.robot.notification;
 
-import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
@@ -10,11 +10,11 @@ public class ContextualColor extends Command {
     
     private final RobotContext robotContext;
     private final LEDSubsystem led;
-    private final PS4Controller toRumble;
+    private final GenericHID toRumble;
 
     private final boolean[] previousValues = new boolean[5];
 
-    public ContextualColor(RobotContext robotContext, LEDSubsystem led, PS4Controller toRumble) {
+    public ContextualColor(RobotContext robotContext, LEDSubsystem led, GenericHID toRumble) {
         this.robotContext = robotContext;
         this.led = led;
         this.toRumble = toRumble;
