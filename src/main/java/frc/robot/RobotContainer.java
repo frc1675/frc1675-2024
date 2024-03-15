@@ -20,6 +20,7 @@ import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.cmdGroup.PodiumShot;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.notification.ContextualColor;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
@@ -38,6 +39,7 @@ public class RobotContainer {
   private final UndertakerSubsystem undertakerSubsystem;
   private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
+  
   private final DriverDashboard dashboard;
   
   private final AbstractAutoGenerator autoGenerator;
@@ -57,7 +59,7 @@ public class RobotContainer {
     shooter = ShooterSubsystem.create();
     arm = ArmSubsystem.create();
 
-    robotContext = new RobotContext(arm);
+    robotContext = new RobotContext(arm, shooter);
 
     autoGenerator = 
       Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
@@ -81,7 +83,15 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
-            robotContext::getDriveSpeedScale));
+            robotContext::getDriveSpeedScale
+            )
+    );
+
+    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
+    ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem));
+
+    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, robotContext::shouldSlowShoot));
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
 
