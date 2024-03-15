@@ -66,7 +66,7 @@ public class RobotContainer {
       ?
       new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext)
       :
-      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
+      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
 
     //dashboard = new DriverDashboard(robotContext); 
     dashboard = null;

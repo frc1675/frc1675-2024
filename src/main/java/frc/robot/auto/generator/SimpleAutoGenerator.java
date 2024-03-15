@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants;
+import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto.simple.SubwooferFrontScore;
 import frc.robot.auto.simple.SubwooferLeftScore;
 import frc.robot.auto.simple.SubwooferRightScore;
@@ -21,13 +22,15 @@ public class SimpleAutoGenerator extends AbstractAutoGenerator {
     private final DriveSubsystem drive;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
+    private final ArmSubsystem arm;
     private final RobotContext context;
 
-    public SimpleAutoGenerator(DriveSubsystem drive, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext context) {
+    public SimpleAutoGenerator(DriveSubsystem drive, ShooterSubsystem shooter, UndertakerSubsystem undertaker,ArmSubsystem arm, RobotContext context) {
         super("Simple");
         this.drive = drive;
         this.shooter = shooter;
         this.undertaker = undertaker;
+        this.arm = arm;
         this.context = context;
 
         autoSelector = new SendableChooser<String>();
@@ -50,7 +53,7 @@ public class SimpleAutoGenerator extends AbstractAutoGenerator {
     public Command autoCommandProvider() {
         switch (autoSelector.getSelected()) {
             case "front":
-                return new SubwooferFrontScore(drive, shooter, undertaker, context);
+                return new SubwooferFrontScore(drive, shooter, undertaker, arm, context);
             case "left":
                 return new SubwooferLeftScore(drive, shooter, undertaker, context);
             case "right":
