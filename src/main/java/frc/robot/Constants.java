@@ -23,10 +23,10 @@ public class Constants {
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
 
         public static final double SLOW_DRIVE_SCALE = 0.5;
-        public static final double ROTATION_P = 1;
+
+        public static final double ROTATION_P = 0.01;
         public static final double ROTATION_I = 0;
         public static final double ROTATION_D = 0;
-
         public static final double ROTATION_TARGET_RANGE = 3;
     }
 
@@ -61,7 +61,7 @@ public class Constants {
     }
 
     public class PathPlanner {
-        public static final boolean PATH_PLANNER_IS_ENABLED = true;
+        public static final boolean PATH_PLANNER_IS_ENABLED = false;
 
         public static final double MAXIMUM_VELOCITY = 2.5; // meters per second
         public static final double MAXIMUM_ACCELERATION = 1.25; // meters per second squared

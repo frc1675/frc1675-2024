@@ -96,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void zeroGyroscope(double degreesOffset) {
     Rotation3d current = this.swerve.getGyroRotation3d();
 
-    swerve.setGyro(new Rotation3d(current.getX(), current.getY(), current.getZ() + Units.degreesToRadians(degreesOffset)));
+    swerve.setGyro(new Rotation3d(current.getX(), current.getY(), current.getZ() - Units.degreesToRadians(degreesOffset)));
   }
 
   /**
@@ -131,15 +131,15 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double x, double y, double rotation) {
-    if (rotation != 0 || Math.abs(swerve.getYaw().getDegrees() - targetAngle) < Constants.Drive.ROTATION_TARGET_RANGE) {
+    if (rotation != 0 || (targetAngle != null &&  Math.abs(swerve.getYaw().getDegrees() - targetAngle) < Constants.Drive.ROTATION_TARGET_RANGE)) {
       targetAngle = null;
     }
+
     if (targetAngle != null) {
       rotation = rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle);
     }else {
       rotation = rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY;
     }
-    
 
     swerve.drive(
         new Translation2d(
@@ -197,10 +197,5 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     poseScheduler.updatePose(getPose());
-
-    if (targetAngle != null) {
-      
-    }
-
   }
 }

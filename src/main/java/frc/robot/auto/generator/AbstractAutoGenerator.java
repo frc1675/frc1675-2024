@@ -22,7 +22,7 @@ public abstract class AbstractAutoGenerator {
 
     protected final void setFieldPose(Pose2d pose) {
         field.getRobotObject().setPose(
-            pose.getX() + 1, //the field visual on shuffleboard is offset slightly (not sure why)
+            pose.getX(), 
             pose.getY(), 
             pose.getRotation()
         );
