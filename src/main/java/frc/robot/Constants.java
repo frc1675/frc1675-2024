@@ -9,8 +9,8 @@ import frc.robot.poseScheduler.FieldArea2d;
 public class Constants {
 
     public class Drive {
-        public static final double MAXIMUM_VELOCITY = 5.0; // meters per second
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 10; // radians per second
+        public static final double MAXIMUM_VELOCITY = 5.5; // meters per second
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 8; // radians per second
 
         public static final double AUTONOMOUS_VELOCITY = MAXIMUM_VELOCITY; //meters per second
         public static final double AUTONOMOUS_ACCELERATION = 10.0; // meters per second squared
@@ -23,6 +23,11 @@ public class Constants {
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
 
         public static final double SLOW_DRIVE_SCALE = 0.5;
+
+        public static final double ROTATION_P = 0.01;
+        public static final double ROTATION_I = 0;
+        public static final double ROTATION_D = 0;
+        public static final double ROTATION_TARGET_RANGE = 3;
     }
 
     public class Arm {
@@ -45,14 +50,13 @@ public class Constants {
         public static final double DEBOUNCE_TIME = 0.5;
         // Position constnats
         public static final double HOME_POSITION = 138;
-        public static final double HIGH_SCORE_POSITION = 60;
-        public static final double AMP_POSITION = 35;
-        public static final double MAX_ARM_RANGE_DEGREES = 20; // 13 degrees is vertical
+        public static final double LONG_SHOT_ANGLE = HOME_POSITION - 33;
+        public static final double HIGH_SCORE_POSITION = HOME_POSITION - 78;
+        public static final double AMP_POSITION = HOME_POSITION - 103;
+        public static final double MAX_ARM_RANGE_DEGREES = HOME_POSITION - 118; // home - 125 degrees is vertical
         // PID Profile constants
         public static final double MAXIMUM_VELOCITY = 150; // degrees per second
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
-
-        public static final double LONG_SHOT_ANGLE = 105;
     }
 
     public class PathPlanner {
@@ -66,11 +70,11 @@ public class Constants {
 
         public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); // meters
 
-        public static final double TRANSLATION_P = 10;
+        public static final double TRANSLATION_P = 8.25;
         public static final double TRANSLATION_I = 0;
         public static final double TRANSLATION_D = 0;
 
-        public static final double ROTATION_P = 1;
+        public static final double ROTATION_P = 0.000;
         public static final double ROTATION_I = 0;
         public static final double ROTATION_D = 0;
 
@@ -91,6 +95,9 @@ public class Constants {
 
     public class Shooter {
         public static final double SHOOT_SPEED = 1700;
+        public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
+        public static final double LONG_SHOT_SPEED = 5000;
+
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 
         public static final int INDEXER_MOTOR_TOP = 18;
@@ -117,9 +124,6 @@ public class Constants {
 
         public static final double SHOOTER_MOI = .001; // Joules * kg / m^2
         public static final double INDEXER_MOI = 1;
-
-        public static final double AMP_SHOOT_SCALE = 0.4;
-        public static final double LONG_SHOT_SPEED = 5000;
     }
 
     public class Dashboard {
@@ -129,6 +133,9 @@ public class Constants {
 
     public class Controller {
         public static final double DEADZONE_CONSTANT = 0.1675;
+
+        public static final double RUMBLE_POWER = 1;
+        public static final double RUMBLE_TIME = 0.5;
 
         public static final int DRIVER_CONTROLLER = 0;
         public static final int OPERATOR_CONTROLLER = 1;

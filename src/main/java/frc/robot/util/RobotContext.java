@@ -36,6 +36,16 @@ public class RobotContext {
         return arm.isAtAmpPosition();
     }
 
+    public double[] getShooterSpeed() {
+        if (arm.isAtAmpPosition()) {
+            return new double[] {Constants.Shooter.AMP_SHOOT_SPEED, Constants.Shooter.AMP_SHOOT_SPEED};
+        }else if(arm.isAtPodiumPosition()) {
+            return new double[] {Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED};
+        }else {
+            return new double[] {Constants.Shooter.SHOOT_SPEED, Constants.Shooter.SHOOT_SPEED * 0.9};
+        }
+    }
+
     public double getDriveSpeedScale() {
         return arm.getAngle() <= Constants.Arm.HIGH_SCORE_POSITION ? Constants.Drive.SLOW_DRIVE_SCALE : 1;
     }

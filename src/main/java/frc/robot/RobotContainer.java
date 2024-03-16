@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
@@ -17,9 +18,9 @@ import frc.robot.auto.generator.AbstractAutoGenerator;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
-import frc.robot.cmdGroup.PodiumShot;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.drive.TurnToAngle;
 import frc.robot.notification.ContextualColor;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
@@ -29,6 +30,7 @@ import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.DriverDashboard;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
+import frc.robot.util.VoltageDashboard;
 import frc.robot.vision.VisionSubsystem;
 
 public class RobotContainer {
@@ -66,17 +68,20 @@ public class RobotContainer {
       ?
       new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext)
       :
-      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, robotContext);
+      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
 
-    dashboard = new DriverDashboard(robotContext); 
+    //dashboard = new DriverDashboard(robotContext); 
+    dashboard = null;
+
+    VoltageDashboard.initVoltageDashboard();
       
     configureBindings();
     VersionFile.getInstance().putToDashboard();
   }
 
   private void configureBindings() {
-    CommandXboxController operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
     CommandXboxController driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
+    CommandXboxController operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
@@ -88,26 +93,28 @@ public class RobotContainer {
     );
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
-    ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem));
+    ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, robotContext::shouldSlowShoot));
+    
+    driverController.rightBumper().onTrue(new SpinUpAndShoot(shooter,
+     () -> robotContext.getShooterSpeed()[0],
+     () -> robotContext.getShooterSpeed()[1]
+    ));
+
+    driverController.a().onTrue(new TurnToAngle(drive, 90));
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
-
-    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    driverController.rightTrigger().onTrue(new SpinUpAndShoot(shooter, robotContext::shouldSlowShoot));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
 
-    operatorController.x().onTrue(new PodiumShot(shooter, arm));
-
+    operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE));
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
   }
 
-  private double getJoystickInput(CommandXboxController stick, int axe) {
+  private double getJoystickInput(CommandGenericHID stick, int axe) {
     return -MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
   }
 
