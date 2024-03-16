@@ -23,6 +23,11 @@ public class Constants {
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
 
         public static final double SLOW_DRIVE_SCALE = 0.5;
+        public static final double ROTATION_P = 1;
+        public static final double ROTATION_I = 0;
+        public static final double ROTATION_D = 0;
+
+        public static final double ROTATION_TARGET_RANGE = 3;
     }
 
     public class Arm {
@@ -66,7 +71,7 @@ public class Constants {
 
         public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); // meters
 
-        public static final double TRANSLATION_P = 7;
+        public static final double TRANSLATION_P = 8.25;
         public static final double TRANSLATION_I = 0;
         public static final double TRANSLATION_D = 0;
 

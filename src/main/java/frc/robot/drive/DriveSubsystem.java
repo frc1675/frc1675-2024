@@ -7,6 +7,7 @@ package frc.robot.drive;
 import java.io.File;
 import java.io.IOException;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -34,8 +35,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   private ShuffleboardTab dashboard;
 
+  private Double targetAngle = null;
+  private final PIDController rotationController;
+
+
   public DriveSubsystem(PoseScheduler poseScheduler) {
     this.poseScheduler = poseScheduler;
+    rotationController = new PIDController(Constants.Drive.ROTATION_P, Constants.Drive.ROTATION_I, Constants.Drive.ROTATION_D);
+    rotationController.enableContinuousInput(-180, 180);
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
       swerve = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(
@@ -56,6 +63,11 @@ public class DriveSubsystem extends SubsystemBase {
   private void initDashboard() {
     dashboard = Shuffleboard.getTab("Drive");
     dashboard.addString("Current Command", this::getCommandName);
+
+    dashboard.add("Rotation PID", rotationController);
+    dashboard.addDouble("Yaw", () ->swerve.getYaw().getDegrees());
+    dashboard.addDouble("Target angle", () -> targetAngle == null ? -1 : targetAngle);
+
 
     dashboard.add(swerve.field).withPosition(0, 1).withSize(5, 3);
     int position = 0;
@@ -119,14 +131,24 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double x, double y, double rotation) {
+    if (rotation != 0 || Math.abs(swerve.getYaw().getDegrees() - targetAngle) < Constants.Drive.ROTATION_TARGET_RANGE) {
+      targetAngle = null;
+    }
+    if (targetAngle != null) {
+      rotation = rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle);
+    }else {
+      rotation = rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY;
+    }
+    
+
     swerve.drive(
         new Translation2d(
           x * Constants.Drive.MAXIMUM_VELOCITY, 
           y * Constants.Drive.MAXIMUM_VELOCITY
         ),
-        rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY,
+        rotation,
         true, false
-      );
+      ); 
   }
 
   public Pose2d getPose() {
@@ -164,8 +186,21 @@ public class DriveSubsystem extends SubsystemBase {
      */
   }
 
+  public void setTargetAngle(double angleDeg) {
+    targetAngle = angleDeg;
+  }
+
+  public void unsetTargetAngle() {
+    targetAngle = null;
+  }
+
   @Override
   public void periodic() {
     poseScheduler.updatePose(getPose());
+
+    if (targetAngle != null) {
+      
+    }
+
   }
 }

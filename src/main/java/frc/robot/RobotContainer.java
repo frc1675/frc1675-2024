@@ -20,6 +20,7 @@ import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.drive.TurnToAngle;
 import frc.robot.notification.ContextualColor;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
@@ -100,6 +101,8 @@ public class RobotContainer {
      () -> robotContext.getShooterSpeed()[0],
      () -> robotContext.getShooterSpeed()[1]
     ));
+
+    driverController.a().onTrue(new TurnToAngle(drive, 90));
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
 
