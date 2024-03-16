@@ -50,14 +50,13 @@ public class Constants {
         public static final double DEBOUNCE_TIME = 0.5;
         // Position constnats
         public static final double HOME_POSITION = 138;
-        public static final double HIGH_SCORE_POSITION = 60;
-        public static final double AMP_POSITION = 35;
-        public static final double MAX_ARM_RANGE_DEGREES = 20; // 13 degrees is vertical
+        public static final double LONG_SHOT_ANGLE = HOME_POSITION - 33;
+        public static final double HIGH_SCORE_POSITION = HOME_POSITION - 78;
+        public static final double AMP_POSITION = HOME_POSITION - 103;
+        public static final double MAX_ARM_RANGE_DEGREES = HOME_POSITION - 118; // 13 degrees is vertical
         // PID Profile constants
         public static final double MAXIMUM_VELOCITY = 150; // degrees per second
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
-
-        public static final double LONG_SHOT_ANGLE = 105;
     }
 
     public class PathPlanner {
