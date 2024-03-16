@@ -70,8 +70,7 @@ public class RobotContainer {
       :
       new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
 
-    //dashboard = new DriverDashboard(robotContext); 
-    dashboard = null;
+    dashboard = new DriverDashboard(robotContext); 
 
     VoltageDashboard.initVoltageDashboard();
       

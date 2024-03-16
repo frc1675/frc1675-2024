@@ -38,6 +38,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   private void ShuffleboardInit() {
+    ShuffleboardTab cameraTab = Shuffleboard.getTab("Camera");
+    cameraTab.addBoolean("Has Note?", () -> isIndexerLoaded()).withSize(1, 5).withPosition(9, 0);
+
     ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.SHUFFLEBOARD_TAB);
     tab.addDouble("Target Top Shooter Speed", () -> targetTopShooterSpeed).withPosition(0, 0).withSize(2, 1);
     tab.addDouble("Target Bottom Shooter Speed", () -> targetBottomShooterSpeed).withPosition(1, 0).withSize(2, 1);

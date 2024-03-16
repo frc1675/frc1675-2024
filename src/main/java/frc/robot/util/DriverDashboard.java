@@ -10,10 +10,10 @@ public class DriverDashboard {
   private VideoCamera webCam;
 
   public DriverDashboard(RobotContext robotContext) {
-    ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+    ShuffleboardTab tab = Shuffleboard.getTab("Camera");
     webCam = CameraServer.startAutomaticCapture();
-    webCam.setVideoMode(PixelFormat.kMJPEG, 200, 200, 20);
-    tab.add(webCam).withPosition(5, 1).withSize(3, 3);
+    webCam.setVideoMode(PixelFormat.kMJPEG, 400, 225, 30);
+    tab.add(webCam).withPosition(0, 0).withSize(9, 5);
   }
 
   private VideoCamera getLimelight() {
