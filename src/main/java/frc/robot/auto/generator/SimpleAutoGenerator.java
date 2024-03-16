@@ -13,6 +13,7 @@ import frc.robot.auto.simple.SubwooferRightScore;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.undertaker.UndertakerSubsystem;
+import frc.robot.util.AllianceUtil;
 import frc.robot.util.RobotContext;
 
 public class SimpleAutoGenerator extends AbstractAutoGenerator {
@@ -67,13 +68,13 @@ public class SimpleAutoGenerator extends AbstractAutoGenerator {
     private void updateMap() {
         switch (autoSelector.getSelected()) {
             case "front":
-                setFieldPose(Constants.Field.SUBWOOFER_FRONT);
+                setFieldPose(AllianceUtil.isRedAlliance() ? Constants.Field.SUBWOOFER_FRONT_RED : Constants.Field.SUBWOOFER_FRONT_BLUE);
                 break;
             case "left":
-                setFieldPose(Constants.Field.SUBWOOFER_LEFT);
+                setFieldPose(AllianceUtil.isRedAlliance() ? Constants.Field.SUBWOOFER_LEFT_RED : Constants.Field.SUBWOOFER_LEFT_BLUE);
                 break;
             case "right":
-                setFieldPose(Constants.Field.SUBWOOFER_RIGHT);
+                setFieldPose(AllianceUtil.isRedAlliance() ? Constants.Field.SUBWOOFER_RIGHT_RED : Constants.Field.SUBWOOFER_RIGHT_BLUE);
                 break;
             default:
                 setFieldPose(new Pose2d());
