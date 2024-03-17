@@ -91,7 +91,7 @@ public class RobotContainer {
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
 
-    operatorController.x().onTrue(new SpitNote(shooter, arm, undertakerSubsystem));
+    operatorController.b().onTrue(new SpitNote(shooter, arm, undertakerSubsystem));
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
   }

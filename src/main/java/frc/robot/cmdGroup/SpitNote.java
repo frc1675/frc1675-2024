@@ -19,7 +19,7 @@ public class SpitNote extends SequentialCommandGroup  {
             new ParallelCommandGroup(
                 new EjectNote(undertaker),
                 new EjectShooter(shooter)
-            ).withTimeout(1),
+            ).withTimeout(3),
             new MoveToHome(arm)
         );
     }

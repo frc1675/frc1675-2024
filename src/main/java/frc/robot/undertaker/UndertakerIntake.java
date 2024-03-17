@@ -22,19 +22,21 @@ public class UndertakerIntake extends Command {
 
     @Override
     public void initialize() {
-        undertaker.run(Constants.Undertaker.INTAKE_SPEED);
+        if (readyToIntake.getAsBoolean()) {
+            undertaker.run(Constants.Undertaker.INTAKE_SPEED);
+        }
     }
 
     @Override
-    public void execute() {
-        undertaker.run(readyToIntake.getAsBoolean() ? Constants.Undertaker.INTAKE_SPEED : 0);
-    }
+    public void execute() {}
 
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+        undertaker.run(0);
+    }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return !readyToIntake.getAsBoolean();
     }
 }
