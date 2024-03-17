@@ -88,13 +88,13 @@ public class Constants {
         
         //Relative to the drivers
         //TODO correct position
-        public static final Pose2d SUBWOOFER_FRONT_BLUE = new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(0)); 
-        public static final Pose2d SUBWOOFER_LEFT_BLUE = new Pose2d(0.75, 6.7, Rotation2d.fromDegrees(60));
-        public static final Pose2d SUBWOOFER_RIGHT_BLUE = new Pose2d(0.75, 4.35, Rotation2d.fromDegrees(-60));
+        public static final Pose2d SUBWOOFER_FRONT_BLUE = new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180)); 
+        public static final Pose2d SUBWOOFER_LEFT_BLUE = new Pose2d(0.75, 6.7, Rotation2d.fromDegrees(60 + 180));
+        public static final Pose2d SUBWOOFER_RIGHT_BLUE = new Pose2d(0.75, 4.35, Rotation2d.fromDegrees(-60 + 180));
 
-        public static final Pose2d SUBWOOFER_FRONT_RED = new Pose2d(15, 5.55, Rotation2d.fromDegrees(180)); 
-        public static final Pose2d SUBWOOFER_LEFT_RED = new Pose2d(15.5, 4.35, Rotation2d.fromDegrees(60 + 180));
-        public static final Pose2d SUBWOOFER_RIGHT_RED = new Pose2d(15.5, 6.7, Rotation2d.fromDegrees(-60 + 180));
+        public static final Pose2d SUBWOOFER_FRONT_RED = new Pose2d(15, 5.55, Rotation2d.fromDegrees(0)); 
+        public static final Pose2d SUBWOOFER_LEFT_RED = new Pose2d(15.5, 4.35, Rotation2d.fromDegrees(60));
+        public static final Pose2d SUBWOOFER_RIGHT_RED = new Pose2d(15.5, 6.7, Rotation2d.fromDegrees(-60));
     }
 
     public class Shooter {
