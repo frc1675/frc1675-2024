@@ -96,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void zeroGyroscope(double degreesOffset) {
     Rotation3d current = this.swerve.getGyroRotation3d();
 
-    swerve.setGyro(new Rotation3d(current.getX(), current.getY(), current.getZ() - Units.degreesToRadians(degreesOffset)));
+    swerve.setGyro(new Rotation3d(current.getX(), current.getY(), Units.degreesToRadians(degreesOffset)));
   }
 
   /**

@@ -19,6 +19,6 @@ public class AllianceUtil {
     }
 
     public static int getAutoDirection() {
-        return isRedAlliance() ? 1 : -1;
+        return isRedAlliance() ? -1 : 1;
     }
 }
