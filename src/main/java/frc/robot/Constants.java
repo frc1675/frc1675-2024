@@ -24,10 +24,10 @@ public class Constants {
 
         public static final double SLOW_DRIVE_SCALE = 0.5;
 
-        public static final double ROTATION_P = 0.01;
-        public static final double ROTATION_I = 0;
+        public static final double ROTATION_P = 0.05;
+        public static final double ROTATION_I = 0.001;
         public static final double ROTATION_D = 0;
-        public static final double ROTATION_TARGET_RANGE = 3;
+        public static final double ROTATION_TARGET_RANGE = 1.5;
     }
 
     public class Arm {
