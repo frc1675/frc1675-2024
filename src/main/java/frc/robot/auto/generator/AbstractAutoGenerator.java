@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.util.AllianceUtil;
 
 public abstract class AbstractAutoGenerator {
     private final Field2d field;
@@ -17,6 +18,7 @@ public abstract class AbstractAutoGenerator {
         tab = Shuffleboard.getTab("Auto");
         tab.add("Starting Pose", field).withPosition(0, 1).withSize(6, 4);
         tab.addString("Mode", () -> mode).withPosition(5, 0);
+        tab.addString("Alliance", () -> AllianceUtil.isRedAlliance() ? "Red" : "Blue").withPosition(6, 1);
         delay = tab.add("Auto delay seconds", 0).withSize(2, 1).withPosition(6, 0).getEntry();
     }
 

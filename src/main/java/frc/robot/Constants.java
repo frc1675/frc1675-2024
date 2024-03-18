@@ -24,10 +24,10 @@ public class Constants {
 
         public static final double SLOW_DRIVE_SCALE = 0.5;
 
-        public static final double ROTATION_P = 0.01;
-        public static final double ROTATION_I = 0;
+        public static final double ROTATION_P = 0.05;
+        public static final double ROTATION_I = 0.001;
         public static final double ROTATION_D = 0;
-        public static final double ROTATION_TARGET_RANGE = 3;
+        public static final double ROTATION_TARGET_RANGE = 1.5;
     }
 
     public class Arm {
@@ -85,12 +85,16 @@ public class Constants {
         public static final Translation2d SPEAKER_SCORING_POSITION = new Translation2d(1.67, 5.52);
 
         public static final FieldArea2d FRIENDLY_ALLIANCE_AREA = new FieldArea2d(0, 0, 5.85, 8.21);
-
-        public static final Pose2d SUBWOOFER_FRONT = new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(0)); 
         
         //Relative to the drivers
-        public static final Pose2d SUBWOOFER_LEFT = new Pose2d(0.75, 6.7, Rotation2d.fromDegrees(60));
-        public static final Pose2d SUBWOOFER_RIGHT = new Pose2d(0.75, 4.35, Rotation2d.fromDegrees(-60));
+        //TODO correct position
+        public static final Pose2d SUBWOOFER_FRONT_BLUE = new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180)); 
+        public static final Pose2d SUBWOOFER_LEFT_BLUE = new Pose2d(0.75, 6.7, Rotation2d.fromDegrees(60 + 180));
+        public static final Pose2d SUBWOOFER_RIGHT_BLUE = new Pose2d(0.75, 4.35, Rotation2d.fromDegrees(-60 + 180));
+
+        public static final Pose2d SUBWOOFER_FRONT_RED = new Pose2d(15, 5.55, Rotation2d.fromDegrees(0)); 
+        public static final Pose2d SUBWOOFER_LEFT_RED = new Pose2d(15.5, 4.35, Rotation2d.fromDegrees(60));
+        public static final Pose2d SUBWOOFER_RIGHT_RED = new Pose2d(15.5, 6.7, Rotation2d.fromDegrees(-60));
     }
 
     public class Shooter {
