@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.poseScheduler.FieldArea2d;
 
 public class Constants {
@@ -158,5 +160,17 @@ public class Constants {
 
         public static final double EJECT_SPEED = -0.5;
 
+    }
+
+    public class Vision {
+        public static final int SPEAKER_TARGET_ID = getSpeakerIDByAlliance();
+
+        private static int getSpeakerIDByAlliance() {
+            if (DriverStation.getAlliance().get() == Alliance.Blue) {
+                return 8;
+            } else {
+                return 4;
+            }
+        }
     }
 }
