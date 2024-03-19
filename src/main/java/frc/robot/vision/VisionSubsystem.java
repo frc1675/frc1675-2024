@@ -2,6 +2,7 @@ package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,11 +26,12 @@ public class VisionSubsystem extends SubsystemBase {
   public VisionSubsystem(IVision implementation) {
     visionImplementation = implementation;
     tab = Shuffleboard.getTab("Vision");
-    tab.addBoolean("Found target: ", () -> hasTarget());
     tab.addInteger("Target Id: ", () -> getTargetId());
     tab.addString("BotPose: ", () -> getBotpose().toString());
-    tab.addDouble("Distance to Speaker", () -> getHorizontalSpeakerDistance());
-    tab.addDouble("Offset from speaker", () -> getTargetOffset().getDegrees());
+    tab.addBoolean("Has Speaker", () -> hasSpeaker());
+    tab.addDouble("Horizontal Offset from Speaker", () -> getHorizontalSpeakerOffset().getDegrees());
+    tab.addDouble("Vertical Offset from speaker", () -> getVerticalSpeakerOffset().getDegrees());
+    tab.addDouble("Displacement from speaker", () -> getDistanceToSpeaker());
   }
   
   public boolean hasTarget(){
@@ -48,14 +50,26 @@ public class VisionSubsystem extends SubsystemBase {
     return visionImplementation.getTargetId();
   }
 
-  public double getHorizontalSpeakerDistance() {
-    return visionImplementation.getHorizontalSpeakerDistance(visionImplementation.getTargetTranslation());
+  public boolean hasSpeaker() {
+    return visionImplementation.hasSpeaker();
   }
 
-  public Rotation2d getTargetOffset() {
-    return visionImplementation.getTargetOffset();
+  public Rotation2d getHorizontalSpeakerOffset() {
+    if (hasSpeaker())
+      return visionImplementation.getTargetHorizontalOffset();
+    return null;
   }
-  
+
+  public Rotation2d getVerticalSpeakerOffset() {
+    if (hasSpeaker())
+      return visionImplementation.getTargetVerticalOffset();
+    return null;
+  }
+
+  public double getDistanceToSpeaker() {
+    return visionImplementation.getHorizontalTranslation();
+  }
+
   public LEDMode getLEDMode(){
     return visionImplementation.getLEDMode();
   }

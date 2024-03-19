@@ -34,15 +34,16 @@ public class RealVision implements IVision {
         if (DriverStation.getAlliance().isPresent()) {
             if (DriverStation.getAlliance().get() == Alliance.Red) {
                 botpose = table.getEntry("botpose_wpired");
-            }  else if(DriverStation.getAlliance().get() == Alliance.Blue) {
+            } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
                 botpose = table.getEntry("botpose_wpiblue");
-            } else{
+            } else {
                 botpose = table.getEntry("botpose");
             }
             double[] botposeArray = botpose.getDoubleArray(new double[6]);
             return new Pose2d(botposeArray[0], botposeArray[1], Rotation2d.fromDegrees(botposeArray[5]));
         }
-        return new Pose2d(-1000, -1000, Rotation2d.fromDegrees(0)); // Out of Bounds Default Pose for Drive Subsystem to Ignore
+        return new Pose2d(-1000, -1000, Rotation2d.fromDegrees(0)); // Out of Bounds Default Pose for Drive Subsystem to
+                                                                    // Ignore
     }
 
     @Override
@@ -53,6 +54,24 @@ public class RealVision implements IVision {
     @Override
     public int getTargetId() {
         return (int) aprilTagID.getInteger(0);
+    }
+
+    @Override
+    public boolean hasSpeaker() {
+        if (hasTarget() && (getTargetId() == Constants.Vision.RED_SPEAKER_TARGET_ID ||
+                getTargetId() == Constants.Vision.BLUE_SPEAKER_TARGET_ID))
+            return true;
+        return false;
+    }
+
+    @Override
+    public Rotation2d getTargetHorizontalOffset() {
+        return Rotation2d.fromDegrees(table.getEntry("tx").getDouble(1000));
+    }
+
+    @Override
+    public Rotation2d getTargetVerticalOffset() {
+        return Rotation2d.fromDegrees(table.getEntry("ty").getDouble(1000));
     }
 
     @Override
@@ -82,23 +101,10 @@ public class RealVision implements IVision {
     }
 
     @Override
-    public double getHorizontalSpeakerDistance(Translation2d translation) {
-        if (hasTarget() && getTargetId() == 8) {
-            return getTargetTranslation().getX();
-        } else {
-            return -1;
-        }
-    }
-    
-    @Override
-    public Translation2d getTargetTranslation() {
-        double[] coords = table.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
-        return new Translation2d(coords[0], coords[1]); 
-    }
-
-	@Override
-	public Rotation2d getTargetOffset() {
-        double[] coords = table.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
-        return Rotation2d.fromDegrees(coords[5]);
+	public double getHorizontalTranslation() {
+	    double[] coords = table.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+        Translation2d tagPose = new Translation2d(coords[0], coords[1]);  	    
+	    Translation2d botPose = getBotpose().getTranslation();
+	    return botPose.getDistance(tagPose);
 	}
 }

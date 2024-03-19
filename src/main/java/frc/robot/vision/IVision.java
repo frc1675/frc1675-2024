@@ -16,9 +16,11 @@ public interface IVision {
 
   public void setLEDMode(LEDMode mode);
 
-  public double getHorizontalSpeakerDistance(Translation2d translation);
+  public boolean hasSpeaker();
 
-  public Translation2d getTargetTranslation();
+  public Rotation2d getTargetHorizontalOffset();
 
-  public Rotation2d getTargetOffset();
+  public Rotation2d getTargetVerticalOffset();
+
+  public double getHorizontalTranslation();
 }

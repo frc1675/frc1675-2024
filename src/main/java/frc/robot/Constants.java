@@ -163,14 +163,7 @@ public class Constants {
     }
 
     public class Vision {
-        public static final int SPEAKER_TARGET_ID = getSpeakerIDByAlliance();
-
-        private static int getSpeakerIDByAlliance() {
-            if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                return 8;
-            } else {
-                return 4;
-            }
-        }
+        public static final int RED_SPEAKER_TARGET_ID = 8;
+        public static final int BLUE_SPEAKER_TARGET_ID = 4;
     }
 }

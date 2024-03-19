@@ -12,8 +12,7 @@ public class SimVision implements IVision {
     private int targetId = 0;
     private LEDMode currentMode;
 
-    public SimVision() {
-    }
+    public SimVision() {}
 
     @Override
     public Pose2d getBotpose() {
@@ -53,18 +52,23 @@ public class SimVision implements IVision {
     }
 
     @Override
-    public double getHorizontalSpeakerDistance(Translation2d translation) {
-        return 0.0;
+    public Rotation2d getTargetHorizontalOffset() {
+        return null;
     }
 
     @Override
-    public Translation2d getTargetTranslation() {
-        return new Translation2d(0.0, 0.0);
+    public Rotation2d getTargetVerticalOffset() {
+        return null;
+    }
+
+    @Override
+    public boolean hasSpeaker() {
+        return false;
     }
 
 	@Override
-	public Rotation2d getTargetOffset() {
-	    return new Rotation2d(0.0);
+	public double getHorizontalTranslation() {
+	    return 0.0;
 	}
 
 }
