@@ -40,27 +40,39 @@ public class ArmSubsystem extends SubsystemBase {
         Integer highMatch = 1000;
 
         for (Integer dist : speakerDistToAngleTable.keySet()) {
-            if (dist > lowMatch && dist < hDist) {
+            if (dist >= lowMatch && dist <= hDist) {
                 lowMatch = dist;
-            } else if (dist < highMatch && dist > hDist) {
+            } else if (dist <= highMatch && dist >= hDist) {
                 highMatch = dist;
             }
         }
 
-        // interpolate to estimate top and bottom angles
-        double interpolant = MathUtil.inverseInterpolate(lowMatch, highMatch, hDist);
-        double interpolatedBottomShot = MathUtil.interpolate(
-            speakerDistToAngleTable.get(lowMatch)[0],
-            speakerDistToAngleTable.get(highMatch)[0],
-            interpolant);
-        double interpolatedTopShot = MathUtil.interpolate(
-            speakerDistToAngleTable.get(lowMatch)[1],
-            speakerDistToAngleTable.get(highMatch)[1],
-            interpolant);
+        double bottomShot;
+        double topShot;
+
+        // if hDist is out of range, use nearest in range value and pray
+        if (lowMatch == -1000) {
+            bottomShot = speakerDistToAngleTable.get(highMatch)[0];
+            topShot = speakerDistToAngleTable.get(highMatch)[1];
+        } else if (highMatch == 1000) {
+            bottomShot = speakerDistToAngleTable.get(lowMatch)[0];
+            topShot = speakerDistToAngleTable.get(lowMatch)[1];
+        } else {
+            // interpolate to estimate top and bottom angles
+            double interpolant = MathUtil.inverseInterpolate(lowMatch, highMatch, hDist);
+            bottomShot = MathUtil.interpolate(
+                speakerDistToAngleTable.get(lowMatch)[0],
+                speakerDistToAngleTable.get(highMatch)[0],
+                interpolant);
+            topShot = MathUtil.interpolate(
+                speakerDistToAngleTable.get(lowMatch)[1],
+                speakerDistToAngleTable.get(highMatch)[1],
+                interpolant);
+        }
 
         // calculate desired angle based on range
-        double dif = interpolatedTopShot - interpolatedBottomShot;
-        return interpolatedBottomShot + dif * Constants.Arm.SPEAKER_SHOT_ANGLE_DIF_MULTIPLIER;
+        double dif = topShot - bottomShot;
+        return bottomShot + dif * Constants.Arm.SPEAKER_SHOT_ANGLE_DIF_MULTIPLIER;
     }
 
     public static ArmSubsystem create() {
