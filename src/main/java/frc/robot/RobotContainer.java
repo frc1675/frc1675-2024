@@ -29,7 +29,7 @@ import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
-import frc.robot.util.DashboardFactory;
+import frc.robot.util.Dashboards;
 import frc.robot.vision.VisionSubsystem;
 
 public class RobotContainer {
@@ -67,8 +67,8 @@ public class RobotContainer {
       :
       new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
 
-    DashboardFactory.initVoltageDashboard();
-    DashboardFactory.initDriverDashboard(robotContext::hasNote);
+    Dashboards.initVoltageDashboard();
+    Dashboards.initDriverDashboard(robotContext::hasNote);
     VersionFile.getInstance().putToDashboard();
       
     configureBindings();

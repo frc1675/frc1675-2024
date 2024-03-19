@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-public class DashboardFactory {
+public class Dashboards {
     private static boolean voltageNeedsInit = true;
     private static boolean driverNeedsInit = true;
 
