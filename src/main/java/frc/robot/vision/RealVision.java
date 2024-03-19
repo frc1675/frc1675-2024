@@ -102,9 +102,14 @@ public class RealVision implements IVision {
 
     @Override
 	public double getHorizontalTranslation() {
-	    double[] coords = table.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
-        Translation2d tagPose = new Translation2d(coords[0], coords[1]);  	    
-	    Translation2d botPose = getBotpose().getTranslation();
-	    return botPose.getDistance(tagPose);
+        if (DriverStation.getAlliance().isPresent()) {
+    	    double[] coords = new double[6];
+    	    double[] robotSpace = table.getEntry("targetpose_robotspace").getDoubleArray(coords);
+            Translation2d tagPose = new Translation2d(robotSpace[0], robotSpace[1]);  	    
+    	    Translation2d botPose = getBotpose().getTranslation();
+    	    return botPose.getDistance(tagPose);
+    	} else {
+    	    return -1000.0;
+    	}
 	}
 }
