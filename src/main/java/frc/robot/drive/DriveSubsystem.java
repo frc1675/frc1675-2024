@@ -36,6 +36,7 @@ public class DriveSubsystem extends SubsystemBase {
   private ShuffleboardTab dashboard;
 
   private Double targetAngle = null;
+  private int rotationDirection = 1; //Used to make sure the rotation PID continues working while the gyroscope is inverted.
   private final PIDController rotationController;
 
 
@@ -94,6 +95,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void initAutonomousMode() {
     swerve.setHeadingCorrection(false);
     swerve.getGyro().setInverted(true);
+    rotationDirection = 1;
 
   }
 
@@ -105,6 +107,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void initTeleopMode() {
     swerve.setHeadingCorrection(true);
     swerve.getGyro().setInverted(false);
+    rotationDirection = -1;
   }
 
   /**
@@ -159,7 +162,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     if (targetAngle != null) {
-      rotation = -rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle);
+      rotation = rotationDirection * rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle);
     }else {
       rotation = rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY;
     }
