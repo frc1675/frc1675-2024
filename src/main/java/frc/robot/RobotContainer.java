@@ -117,4 +117,12 @@ public class RobotContainer {
     return autoGenerator.getAutoCommand();
   }
 
+  public void autoInit() {
+    drive.initAutonomousMode();
+  }
+
+  public void teleInit() {
+    drive.initTeleopMode();
+  }
+
 }
