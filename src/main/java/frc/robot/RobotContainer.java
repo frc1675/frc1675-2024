@@ -68,6 +68,7 @@ public class RobotContainer {
       new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
 
     Dashboards.initVoltageDashboard();
+    Dashboards.initCurrentDashboard();
     Dashboards.initDriverDashboard(robotContext::hasNote);
     VersionFile.getInstance().putToDashboard();
       

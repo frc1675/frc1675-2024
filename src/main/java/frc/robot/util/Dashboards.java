@@ -6,12 +6,15 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.VideoCamera;
 import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class Dashboards {
     private static boolean voltageNeedsInit = true;
+    private static boolean currentNeedsInit = true;
     private static boolean driverNeedsInit = true;
 
     public static void initVoltageDashboard() {
@@ -24,6 +27,19 @@ public class Dashboards {
             tab.addDouble("CAN bus usage %", () -> RobotController.getCANStatus().percentBusUtilization);
 
             voltageNeedsInit = false;
+        }
+    }
+
+    public static void initCurrentDashboard(){
+        if (currentNeedsInit){
+            ShuffleboardTab tab = Shuffleboard.getTab("Current Info");
+            try (PowerDistribution PDH = new PowerDistribution(1, ModuleType.kRev)) {
+                tab.addDouble("Right Arm Motor Current",()-> PDH.getCurrent(18));
+                tab.addDouble("Left Arm Motor Current",()-> PDH.getCurrent(5));
+            } catch(Exception e){
+                tab.addString("Failure", ()-> "Failed to recieve current from PDH");
+            }
+            currentNeedsInit = false;
         }
     }
 
