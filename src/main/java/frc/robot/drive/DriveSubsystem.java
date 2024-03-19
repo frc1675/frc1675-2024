@@ -43,6 +43,8 @@ public class DriveSubsystem extends SubsystemBase {
     this.poseScheduler = poseScheduler;
     rotationController = new PIDController(Constants.Drive.ROTATION_P, Constants.Drive.ROTATION_I, Constants.Drive.ROTATION_D);
     rotationController.enableContinuousInput(-180, 180);
+    rotationController.setTolerance(Constants.Drive.ROTATION_TARGET_RANGE);
+
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
       swerve = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(
@@ -67,6 +69,8 @@ public class DriveSubsystem extends SubsystemBase {
     dashboard.add("Rotation PID", rotationController);
     dashboard.addDouble("Yaw", () ->swerve.getYaw().getDegrees());
     dashboard.addDouble("Target angle", () -> targetAngle == null ? -1 : targetAngle);
+
+    dashboard.addBoolean("Rotation On Target?", () -> rotationController.atSetpoint());
 
 
     dashboard.add(swerve.field).withPosition(0, 1).withSize(5, 3);
@@ -96,7 +100,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void zeroGyroscope(double degreesOffset) {
     Rotation3d current = this.swerve.getGyroRotation3d();
 
-    swerve.setGyro(new Rotation3d(current.getX(), current.getY(), current.getZ() - Units.degreesToRadians(degreesOffset)));
+    swerve.setGyro(new Rotation3d(current.getX(), current.getY(), Units.degreesToRadians(degreesOffset)));
   }
 
   /**
@@ -131,12 +135,12 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double x, double y, double rotation) {
-    if (rotation != 0 || (targetAngle != null &&  Math.abs(swerve.getYaw().getDegrees() - targetAngle) < Constants.Drive.ROTATION_TARGET_RANGE)) {
+    if (rotation != 0 || (targetAngle != null && rotationController.atSetpoint())) {
       targetAngle = null;
     }
 
     if (targetAngle != null) {
-      rotation = rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle);
+      rotation = -rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle);
     }else {
       rotation = rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY;
     }
@@ -187,6 +191,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void setTargetAngle(double angleDeg) {
+    rotationController.reset();
     targetAngle = angleDeg;
   }
 
