@@ -22,5 +22,5 @@ public interface IVision {
 
   public Rotation2d getTargetVerticalOffset();
 
-  public double getHorizontalTranslation();
+  public Double getHorizontalDistance();
 }

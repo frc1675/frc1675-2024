@@ -66,12 +66,12 @@ public class RealVision implements IVision {
 
     @Override
     public Rotation2d getTargetHorizontalOffset() {
-        return Rotation2d.fromDegrees(table.getEntry("tx").getDouble(1000));
+        return Rotation2d.fromDegrees(table.getEntry("tx").getDouble(-1000));
     }
 
     @Override
     public Rotation2d getTargetVerticalOffset() {
-        return Rotation2d.fromDegrees(table.getEntry("ty").getDouble(1000));
+        return Rotation2d.fromDegrees(table.getEntry("ty").getDouble(-1000));
     }
 
     @Override
@@ -101,15 +101,15 @@ public class RealVision implements IVision {
     }
 
     @Override
-	public double getHorizontalTranslation() {
-        if (DriverStation.getAlliance().isPresent()) {
-    	    double[] coords = new double[6];
-    	    double[] robotSpace = table.getEntry("targetpose_robotspace").getDoubleArray(coords);
-            Translation2d tagPose = new Translation2d(robotSpace[0], robotSpace[1]);  	    
-    	    Translation2d botPose = getBotpose().getTranslation();
-    	    return botPose.getDistance(tagPose);
-    	} else {
-    	    return -1000.0;
-    	}
-	}
+    public Double getHorizontalDistance() {
+        double[] defaultCoords = new double[6];
+        NetworkTableEntry robotSpace = table.getEntry("targetpose_cameraspace");
+
+        if(robotSpace instanceof NetworkTableEntry){
+        	double[] spaceArray = robotSpace.getDoubleArray(defaultCoords);
+        	Translation2d tagPose = new Translation2d(spaceArray[0], spaceArray[1]);
+        	return new Translation2d(0, 0).getDistance(tagPose);
+        }
+        return null;
+    }
 }

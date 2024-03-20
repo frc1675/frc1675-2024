@@ -65,10 +65,10 @@ public class SimVision implements IVision {
     public boolean hasSpeaker() {
         return false;
     }
-
+    
 	@Override
-	public double getHorizontalTranslation() {
-	    return 0.0;
+	public Double getHorizontalDistance() {
+	    return null;
 	}
 
 }

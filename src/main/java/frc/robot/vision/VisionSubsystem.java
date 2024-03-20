@@ -31,7 +31,7 @@ public class VisionSubsystem extends SubsystemBase {
     tab.addBoolean("Has Speaker", () -> hasSpeaker());
     tab.addDouble("Horizontal Offset from Speaker", () -> getHorizontalSpeakerOffset().getDegrees());
     tab.addDouble("Vertical Offset from speaker", () -> getVerticalSpeakerOffset().getDegrees());
-    tab.addDouble("Displacement from speaker", () -> getDistanceToSpeaker());
+    // tab.addDouble("Displacement from speaker", () -> getDistanceToSpeaker());
   }
   
   public boolean hasTarget(){
@@ -67,7 +67,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public double getDistanceToSpeaker() {
-    return visionImplementation.getHorizontalTranslation();
+    return visionImplementation.getHorizontalDistance();
   }
 
   public LEDMode getLEDMode(){
