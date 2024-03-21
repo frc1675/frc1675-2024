@@ -26,12 +26,11 @@ public class VisionSubsystem extends SubsystemBase {
   public VisionSubsystem(IVision implementation) {
     visionImplementation = implementation;
     tab = Shuffleboard.getTab("Vision");
-    tab.addInteger("Target Id: ", () -> getTargetId());
     tab.addString("BotPose: ", () -> getBotpose().toString());
     tab.addBoolean("Has Speaker", () -> hasSpeaker());
-    tab.addDouble("Horizontal Offset from Speaker", () -> getHorizontalSpeakerOffset().getDegrees());
-    tab.addDouble("Vertical Offset from speaker", () -> getVerticalSpeakerOffset().getDegrees());
-    // tab.addDouble("Displacement from speaker", () -> getDistanceToSpeaker());
+    tab.addDouble("Horizontal Offset from Speaker", () -> getHorizontalSpeakerOffset() != null ? getHorizontalSpeakerOffset().getDegrees() : -1000);
+    tab.addDouble("Vertical Offset from speaker", () -> getVerticalSpeakerOffset() != null ? getVerticalSpeakerOffset().getDegrees() : -1000);
+    tab.addDouble("Displacement from speaker", () -> getDistanceToSpeaker() != null ? getDistanceToSpeaker().doubleValue() : -1000);
   }
   
   public boolean hasTarget(){
@@ -66,7 +65,7 @@ public class VisionSubsystem extends SubsystemBase {
     return null;
   }
 
-  public double getDistanceToSpeaker() {
+  public Double getDistanceToSpeaker() {
     return visionImplementation.getHorizontalDistance();
   }
 

@@ -43,7 +43,6 @@ public class RealVision implements IVision {
             return new Pose2d(botposeArray[0], botposeArray[1], Rotation2d.fromDegrees(botposeArray[5]));
         }
         return new Pose2d(-1000, -1000, Rotation2d.fromDegrees(0)); // Out of Bounds Default Pose for Drive Subsystem to
-                                                                    // Ignore
     }
 
     @Override
@@ -102,13 +101,11 @@ public class RealVision implements IVision {
 
     @Override
     public Double getHorizontalDistance() {
-        double[] defaultCoords = new double[6];
-        NetworkTableEntry robotSpace = table.getEntry("targetpose_cameraspace");
-
-        if(robotSpace instanceof NetworkTableEntry){
-        	double[] spaceArray = robotSpace.getDoubleArray(defaultCoords);
-        	Translation2d tagPose = new Translation2d(spaceArray[0], spaceArray[1]);
-        	return new Translation2d(0, 0).getDistance(tagPose);
+        // make sure limelight horizon is calibrated correctly!
+        double[] cameraSpace = table.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
+        if (cameraSpace.length > 0) {
+            Translation2d tagPose = new Translation2d(cameraSpace[0], cameraSpace[1]);
+            return new Translation2d(0, 0).getDistance(tagPose); // returns meters
         }
         return null;
     }
