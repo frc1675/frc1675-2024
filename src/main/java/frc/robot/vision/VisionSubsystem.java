@@ -1,5 +1,9 @@
 package frc.robot.vision;
 
+import java.util.HashMap;
+
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -12,6 +16,26 @@ public class VisionSubsystem extends SubsystemBase {
     OFF,
     BLINK,
     ON;
+  }
+
+  private static HashMap<Double, Double> angleToSpeakerDist = new HashMap<Double, Double>() {{}};
+
+  public static double getDistanceToSpeaker(double angleToTag) {
+    double lowMatch = -1000;
+    double highMatch = 1000;
+
+    for (Double angle : angleToSpeakerDist.keySet()) {
+        if (angle >= lowMatch && angle <= angleToTag) {
+            lowMatch = angle;
+        } else if (angle <= highMatch && angle >= angleToTag) {
+            highMatch = angle;
+        }
+    }
+
+    double interpolant = MathUtil.inverseInterpolate(lowMatch, highMatch, angleToTag);
+    double dist = MathUtil.interpolate(angleToSpeakerDist.get(lowMatch), angleToSpeakerDist.get(highMatch), interpolant);
+
+    return dist;
   }
 
   private final IVision visionImplementation;
