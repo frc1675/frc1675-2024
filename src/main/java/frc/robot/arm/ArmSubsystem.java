@@ -1,5 +1,8 @@
 package frc.robot.arm;
 
+import java.util.HashMap;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,6 +19,52 @@ public class ArmSubsystem extends SubsystemBase {
     private IArmIO armIO;
     private TrapezoidProfile.Constraints profileConstraints;
 
+    private static HashMap<Integer, Double[]> speakerDistToAngleTable = new HashMap<Integer, Double[]>() {{
+        // format: distance, {bottom shot, top shot}
+        // uses arm angle values so high shot has a lower angle than low shot
+        put(50, new Double[]{70.76, 58.19});
+        put(90, new Double[]{87.85, 80.26});
+        put(120, new Double[]{94.76, 89.50});
+        put(150, new Double[]{99.20, 95.34});
+        put(180, new Double[]{102.23, 99.26});
+        put(210, new Double[]{104.42, 102.05});
+        put(240, new Double[]{106.07, 104.11});
+        put(270, new Double[]{107.36, 105.70});
+        put(300, new Double[]{108.39, 106.96});
+        put(318, new Double[]{108.91, 107.59});
+    }};
+
+    public static double calcSpeakerArmAngle(double hDist) {
+        // find nearest pre-calculated values
+        Integer lowMatch = -1000;
+        Integer highMatch = 1000;
+
+        for (Integer dist : speakerDistToAngleTable.keySet()) {
+            if (dist >= lowMatch && dist <= hDist) {
+                lowMatch = dist;
+            } else if (dist <= highMatch && dist >= hDist) {
+                highMatch = dist;
+            }
+        }
+
+        double bottomShot;
+        double topShot;
+
+        // interpolate to estimate top and bottom angles
+        double interpolant = MathUtil.inverseInterpolate(lowMatch, highMatch, hDist);
+        bottomShot = MathUtil.interpolate(
+            speakerDistToAngleTable.get(lowMatch)[0],
+            speakerDistToAngleTable.get(highMatch)[0],
+            interpolant);
+        topShot = MathUtil.interpolate(
+            speakerDistToAngleTable.get(lowMatch)[1],
+            speakerDistToAngleTable.get(highMatch)[1],
+            interpolant);
+            
+        // calculate desired angle based on range
+        double dif = topShot - bottomShot;
+        return bottomShot + dif * Constants.Arm.SPEAKER_SHOT_ANGLE_DIF_MULTIPLIER;
+    }
 
     public static ArmSubsystem create() {
         return new ArmSubsystem(Robot.isReal() ? new RealArmIO() : new SimArmIO());
