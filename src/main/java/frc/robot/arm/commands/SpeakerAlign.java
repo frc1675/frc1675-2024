@@ -18,7 +18,10 @@ public class SpeakerAlign extends Command {
 
   @Override
   public void initialize() {
-    new MoveToPosition(arm, Constants.Arm.HOME_POSITION - vision.getVerticalSpeakerOffset().getDegrees());
+    double readAngle = vision.getVerticalSpeakerOffset().getDegrees();
+    double aimAngle = ArmSubsystem.calcSpeakerArmAngle(VisionSubsystem.getDistanceToSpeaker(readAngle));
+
+    new MoveToPosition(arm, Constants.Arm.HOME_POSITION - aimAngle);
   }
 
   @Override
