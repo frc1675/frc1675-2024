@@ -31,13 +31,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   private SwerveDrive swerve;
 
-  private PoseScheduler poseScheduler;
+  private final PoseScheduler poseScheduler;
 
   private ShuffleboardTab dashboard;
 
+  private final PIDController rotationController;
   private Double targetAngle = null;
   private int rotationDirection = 1; //Used to make sure the rotation PID continues working while the gyroscope is inverted.
-  private final PIDController rotationController;
 
 
   public DriveSubsystem(PoseScheduler poseScheduler) {
@@ -126,7 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Used for autonomous
+   * Used for PathPlanner autonomous
    * 
    * @return robot relative chassis speeds
    */
@@ -135,13 +135,14 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Used for autonomous
+   * Used for PathPlanner autonomous
    */
   public void setRobotRelativeChassisSpeeds(ChassisSpeeds speeds) {
     swerve.drive(new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond), speeds.omegaRadiansPerSecond, false, false);
   }
 
   /**
+   * Used for simple autonomous
    * Drive the drivetrain in a single direction
    * @param velocity The desired velocity. Will be capped at the max velocity
    * @param isX True if the drivetrain should drive in the x direction, false otherwise
@@ -202,14 +203,6 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d override) {
     swerve.resetOdometry(override);
-  }
-
-  public void setMotorBrakeMode(boolean mode) {
-    /*
-    for (SwerveModule module : swerve.getModules()) {
-      module.setMotorBrake(mode);
-    }
-     */
   }
 
   public void setTargetAngle(double angleDeg) {
