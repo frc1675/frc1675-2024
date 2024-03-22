@@ -59,6 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     swerve.chassisVelocityCorrection = false;    
+    swerve.setHeadingCorrection(true);
     initDashboard();
   }
 
@@ -86,28 +87,6 @@ public class DriveSubsystem extends SubsystemBase {
       return "None";
     }
     return this.getCurrentCommand().getName();
-  }
-
-  /**
-   * This method must be called for the autonomous to function properly.
-   * Call before the autonomous routine starts.
-   */
-  public void initAutonomousMode() {
-    swerve.setHeadingCorrection(false);
-    swerve.getGyro().setInverted(true);
-    rotationDirection = 1;
-
-  }
-
-  /**
-   * This method must be called for the TeleOp heading correction to work, and for
-   * controls to feel natural.
-   * Call as teleop begins. 
-   */
-  public void initTeleopMode() {
-    swerve.setHeadingCorrection(true);
-    swerve.getGyro().setInverted(false);
-    rotationDirection = -1;
   }
 
   /**
