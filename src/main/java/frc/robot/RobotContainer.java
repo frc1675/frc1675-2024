@@ -18,6 +18,7 @@ import frc.robot.auto.generator.AbstractAutoGenerator;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
+import frc.robot.cmdGroup.LongShot;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.drive.TurnToAngle;
@@ -107,6 +108,7 @@ public class RobotContainer {
     operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE));
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
+    operatorController.b().onTrue(new LongShot(shooter, arm, visionSubsystem));
   }
 
   private double getJoystickInput(CommandGenericHID stick, int axe) {

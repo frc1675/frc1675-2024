@@ -59,8 +59,6 @@ public class Constants {
         // PID Profile constants
         public static final double MAXIMUM_VELOCITY = 150; // degrees per second
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
-        // Speaker Shoot Angle Calculation Constants
-        public static final double SPEAKER_SHOT_ANGLE_DIF_MULTIPLIER = 0.5; // <0 -> undershoot, 0 -> bottom, 0.5 -> average, 1 -> top, >1 -> overshoot
     }
 
     public class PathPlanner {
