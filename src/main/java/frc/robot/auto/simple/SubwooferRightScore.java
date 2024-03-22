@@ -20,7 +20,7 @@ public class SubwooferRightScore extends SequentialCommandGroup {
             new SpinUpAndShoot(shooter, () -> Constants.Shooter.SHOOT_SPEED, () -> Constants.Shooter.SHOOT_SPEED * 0.9),
             new WaitCommand(delay),
             new ParallelDeadlineGroup(
-                new SimpleAutoDrive(drive, 4, true, AllianceUtil.getAutoDirection()), 
+                new SimpleAutoDrive(drive, 4, true, AllianceUtil.getTranslationDirection()), 
                 new IntakeNote(shooter, undertaker, context::getReadyToIntake)
             )
         );
