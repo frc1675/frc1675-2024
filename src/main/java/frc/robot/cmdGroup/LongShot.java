@@ -1,5 +1,6 @@
 package frc.robot.cmdGroup;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.arm.ArmSubsystem;
@@ -11,8 +12,11 @@ import frc.robot.vision.VisionSubsystem;
 
 public class LongShot extends SequentialCommandGroup {
   public LongShot(ShooterSubsystem shooter, ArmSubsystem arm, VisionSubsystem vision) {
-    double readAngle = vision.getVerticalSpeakerOffset().getDegrees();
-    double aimAngle = ArmSubsystem.calcSpeakerArmAngle(VisionSubsystem.getDistanceToSpeaker(readAngle));
+    Rotation2d measurement = vision.getVerticalSpeakerOffset();
+    if (measurement == null) {
+      return;
+    }
+    double aimAngle = ArmSubsystem.calcSpeakerArmAngle(VisionSubsystem.getDistanceToSpeaker(measurement.getDegrees()));
     
     addCommands(
         new MoveToPosition(arm, Constants.Arm.HOME_POSITION - aimAngle),
