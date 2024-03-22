@@ -12,9 +12,16 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "spinUpAndShoot"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SubwooferToNote2"
+                }
+              }
+            ]
           }
         },
         {
@@ -24,22 +31,10 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SubwooferToNote2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "runUndertaker"
+                  "pathName": "Note2ToNote1"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "podiumShot"
           }
         }
       ]

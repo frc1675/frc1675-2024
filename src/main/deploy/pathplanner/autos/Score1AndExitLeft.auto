@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
-      "y": 5.55
+      "x": 0.7987428243044774,
+      "y": 6.651755158003897
     },
-    "rotation": 0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -18,28 +18,22 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SubwooferToNote2"
-                }
-              },
               {
                 "type": "named",
                 "data": {
                   "name": "runUndertaker"
                 }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SubwooferTopToNote1"
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "podiumShot"
           }
         }
       ]
