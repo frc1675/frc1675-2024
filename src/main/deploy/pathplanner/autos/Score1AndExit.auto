@@ -14,19 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "spinUp"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "spinDown"
+            "name": "spinUpAndShoot"
           }
         },
         {

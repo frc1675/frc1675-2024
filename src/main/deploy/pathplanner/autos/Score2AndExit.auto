@@ -36,12 +36,6 @@
                       "data": {
                         "pathName": "SubwooferToNote2"
                       }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Note2ToSubwoofer"
-                      }
                     }
                   ]
                 }
@@ -52,13 +46,7 @@
         {
           "type": "named",
           "data": {
-            "name": "spinUpAndShoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SubwooferToNote2"
+            "name": "podiumShot"
           }
         }
       ]
