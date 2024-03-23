@@ -12,45 +12,163 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SubwooferLeftToNoteLeft"
+            "name": "spinUpFar"
           }
         },
         {
-          "type": "wait",
+          "type": "deadline",
           "data": {
-            "waitTime": 1.0
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SubwooferLeftToNoteLeft"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "NoteLeftToNoteCenter"
+            "name": "intakeUntil"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "armNoteLeft"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "NoteCenterToNoteRight"
+            "name": "shoot"
           }
         },
         {
-          "type": "wait",
+          "type": "deadline",
           "data": {
-            "waitTime": 1.0
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "NoteLeftToNoteCenter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "armHome"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "NoteRightToCloseScoring"
+            "name": "intakeUntil"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "armNoteMiddle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "NoteCenterToNoteRight"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "armHome"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeUntil"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "NoteRightToCloseScoring"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeUntil"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "armNoteRight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "armHome"
           }
         }
       ]

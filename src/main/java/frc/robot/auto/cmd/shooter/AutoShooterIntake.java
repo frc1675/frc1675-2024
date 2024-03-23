@@ -27,8 +27,13 @@ public class AutoShooterIntake extends Command {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        shooter.setIndexerSpeed(0);
+    }
+
+    @Override
     public boolean isFinished() {
-        return false;
+        return shooter.isIndexerLoaded();
     }
 
 }

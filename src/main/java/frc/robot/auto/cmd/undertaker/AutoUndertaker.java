@@ -30,9 +30,13 @@ public class AutoUndertaker extends Command {
         }
     }
 
+    public void end(boolean interrupted) {
+        undertaker.run(0);
+    }
+
     @Override
     public boolean isFinished() {
-        return false;
+        return shouldStop.getAsBoolean();
     }
 
 }

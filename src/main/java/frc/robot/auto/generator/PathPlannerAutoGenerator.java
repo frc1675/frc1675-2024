@@ -82,14 +82,19 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     }
 
     private void registerCommands() {
-        NamedCommands.registerCommand("intake", new AutoIntakeNote(shooter, undertaker)); //never ends
+        NamedCommands.registerCommand("intake", new AutoIntakeNote(shooter, undertaker)); //blocking
+        NamedCommands.registerCommand("intakeUntil", new AutoIntakeNote(shooter, undertaker).withTimeout(0.5)); //blocking
 
         NamedCommands.registerCommand("armHome", new AutoArmHome(arm)); //blocking
         NamedCommands.registerCommand("armPodiumAngle", new AutoArmMove(arm, Constants.Arm.LONG_SHOT_ANGLE)); //blocking
+
+        NamedCommands.registerCommand("armNoteLeft", new AutoArmMove(arm, Constants.Arm.AUTO_LEFT_NOTE_ANGLE)); //blocking
+        NamedCommands.registerCommand("armNoteMiddle", new AutoArmMove(arm, Constants.Arm.AUTO_MIDDLE_NOTE_ANGLE)); //blocking
+        NamedCommands.registerCommand("armNoteRight", new AutoArmMove(arm, Constants.Arm.AUTO_RIGHT_NOTE_ANGLE)); //blocking
         
-        NamedCommands.registerCommand("shoot", new AutoShoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME)); //blocking
+        NamedCommands.registerCommand("shoot", new AutoShoot(shooter).withTimeout(0.25)); //blocking
         NamedCommands.registerCommand("spinUpClose", new AutoSpinUp(shooter, Constants.Shooter.SHOOT_SPEED, Constants.Shooter.SHOOT_SPEED * 0.9)); //blocking
-        NamedCommands.registerCommand("spinUpFar", new AutoSetTargetSpeed(shooter, Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED)); //non-blocking
+        NamedCommands.registerCommand("spinUpFar", new AutoSetTargetSpeed(shooter, Constants.Shooter.AUTO_SHOT_SPEED, Constants.Shooter.AUTO_SHOT_SPEED)); //non-blocking
         NamedCommands.registerCommand("spinDown", new AutoSetTargetSpeed(shooter, 0, 0)); //non-blocking
     }
 
@@ -98,11 +103,12 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
         return new SequentialCommandGroup(
             //We always want to shoot the preloaded piece, and we want to shoot before the delay.
             new SpinUpAndShoot(shooter, () -> Constants.Shooter.SHOOT_SPEED, () -> Constants.Shooter.SHOOT_SPEED * 0.9),
-            
+
             //If a delay is set in the shuffleboard, wait that long
             //This has strategic value and is not required for technical reasons. 
             new WaitCommand(this.getDelay(0)), 
-            autoSelector.getSelected()
+            autoSelector.getSelected(),
+            new AutoSetTargetSpeed(shooter, 0, 0)
         );
     }
 
