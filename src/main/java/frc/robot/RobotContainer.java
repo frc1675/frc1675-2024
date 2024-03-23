@@ -45,6 +45,9 @@ public class RobotContainer {
   private final AbstractAutoGenerator autoGenerator;
   private final RobotContext robotContext;
 
+  private final CommandXboxController driverController;
+  private final CommandXboxController operatorController;
+
   public RobotContainer() {
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
@@ -68,29 +71,17 @@ public class RobotContainer {
       :
       new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
 
+    driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
+    operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
+
     Dashboards.initVoltageDashboard();
-    Dashboards.initDriverDashboard(robotContext::hasNote);
+    //Dashboards.initDriverDashboard(robotContext::hasNote);
     VersionFile.getInstance().putToDashboard();
       
     configureBindings();
   }
 
   private void configureBindings() {
-    CommandXboxController driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
-    CommandXboxController operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
-
-    drive.setDefaultCommand(
-        new DefaultDrive(drive,
-            () -> AllianceUtil.getTranslationDirection() * getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
-            () -> AllianceUtil.getTranslationDirection() * getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
-            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
-            robotContext::getDriveSpeedScale
-            )
-    );
-
-    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
-    ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
-
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     
     driverController.rightBumper().onTrue(new SpinUpAndShoot(shooter,
@@ -100,14 +91,25 @@ public class RobotContainer {
 
     driverController.a().onTrue(new TurnToAngle(drive, 90));
 
-    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
-
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
 
     operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE));
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
+  }
+
+  public void teleopInit() {
+    drive.setDefaultCommand(
+        new DefaultDrive(drive,
+            () -> AllianceUtil.getTranslationDirection() * getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
+            () -> AllianceUtil.getTranslationDirection() * getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
+            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
+            robotContext::getDriveSpeedScale
+            )
+    );
+    shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
+    ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
   }
 
   private double getJoystickInput(CommandGenericHID stick, int axe) {
