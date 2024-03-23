@@ -29,6 +29,7 @@ import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
+import frc.robot.util.AllianceUtil;
 import frc.robot.util.Dashboards;
 import frc.robot.vision.VisionSubsystem;
 
@@ -80,8 +81,8 @@ public class RobotContainer {
 
     drive.setDefaultCommand(
         new DefaultDrive(drive,
-            () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
-            () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
+            () -> AllianceUtil.getTranslationDirection() * getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
+            () -> AllianceUtil.getTranslationDirection() * getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
             robotContext::getDriveSpeedScale
             )
@@ -110,7 +111,7 @@ public class RobotContainer {
   }
 
   private double getJoystickInput(CommandGenericHID stick, int axe) {
-    return -MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
+    return MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
   }
 
   public Command getAutonomousCommand() {
