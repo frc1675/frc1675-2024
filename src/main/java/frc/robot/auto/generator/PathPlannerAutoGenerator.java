@@ -2,7 +2,6 @@ package frc.robot.auto.generator;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -65,8 +64,6 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
         getTab().add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
 
         autoSelector.onChange( (cmd) -> setStartingPose(cmd == null ? "null" : cmd.getName()));
-
-        FollowPathCommand.warmupCommand().schedule(); //Load all pathplanner classes in order to prevent delay when initally following path
     }
 
     private void setStartingPose(String cmdName) {
