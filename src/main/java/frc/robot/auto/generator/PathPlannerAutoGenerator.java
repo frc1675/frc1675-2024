@@ -9,30 +9,27 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
-import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.cmdGroup.IntakeNote;
+import frc.robot.cmdGroup.PodiumShot;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.SpinDown;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
+import frc.robot.util.AllianceUtil;
 import frc.robot.util.RobotContext;
 
 public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
     private SendableChooser<Command> autoSelector;
 
-    private final DriveSubsystem drive;
     private final ArmSubsystem arm;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
@@ -40,7 +37,6 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
     public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
         super("PathPlanner");
-        this.drive = drive;
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
@@ -60,7 +56,7 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
                 Constants.PathPlanner.DRIVEBASE_RADIUS, 
                 new ReplanningConfig(true, false)
             ),
-            () -> Robot.isSimulation() ? false : DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red),
+            AllianceUtil::isRedAlliance,
             drive
         );
 
@@ -88,22 +84,21 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
     private void registerCommands() {
         NamedCommands.registerCommand("armHome", new MoveToHome(arm));
-        NamedCommands.registerCommand("armAmp", new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
         NamedCommands.registerCommand("spinUpAndShoot", new SpinUpAndShoot(shooter, 
             () -> robotContext.getShooterSpeed()[0], 
             () -> robotContext.getShooterSpeed()[1]
         ));
+        NamedCommands.registerCommand("podiumShot", new PodiumShot(shooter, arm));
         NamedCommands.registerCommand("spinDown", new SpinDown(shooter));
         NamedCommands.registerCommand("runUndertaker", new IntakeNote(shooter, undertaker, robotContext::getReadyToIntake));
-        NamedCommands.registerCommand("disableUndertaker", new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
-        NamedCommands.registerCommand("enableUndertaker", new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     }
 
     @Override
     public Command getAutoCommand() {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> drive.zeroGyroscope(180)),
-            new WaitCommand(this.getDelay(0)),
+            //If a delay is set in the shuffleboard, wait that long
+            //This has strategic value and is not required for technical reasons. 
+            new WaitCommand(this.getDelay(0)), 
             autoSelector.getSelected()
         );
     }

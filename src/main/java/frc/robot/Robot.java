@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.revrobotics.REVPhysicsSim;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -18,6 +19,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    FollowPathCommand.warmupCommand().schedule(); //Load all pathplanner classes in order to prevent delay when initally following path
   }
 
   @Override
