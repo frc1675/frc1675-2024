@@ -1,9 +1,13 @@
 package frc.robot.arm;
 
+import java.util.HashMap;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -16,6 +20,43 @@ public class ArmSubsystem extends SubsystemBase {
     private IArmIO armIO;
     private TrapezoidProfile.Constraints profileConstraints;
 
+    private static HashMap<Integer, Double> speakerDistToAngleTable = new HashMap<Integer, Double>() {{
+        // format: distance, {bottom shot, top shot}
+        // uses arm angle values so high shot has a lower angle than low shot
+        put(50, 19.3);
+        put(90, 40.2);
+        put(120, 48.8);
+        put(150, 54.3);
+        /* we don't need these :(
+        put(180, 58.0);
+        put(210, 60.6);
+        put(240, 62.6);
+        put(270, 64.1);
+        put(300, 65.3);
+        put(318, 65.9); */
+    }};
+
+    private static boolean IS_TUNING = true;
+    public static double calcSpeakerArmAngle(double hDist) {
+        if (IS_TUNING) {
+            return SmartDashboard.getNumber("Shoot Angle Override", 0);
+        }
+        // find nearest pre-calculated values
+        Integer lowMatch = -1000;
+        Integer highMatch = 1000;
+
+        for (Integer dist : speakerDistToAngleTable.keySet()) {
+            if (dist >= lowMatch && dist <= hDist) {
+                lowMatch = dist;
+            } else if (dist <= highMatch && dist >= hDist) {
+                highMatch = dist;
+            }
+        }
+
+        // interpolate to estimate the angle
+        double interpolant = MathUtil.inverseInterpolate(lowMatch, highMatch, hDist);
+        return MathUtil.interpolate(speakerDistToAngleTable.get(lowMatch), speakerDistToAngleTable.get(highMatch), interpolant);
+    }
 
     public static ArmSubsystem create() {
         return new ArmSubsystem(Robot.isReal() ? new RealArmIO() : new SimArmIO());
@@ -82,7 +123,7 @@ public class ArmSubsystem extends SubsystemBase {
         dashboard.addBoolean("Right home switch: ", () -> armIO.getRightHomeSwitch());
         dashboard.addBoolean("Left home switch: ", () -> armIO.getLeftHomeSwitch());
         dashboard.addBoolean("Is Broken", () -> isBroken());
-        dashboard.add(pid);
+        SmartDashboard.putNumber("Shoot Angle Override", 0);
     }
 
     public double getPositionSetpoint() {

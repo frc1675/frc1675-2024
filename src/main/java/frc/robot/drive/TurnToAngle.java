@@ -1,13 +1,15 @@
 package frc.robot.drive;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class TurnToAngle extends Command {
     
     private final DriveSubsystem drive;
-    private final double targetAngle;
+    private final DoubleSupplier targetAngle;
 
-    public TurnToAngle(DriveSubsystem drive, double angleDeg) {
+    public TurnToAngle(DriveSubsystem drive, DoubleSupplier angleDeg) {
         this.drive = drive;
         this.targetAngle = angleDeg;
         addRequirements(drive);
@@ -15,7 +17,7 @@ public class TurnToAngle extends Command {
 
     @Override
     public void initialize() {
-        drive.setTargetAngle(targetAngle);
+        drive.setTargetAngle(targetAngle.getAsDouble());
     }
 
     @Override

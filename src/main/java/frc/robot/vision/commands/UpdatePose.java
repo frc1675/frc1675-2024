@@ -1,7 +1,8 @@
-package frc.robot.vision;
+package frc.robot.vision.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.drive.DriveSubsystem;
+import frc.robot.vision.VisionSubsystem;
 
 public class UpdatePose extends Command{
 

@@ -18,6 +18,8 @@ import frc.robot.auto.generator.AbstractAutoGenerator;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
+import frc.robot.cmdGroup.LongShot;
+import frc.robot.cmdGroup.SpeakerAlign;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.drive.TurnToAngle;
@@ -27,10 +29,10 @@ import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
-import frc.robot.util.RobotContext;
-import frc.robot.util.VersionFile;
 import frc.robot.util.AllianceUtil;
 import frc.robot.util.Dashboards;
+import frc.robot.util.RobotContext;
+import frc.robot.util.VersionFile;
 import frc.robot.vision.VisionSubsystem;
 
 public class RobotContainer {
@@ -98,7 +100,8 @@ public class RobotContainer {
      () -> robotContext.getShooterSpeed()[1]
     ));
 
-    driverController.a().onTrue(new TurnToAngle(drive, 90));
+    // driverController.a().onTrue(new TurnToAngle(drive, () -> 90));
+    driverController.b().onTrue(new SpeakerAlign(drive, visionSubsystem));
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
 
@@ -108,6 +111,7 @@ public class RobotContainer {
     operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE));
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
+    operatorController.b().onTrue(new LongShot(shooter, arm, visionSubsystem));
   }
 
   private double getJoystickInput(CommandGenericHID stick, int axe) {
