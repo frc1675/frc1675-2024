@@ -102,7 +102,7 @@ public class RealVision implements IVision {
     @Override
     public Double getHorizontalDistance() {
         // make sure limelight horizon is calibrated correctly!
-        double[] cameraSpace = table.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
+        double[] cameraSpace = table.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
         if (cameraSpace.length > 0) {
             Translation2d tagPose = new Translation2d(cameraSpace[0], cameraSpace[1]);
             return new Translation2d(0, 0).getDistance(tagPose); // returns meters
