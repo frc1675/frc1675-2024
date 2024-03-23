@@ -16,6 +16,7 @@ public class AutoSetTargetSpeed extends Command{
         this.shooter = shooter;
         this.topSpeed = topSpeed;
         this.bottomSpeed = bottomSpeed;
+        addRequirements(shooter);
     }
 
     @Override

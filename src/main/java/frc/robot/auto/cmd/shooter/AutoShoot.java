@@ -13,6 +13,7 @@ public class AutoShoot extends Command{
 
     public AutoShoot(ShooterSubsystem shooter) {
         this.shooter = shooter;
+        addRequirements(shooter);
     }
 
     @Override

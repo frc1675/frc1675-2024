@@ -14,6 +14,7 @@ public class AutoShooterIntake extends Command {
     public AutoShooterIntake(ShooterSubsystem shooter, double speed) {
         this.shooter = shooter;
         this.speed = speed;
+        addRequirements(shooter);
     }
 
     @Override

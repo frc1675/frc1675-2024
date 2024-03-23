@@ -15,6 +15,7 @@ public class AutoArmMove extends Command {
     public AutoArmMove(ArmSubsystem arm, double position) {
         this.arm = arm;
         this.position = position;
+        addRequirements(arm);
     }
 
     @Override

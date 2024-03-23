@@ -15,6 +15,7 @@ public class AutoArmHome extends Command {
 
     public AutoArmHome(ArmSubsystem arm) {
         this.arm = arm;
+        addRequirements(arm);
     }
 
     @Override

@@ -18,6 +18,7 @@ public class AutoUndertaker extends Command {
         this.undertaker = undertaker;
         this.speed = speed;
         this.shouldStop = shouldStop;
+        addRequirements(undertaker);
     }
 
     @Override
