@@ -19,6 +19,7 @@ import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.cmdGroup.LongShot;
+import frc.robot.cmdGroup.SpeakerAlign;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.drive.TurnToAngle;
@@ -28,9 +29,9 @@ import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
+import frc.robot.util.Dashboards;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
-import frc.robot.util.Dashboards;
 import frc.robot.vision.VisionSubsystem;
 
 public class RobotContainer {
@@ -99,6 +100,7 @@ public class RobotContainer {
     ));
 
     driverController.a().onTrue(new TurnToAngle(drive, 90));
+    driverController.b().onTrue(new SpeakerAlign(drive, visionSubsystem));
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
 

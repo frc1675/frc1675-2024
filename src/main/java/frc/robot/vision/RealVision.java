@@ -107,6 +107,6 @@ public class RealVision implements IVision {
             Translation2d tagPose = new Translation2d(cameraSpace[0], cameraSpace[1]);
             return new Translation2d(0, 0).getDistance(tagPose); // returns meters
         }
-        return null;
+        return -1000.0;
     }
 }
