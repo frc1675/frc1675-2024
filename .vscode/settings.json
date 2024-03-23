@@ -37,6 +37,7 @@
     "CANTX",
     "Deadband",
     "DEADZONE",
+    "debouncer",
     "DRIVEBASE",
     "Feedforward",
     "frontleft",
