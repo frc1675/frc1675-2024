@@ -15,16 +15,16 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.arm.ArmSubsystem;
-import frc.robot.arm.commands.MoveToHome;
-import frc.robot.cmdGroup.IntakeNote;
-import frc.robot.cmdGroup.PodiumShot;
+import frc.robot.auto.cmd.AutoIntakeNote;
+import frc.robot.auto.cmd.arm.AutoArmHome;
+import frc.robot.auto.cmd.arm.AutoArmMove;
+import frc.robot.auto.cmd.shooter.AutoSetTargetSpeed;
+import frc.robot.auto.cmd.shooter.AutoShoot;
+import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.shooter.ShooterSubsystem;
-import frc.robot.shooter.commands.SpinDown;
-import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AllianceUtil;
-import frc.robot.util.RobotContext;
 
 public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
@@ -33,14 +33,12 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     private final ArmSubsystem arm;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
-    private final RobotContext robotContext;
 
-    public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, RobotContext robotContext) {
+    public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker) {
         super("PathPlanner");
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
-        this.robotContext = robotContext;
 
         registerCommands();
 
@@ -50,8 +48,8 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
             drive::getRobotRelativeSpeeds,
             drive::setRobotRelativeChassisSpeeds,
             new HolonomicPathFollowerConfig(
-                new PIDConstants(Constants.PathPlanner.TRANSLATION_P),
-                new PIDConstants(Constants.PathPlanner.ROTATION_P),
+                new PIDConstants(Constants.PathPlanner.TRANSLATION_P, Constants.PathPlanner.TRANSLATION_I, Constants.PathPlanner.TRANSLATION_D),
+                new PIDConstants(Constants.PathPlanner.ROTATION_P, Constants.PathPlanner.ROTATION_I, Constants.PathPlanner.ROTATION_D),
                 Constants.PathPlanner.MAXIMUM_VELOCITY, 
                 Constants.PathPlanner.DRIVEBASE_RADIUS, 
                 new ReplanningConfig(true, false)
@@ -63,11 +61,11 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
         autoSelector = AutoBuilder.buildAutoChooser();
         getTab().add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
 
-        autoSelector.onChange( (cmd) -> setStartingPose(cmd == null ? "null" : cmd.getName()));
+        autoSelector.onChange((cmd) -> setStartingPose(cmd.getName()));
     }
 
     private void setStartingPose(String cmdName) {
-        if (cmdName.equals("InstantCommand") || cmdName.equals("null")) {
+        if (cmdName == null || cmdName.equals("InstantCommand")) {
             //This is the none command
             setFieldPose(new Pose2d());
             return;
@@ -83,14 +81,15 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     }
 
     private void registerCommands() {
-        NamedCommands.registerCommand("armHome", new MoveToHome(arm));
-        NamedCommands.registerCommand("spinUpAndShoot", new SpinUpAndShoot(shooter, 
-            () -> robotContext.getShooterSpeed()[0], 
-            () -> robotContext.getShooterSpeed()[1]
-        ));
-        NamedCommands.registerCommand("podiumShot", new PodiumShot(shooter, arm));
-        NamedCommands.registerCommand("spinDown", new SpinDown(shooter));
-        NamedCommands.registerCommand("runUndertaker", new IntakeNote(shooter, undertaker, robotContext::getReadyToIntake));
+        NamedCommands.registerCommand("intake", new AutoIntakeNote(shooter, undertaker)); //never ends
+
+        NamedCommands.registerCommand("armHome", new AutoArmHome(arm)); //blocking
+        NamedCommands.registerCommand("armPodiumAngle", new AutoArmMove(arm, Constants.Arm.LONG_SHOT_ANGLE)); //blocking
+        
+        NamedCommands.registerCommand("shoot", new AutoShoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME)); //blocking
+        NamedCommands.registerCommand("spinUpClose", new AutoSpinUp(shooter, Constants.Shooter.SHOOT_SPEED, Constants.Shooter.SHOOT_SPEED * 0.9)); //blocking
+        NamedCommands.registerCommand("spinUpFar", new AutoSetTargetSpeed(shooter, Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED)); //non-blocking
+        NamedCommands.registerCommand("spinDown", new AutoSetTargetSpeed(shooter, 0, 0)); //non-blocking
     }
 
     @Override

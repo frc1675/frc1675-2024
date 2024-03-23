@@ -64,7 +64,7 @@ public class RobotContainer {
     autoGenerator = 
       Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
       ?
-      new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext)
+      new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem)
       :
       new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
 
