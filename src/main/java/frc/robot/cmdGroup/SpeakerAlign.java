@@ -9,11 +9,15 @@ import frc.robot.vision.VisionSubsystem;
 public class SpeakerAlign extends SequentialCommandGroup {
   public SpeakerAlign(DriveSubsystem drive, VisionSubsystem vision) {
     addCommands(
-      new TurnToAngle(drive, getAngleToSpeaker(drive.getPose().getRotation(), vision.getHorizontalSpeakerOffset()))
+      new TurnToAngle(drive, () -> getAngleToSpeaker(drive, vision))
     );
   }
 
-  private double getAngleToSpeaker(Rotation2d currentDriveAngle, Rotation2d offset) {
-    return currentDriveAngle.rotateBy(offset).getDegrees();
+  private double getAngleToSpeaker(DriveSubsystem drive, VisionSubsystem vision) {
+      double offset = vision.getHorizontalSpeakerOffset() != null ? vision.getHorizontalSpeakerOffset().getDegrees() : -1000;
+      System.out.println(offset); 
+      if (offset < 60)
+        return drive.getPose().getRotation().getDegrees();
+      return drive.getPose().getRotation().rotateBy(new Rotation2d(offset)).getDegrees();
   }
 }
