@@ -23,6 +23,7 @@ import frc.robot.auto.cmd.shooter.AutoShoot;
 import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.shooter.ShooterSubsystem;
+import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AllianceUtil;
 
@@ -95,6 +96,9 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     @Override
     public Command getAutoCommand() {
         return new SequentialCommandGroup(
+            //We always want to shoot the preloaded piece, and we want to shoot before the delay.
+            new SpinUpAndShoot(shooter, () -> Constants.Shooter.SHOOT_SPEED, () -> Constants.Shooter.SHOOT_SPEED * 0.9),
+            
             //If a delay is set in the shuffleboard, wait that long
             //This has strategic value and is not required for technical reasons. 
             new WaitCommand(this.getDelay(0)), 
