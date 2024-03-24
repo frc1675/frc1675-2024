@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.45,
-        "y": 4.1
+        "x": 7.967350363113601,
+        "y": 4.11382718436913
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.092806316578227,
-        "y": 3.8429886979640777
+        "x": 6.81079950395195,
+        "y": 3.9669635832057457
       },
       "isLocked": false,
-      "linkedName": "PodiumPickup"
+      "linkedName": "MiddleCenter"
     },
     {
       "anchor": {
-        "x": 1.4,
-        "y": 5.55
+        "x": 5.580816844208606,
+        "y": 4.123006159441842
       },
       "prevControl": {
-        "x": 1.4284883107613053,
-        "y": 4.9032190406223215
+        "x": 6.498714351479758,
+        "y": 3.856815882333208
+      },
+      "nextControl": {
+        "x": 4.620387705429877,
+        "y": 4.401530609687674
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.772558754884436,
+        "y": 5.564105245857552
+      },
+      "prevControl": {
+        "x": 4.607845486501184,
+        "y": 4.609491838295552
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Subwoofer"
+      "linkedName": "FarScoring"
     }
   ],
   "rotationTargets": [],

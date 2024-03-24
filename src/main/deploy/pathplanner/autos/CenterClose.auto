@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
-      "y": 5.55
+      "x": 1.3584883107613055,
+      "y": 5.573284220930263
     },
     "rotation": 0
   },
@@ -14,23 +14,23 @@
         {
           "type": "named",
           "data": {
-            "name": "spinUpAndShoot"
+            "name": "spinUpFar"
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SubwooferToNote2"
+                  "pathName": "SubwooferFrontToNoteCenter"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "runUndertaker"
+                  "name": "intake"
                 }
               }
             ]
@@ -39,7 +39,19 @@
         {
           "type": "named",
           "data": {
-            "name": "podiumShot"
+            "name": "armPodiumAngle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "armHome"
           }
         }
       ]

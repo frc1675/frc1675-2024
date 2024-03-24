@@ -51,6 +51,11 @@ public class Constants {
         // Position constnats
         public static final double HOME_POSITION = 138;
         public static final double LONG_SHOT_ANGLE = HOME_POSITION - 33;
+
+        public static final double AUTO_LEFT_NOTE_ANGLE = HOME_POSITION - 35;
+        public static final double AUTO_MIDDLE_NOTE_ANGLE = HOME_POSITION - 31;
+        public static final double AUTO_RIGHT_NOTE_ANGLE = HOME_POSITION - 25;
+
         public static final double HIGH_SCORE_POSITION = HOME_POSITION - 78;
         public static final double AMP_POSITION = HOME_POSITION - 103;
         public static final double MAX_ARM_RANGE_DEGREES = HOME_POSITION - 118; // home - 125 degrees is vertical
@@ -97,6 +102,7 @@ public class Constants {
         public static final double SHOOT_SPEED = 1700;
         public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
         public static final double LONG_SHOT_SPEED = 5000;
+        public static final double AUTO_SHOT_SPEED = 3500;
 
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 
