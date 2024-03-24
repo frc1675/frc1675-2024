@@ -7,7 +7,9 @@ public enum LEDState {
   AT_AMP_POSITION(0.87, "At amp position", "0000ff", -1), //BLUE
   SHOT_FIRED(-0.07,"Shot fired", "#Fdc256", 2), //GOLD
   NOTHING(0.93 ,"Nothing", "#ffffff", -1), //WHITE
-  AUTONOMOUS_INTAKE_FAILED(-0.11, "Autonomous intake failed", "#da2d07", 2); //RED STROBE
+  AUTONOMOUS_INTAKE_FAILED(-0.11, "Autonomous intake failed", "#da2d07", 2), //RED STROBE
+  AUTONOMOUS_COMPLETE(-0.19, "Autonomous is complete, no further movement", "#808080", 5), // GRAY HEARTBEAT
+  AUTONOMOUS_PATHFINDING(-0.23, "Autonomous is complete, attempting to pathfind.", "#0000ff", 5); //BLUE HEARTBEAT
   
   private final double spark;
   private final String message;

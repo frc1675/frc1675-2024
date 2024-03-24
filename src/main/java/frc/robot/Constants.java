@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -85,6 +87,9 @@ public class Constants {
         public static final double MIDDLE_NOTE_ANGLE = Arm.HOME_POSITION - 31;
         public static final double RIGHT_NOTE_ANGLE = Arm.HOME_POSITION - 25;
         public static final double FAR_SHOT_ANGLE = MIDDLE_NOTE_ANGLE; //TODO measure this
+
+        public static final double SUFFICIENT_EXTRA_PATHFINDING_TIME = 2;
+        public static final PathConstraints EXTRA_PATHFINDING_CONSTRAINTS = new PathConstraints(3, 3, 9.4, 12.5);
 
     }
 
