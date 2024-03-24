@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.shooter.ShooterSubsystem;
 
 /**
- * Run the indexer at the given speed. Will stop when a note is loaded. This command will never end.
+ * Run the indexer at the given speed. This command ends when a note is acquired. 
  */
 public class AutoShooterIntake extends Command {
     

@@ -9,7 +9,7 @@ import frc.robot.undertaker.UndertakerSubsystem;
 
 /**
  * Runs the undertaker and shooter indexer in intake mode.
- * This command will never end.
+ * This command will end when the shooter reports that the indexer is loaded.
  */
 public class AutoIntakeNote extends ParallelCommandGroup {
     public AutoIntakeNote(ShooterSubsystem shooter, UndertakerSubsystem undertaker) {
