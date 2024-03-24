@@ -1,10 +1,6 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.poseScheduler.FieldArea2d;
 
 public class Constants {
 
@@ -52,10 +48,6 @@ public class Constants {
         public static final double HOME_POSITION = 138;
         public static final double LONG_SHOT_ANGLE = HOME_POSITION - 33;
 
-        public static final double AUTO_LEFT_NOTE_ANGLE = HOME_POSITION - 35;
-        public static final double AUTO_MIDDLE_NOTE_ANGLE = HOME_POSITION - 31;
-        public static final double AUTO_RIGHT_NOTE_ANGLE = HOME_POSITION - 25;
-
         public static final double HIGH_SCORE_POSITION = HOME_POSITION - 78;
         public static final double AMP_POSITION = HOME_POSITION - 103;
         public static final double MAX_ARM_RANGE_DEGREES = HOME_POSITION - 118; // home - 125 degrees is vertical
@@ -64,8 +56,8 @@ public class Constants {
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
     }
 
-    public class PathPlanner {
-        public static final double MAXIMUM_VELOCITY = 5.5; // meters per second
+    public class Auto {
+        public static final double MODULE_MAXIMUM_VELOCITY = 5.5; // meters per second
 
         public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); // meters
 
@@ -78,29 +70,28 @@ public class Constants {
         public static final double ROTATION_D = 0;
 
         public static final double DYNAMIC_PATHING_MAX_DISTANCE = 5; // meters
-    }
 
-    public class Field {
-        public static final Translation2d SPEAKER_SCORING_POSITION = new Translation2d(1.67, 5.52);
+        public static final double CLOSE_SHOT_SPEED_TOP = 1700;
+        public static final double CLOSE_SHOT_SPEED_BOTTOM = CLOSE_SHOT_SPEED_TOP * 0.9;
+        public static final double SHOT_SPEED = 3500;
+        public static final double SHOOT_TIME = 0.25;
+        public static final double SHOOTER_INTAKE_SPEED = Undertaker.INTAKE_SPEED * 0.09;
 
-        public static final FieldArea2d FRIENDLY_ALLIANCE_AREA = new FieldArea2d(0, 0, 5.85, 8.21);
-        
-        //Relative to the drivers
-        //TODO correct position
-        public static final Pose2d SUBWOOFER_FRONT_BLUE = new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180)); 
-        public static final Pose2d SUBWOOFER_LEFT_BLUE = new Pose2d(0.75, 6.7, Rotation2d.fromDegrees(60 + 180));
-        public static final Pose2d SUBWOOFER_RIGHT_BLUE = new Pose2d(0.75, 4.35, Rotation2d.fromDegrees(-60 + 180));
+        public static final double UNDERTAKER_INTAKE_SPEED = Undertaker.INTAKE_SPEED;
 
-        public static final Pose2d SUBWOOFER_FRONT_RED = new Pose2d(15, 5.55, Rotation2d.fromDegrees(0)); 
-        public static final Pose2d SUBWOOFER_LEFT_RED = new Pose2d(15.5, 4.35, Rotation2d.fromDegrees(60));
-        public static final Pose2d SUBWOOFER_RIGHT_RED = new Pose2d(15.5, 6.7, Rotation2d.fromDegrees(-60));
+        public static final double INTAKE_ATTEMPT_TIMEOUT = 0.5;
+
+        public static final double LEFT_NOTE_ANGLE = Arm.HOME_POSITION - 35;
+        public static final double MIDDLE_NOTE_ANGLE = Arm.HOME_POSITION - 31;
+        public static final double RIGHT_NOTE_ANGLE = Arm.HOME_POSITION - 25;
+        public static final double FAR_SHOT_ANGLE = MIDDLE_NOTE_ANGLE; //TODO measure this
+
     }
 
     public class Shooter {
         public static final double SHOOT_SPEED = 1700;
         public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
         public static final double LONG_SHOT_SPEED = 5000;
-        public static final double AUTO_SHOT_SPEED = 3500;
 
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 

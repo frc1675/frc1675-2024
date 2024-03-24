@@ -39,13 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "armPodiumAngle"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
+            "name": "shootSequence"
           }
         },
         {

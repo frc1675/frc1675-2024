@@ -39,19 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeUntil"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "armNoteLeft"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
+            "name": "shootSequence"
           }
         },
         {
@@ -82,19 +70,7 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeUntil"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "armNoteMiddle"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
+            "name": "shootSequence"
           }
         },
         {
@@ -123,12 +99,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "intakeUntil"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -150,19 +120,7 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeUntil"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "armNoteRight"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
+            "name": "shootSequence"
           }
         },
         {

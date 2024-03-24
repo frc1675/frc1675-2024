@@ -63,7 +63,7 @@ public class RobotContainer {
 
     robotContext = new RobotContext(arm, shooter);
 
-    autoGenerator = new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem);
+    autoGenerator = new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, ledSubsystem);
 
     driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
     operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);

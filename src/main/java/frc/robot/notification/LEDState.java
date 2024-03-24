@@ -6,7 +6,8 @@ public enum LEDState {
   HAS_NOTE(0.77, "Has note", "#00ff00", 2), //GREEN
   AT_AMP_POSITION(0.87, "At amp position", "0000ff", -1), //BLUE
   SHOT_FIRED(-0.07,"Shot fired", "#Fdc256", 2), //GOLD
-  NOTHING(0.93 ,"Nothing", "#ffffff", -1); //WHITE
+  NOTHING(0.93 ,"Nothing", "#ffffff", -1), //WHITE
+  AUTONOMOUS_INTAKE_FAILED(-0.11, "Autonomous intake failed", "#da2d07", 2); //RED STROBE
   
   private final double spark;
   private final String message;
