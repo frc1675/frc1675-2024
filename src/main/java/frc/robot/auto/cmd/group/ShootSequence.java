@@ -1,4 +1,4 @@
-package frc.robot.auto.cmd;
+package frc.robot.auto.cmd.group;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
