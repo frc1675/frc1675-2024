@@ -8,7 +8,11 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -29,9 +33,13 @@ import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AllianceUtil;
 
-public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
+public class PathPlannerAutoGenerator {
 
     private SendableChooser<Command> autoSelector;
+
+    private Field2d field;
+    private ShuffleboardTab tab;
+    private GenericEntry delay;
 
     private final ArmSubsystem arm;
     private final ShooterSubsystem shooter;
@@ -41,7 +49,6 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     private final AutonomousContext autoContext;
 
     public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, LEDSubsystem led) {
-        super("PathPlanner");
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
@@ -49,6 +56,7 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
         this.autoContext = new AutonomousContext(Constants.Arm.HOME_POSITION);
 
+        setupShuffleboard();
         registerCommands();
 
         AutoBuilder.configureHolonomic(
@@ -68,7 +76,6 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
         );
 
         autoSelector = AutoBuilder.buildAutoChooser();
-        getTab().add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
 
         autoSelector.onChange((cmd) -> setStartingPose(cmd.getName()));
     }
@@ -76,17 +83,26 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
     private void setStartingPose(String cmdName) {
         if (cmdName == null || cmdName.equals("InstantCommand")) {
             //This is the none command
-            setFieldPose(new Pose2d());
+            field.setRobotPose(new Pose2d());
             return;
         }
 
         try {
-            setFieldPose(PathPlannerAuto.getStaringPoseFromAutoFile(cmdName));
+            field.setRobotPose(PathPlannerAuto.getStaringPoseFromAutoFile(cmdName));
         } catch(Exception e) {
             DataLogManager.log("An exception occurred while setting the starting position of a path planner path: " + e.getMessage());
-            setFieldPose(new Pose2d());
+            field.setRobotPose(new Pose2d());
         }
         
+    }
+
+    private void setupShuffleboard() {
+        field = new Field2d();
+        tab = Shuffleboard.getTab("Auto");
+        tab.add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
+        tab.add("Starting Pose", field).withPosition(0, 1).withSize(6, 4);
+        tab.addString("Alliance", () -> AllianceUtil.isRedAlliance() ? "Red" : "Blue").withPosition(6, 1);
+        delay = tab.add("Auto delay seconds", 0).withSize(2, 1).withPosition(6, 0).getEntry();
     }
 
     private void registerCommands() {
@@ -125,7 +141,6 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
         }
     }
 
-    @Override
     public Command getAutoCommand() {
         setupAutoContext(autoSelector.getSelected().getName());
         return new SequentialCommandGroup(
@@ -134,7 +149,7 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
             //If a delay is set in the shuffleboard, wait that long
             //This has strategic value and is not required for technical reasons. 
-            new WaitCommand(this.getDelay(0)), 
+            new WaitCommand(delay.getDouble(0)), 
             autoSelector.getSelected(),
             new AutoSetTargetSpeed(shooter, 0, 0)
         );

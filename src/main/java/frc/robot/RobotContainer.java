@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
-import frc.robot.auto.generator.AbstractAutoGenerator;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DefaultDrive;
@@ -41,7 +40,7 @@ public class RobotContainer {
   private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
   
-  private final AbstractAutoGenerator autoGenerator;
+  private final PathPlannerAutoGenerator autoGenerator;
   private final RobotContext robotContext;
 
   private final CommandXboxController driverController;
