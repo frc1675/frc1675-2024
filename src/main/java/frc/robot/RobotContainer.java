@@ -16,7 +16,6 @@ import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.auto.generator.AbstractAutoGenerator;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
-import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
@@ -64,12 +63,7 @@ public class RobotContainer {
 
     robotContext = new RobotContext(arm, shooter);
 
-    autoGenerator = 
-      Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
-      ?
-      new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem)
-      :
-      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
+    autoGenerator = new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem);
 
     driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
     operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);

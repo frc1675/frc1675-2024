@@ -65,8 +65,6 @@ public class Constants {
     }
 
     public class PathPlanner {
-        public static final boolean PATH_PLANNER_IS_ENABLED = true;
-
         public static final double MAXIMUM_VELOCITY = 5.5; // meters per second
 
         public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); // meters
