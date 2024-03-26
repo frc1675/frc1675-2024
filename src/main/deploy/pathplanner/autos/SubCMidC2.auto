@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SubwooferRightToMiddleCenter"
+            "pathName": "SubCToMidC"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleCenterToFarScoring"
+            "pathName": "MidCToBehindCloseB"
           }
         },
         {
