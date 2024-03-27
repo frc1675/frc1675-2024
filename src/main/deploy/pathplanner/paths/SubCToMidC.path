@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7159600556714989,
-        "y": 4.370838486405053
+        "x": 0.706854784416842,
+        "y": 4.371973526584332
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7159600556715007,
-        "y": 4.370838486405053
+        "x": 1.706854784416843,
+        "y": 4.371973526584332
       },
       "isLocked": false,
-      "linkedName": "SubwooferRight"
+      "linkedName": "SubC"
     },
     {
       "anchor": {
@@ -57,7 +57,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MiddleCenter"
+      "linkedName": "MidC"
     }
   ],
   "rotationTargets": [],

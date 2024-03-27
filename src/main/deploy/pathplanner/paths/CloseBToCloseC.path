@@ -12,20 +12,20 @@
         "y": 5.5824631960029745
       },
       "isLocked": false,
-      "linkedName": "NoteCenter"
+      "linkedName": "CloseB"
     },
     {
       "anchor": {
-        "x": 2.8913771479041297,
-        "y": 4.1046482092964185
+        "x": 2.505991833947063,
+        "y": 4.111477906816047
       },
       "prevControl": {
-        "x": 1.7072893635243434,
-        "y": 4.049574358860149
+        "x": 1.3219040495672765,
+        "y": 4.056404056379778
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "NoteRight"
+      "linkedName": "CloseCStraight"
     }
   ],
   "rotationTargets": [],

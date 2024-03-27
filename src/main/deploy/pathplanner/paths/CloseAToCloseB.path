@@ -12,7 +12,7 @@
         "y": 7.060278182709529
       },
       "isLocked": false,
-      "linkedName": "NoteLeft"
+      "linkedName": "CloseAScoreAngle"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "NoteCenter"
+      "linkedName": "CloseB"
     }
   ],
   "rotationTargets": [],

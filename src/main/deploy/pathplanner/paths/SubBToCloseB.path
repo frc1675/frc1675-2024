@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3584883107613055,
-        "y": 5.573284220930263
+        "x": 1.3627004691613382,
+        "y": 5.53478686990652
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3584883107613064,
-        "y": 5.573284220930263
+        "x": 2.3627004691613394,
+        "y": 5.53478686990652
       },
       "isLocked": false,
-      "linkedName": "SubwooferFront"
+      "linkedName": "SubB"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "NoteCenter"
+      "linkedName": "CloseB"
     }
   ],
   "rotationTargets": [],
