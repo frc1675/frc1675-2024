@@ -49,6 +49,7 @@ public class PathPlannerAutoGenerator {
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
     private final LEDSubsystem led;
+    private Command ppAuto;
 
     private final AutonomousContext autoContext;
 
@@ -79,8 +80,12 @@ public class PathPlannerAutoGenerator {
             drive
         );
 
-        autoSelector = AutoBuilder.buildAutoChooser();
-        autoSelector.onChange((cmd) -> setStartingPose(cmd.getName()));
+
+        autoSelector = AutoBuilder.buildAutoChooser(); // the sendablechooser should really only be the name strings (fix w/ jake later)
+        autoSelector.onChange((cmd) -> {
+            setStartingPose(cmd.getName());
+            ppAuto = new PathPlannerAuto(cmd.getName()); // because we are composing later, we need to cook a fresh Command every time we select.
+        });
 
         extraPathfindPoses = new SendableChooser<>();
         setupExtraPathfindingPoses();
@@ -163,17 +168,19 @@ public class PathPlannerAutoGenerator {
 
     public Command getAutoCommand() {
         setupAutoContext(autoSelector.getSelected().getName());
-        return new SequentialCommandGroup(
+        Command autoCmd = new SequentialCommandGroup(
             //We always want to shoot the preloaded piece, and we want to shoot before the delay.
             new SpinUpAndShoot(shooter, () -> Constants.Shooter.SHOOT_SPEED, () -> Constants.Shooter.SHOOT_SPEED * 0.9),
 
             //If a delay is set in the shuffleboard, wait that long
             //This has strategic value and is not required for technical reasons. 
             new WaitCommand(delay.getDouble(0)), 
-            autoSelector.getSelected(),
+            ppAuto,
             new AutoSetTargetSpeed(shooter, 0, 0),
             new ExtraPathfinding(shooter, undertaker, led, extraPathfindPoses::getSelected, drive::getPose)
         );
+        ppAuto = new PathPlannerAuto(autoSelector.getSelected().getName()); // rebake pp auto... this might cause delay (bad)
+        return autoCmd;
     }
 
 }
