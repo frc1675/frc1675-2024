@@ -83,8 +83,10 @@ public class PathPlannerAutoGenerator {
 
         autoSelector = AutoBuilder.buildAutoChooser(); // the sendablechooser should really only be the name strings (fix w/ jake later)
         autoSelector.onChange((cmd) -> {
-            setStartingPose(cmd.getName());
-            ppAuto = new PathPlannerAuto(cmd.getName()); // because we are composing later, we need to cook a fresh Command every time we select.
+            if(cmd != null){
+                setStartingPose(cmd.getName());
+                ppAuto = new PathPlannerAuto(cmd.getName()); // because we are composing later, we need to cook a fresh Command every time we select.
+            }
         });
 
         extraPathfindPoses = new SendableChooser<>();
