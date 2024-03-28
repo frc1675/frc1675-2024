@@ -9,10 +9,8 @@ import java.io.IOException;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -98,12 +96,6 @@ public class DriveSubsystem extends SubsystemBase {
     swerve.zeroGyro();
   }
 
-  public void zeroGyroscope(double degreesOffset) {
-    Rotation3d current = this.swerve.getGyroRotation3d();
-
-    swerve.setGyro(new Rotation3d(current.getX(), current.getY(), Units.degreesToRadians(degreesOffset)));
-  }
-
   /**
    * Used for PathPlanner autonomous
    * 
@@ -118,22 +110,6 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setRobotRelativeChassisSpeeds(ChassisSpeeds speeds) {
     swerve.drive(new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond), speeds.omegaRadiansPerSecond, false, false);
-  }
-
-  /**
-   * Used for simple autonomous
-   * Drive the drivetrain in a single direction
-   * @param velocity The desired velocity. Will be capped at the max velocity
-   * @param isX True if the drivetrain should drive in the x direction, false otherwise
-   */
-  public void singleDirectionDrive(double velocity, boolean isX) {
-    velocity = Math.min(velocity, Constants.Drive.MAXIMUM_VELOCITY);
-
-    if (isX) {
-      swerve.drive(new Translation2d(velocity, 0), 0, true, false);
-    }else  {
-      swerve.drive(new Translation2d(0, velocity), 0, true, false);
-    }
   }
 
   public void drive(double x, double y, double rotation) {

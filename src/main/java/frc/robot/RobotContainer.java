@@ -14,9 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
-import frc.robot.auto.generator.AbstractAutoGenerator;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
-import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
@@ -42,7 +40,7 @@ public class RobotContainer {
   private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
   
-  private final AbstractAutoGenerator autoGenerator;
+  private final PathPlannerAutoGenerator autoGenerator;
   private final RobotContext robotContext;
 
   private final CommandXboxController driverController;
@@ -64,12 +62,7 @@ public class RobotContainer {
 
     robotContext = new RobotContext(arm, shooter);
 
-    autoGenerator = 
-      Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
-      ?
-      new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem)
-      :
-      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
+    autoGenerator = new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, ledSubsystem);
 
     driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
     operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);

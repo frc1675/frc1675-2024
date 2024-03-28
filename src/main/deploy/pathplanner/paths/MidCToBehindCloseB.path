@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3584883107613055,
-        "y": 5.573284220930263
+        "x": 7.967350363113601,
+        "y": 4.11382718436913
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3584883107613064,
-        "y": 5.573284220930263
+        "x": 6.81079950395195,
+        "y": 3.9669635832057457
       },
       "isLocked": false,
-      "linkedName": "SubwooferFront"
+      "linkedName": "MidC"
     },
     {
       "anchor": {
-        "x": 2.8913771479041297,
+        "x": 5.580816844208606,
+        "y": 4.123006159441842
+      },
+      "prevControl": {
+        "x": 6.498714351479758,
+        "y": 3.856815882333208
+      },
+      "nextControl": {
+        "x": 4.620387705429877,
+        "y": 4.401530609687674
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.772558754884436,
         "y": 5.564105245857552
       },
       "prevControl": {
-        "x": 1.8913771479041297,
-        "y": 5.564105245857552
+        "x": 4.607845486501184,
+        "y": 4.609491838295552
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "NoteCenter"
+      "linkedName": "BehindCloseBScore"
     }
   ],
   "rotationTargets": [],

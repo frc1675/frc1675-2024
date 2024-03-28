@@ -45,6 +45,8 @@
     "Holonomic",
     "navx",
     "Odometry",
+    "Pathfind",
+    "Pathfinding",
     "PATHING",
     "Pidf",
     "sparkmax",

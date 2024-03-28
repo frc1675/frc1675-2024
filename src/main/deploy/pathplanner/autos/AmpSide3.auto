@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SubwooferLeftToNoteLeft"
+            "pathName": "SubAToCloseA"
           }
         },
         {
@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "NoteLeftToMiddleLeft"
+            "pathName": "CloseAToMidB"
           }
         },
         {
@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleLeftToNoteLeft"
+            "pathName": "MidBToCloseA"
           }
         }
       ]
