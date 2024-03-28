@@ -31,12 +31,15 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
     private SendableChooser<Command> autoSelector;
 
+    private final DriveSubsystem drive;
     private final ArmSubsystem arm;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
+    private Command ppAuto;
 
     public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker) {
         super("PathPlanner");
+        this.drive = drive;
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
@@ -59,10 +62,13 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
             drive
         );
 
-        autoSelector = AutoBuilder.buildAutoChooser();
+        autoSelector = AutoBuilder.buildAutoChooser(); // the sendablechooser should really only be the name strings (fix w/ jake later)
         getTab().add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
 
-        autoSelector.onChange((cmd) -> setStartingPose(cmd.getName()));
+        autoSelector.onChange((cmd) -> {
+            setStartingPose(cmd.getName());
+            ppAuto = new PathPlannerAuto(cmd.getName()); // because we are composing later, we need to cook a fresh Command every time we select.
+        });
     }
 
     private void setStartingPose(String cmdName) {
@@ -100,16 +106,18 @@ public class PathPlannerAutoGenerator extends AbstractAutoGenerator {
 
     @Override
     public Command getAutoCommand() {
-        return new SequentialCommandGroup(
+        Command autoCmd = new SequentialCommandGroup(
             //We always want to shoot the preloaded piece, and we want to shoot before the delay.
             new SpinUpAndShoot(shooter, () -> Constants.Shooter.SHOOT_SPEED, () -> Constants.Shooter.SHOOT_SPEED * 0.9),
 
             //If a delay is set in the shuffleboard, wait that long
             //This has strategic value and is not required for technical reasons. 
             new WaitCommand(this.getDelay(0)), 
-            autoSelector.getSelected(),
+            ppAuto,
             new AutoSetTargetSpeed(shooter, 0, 0)
         );
+        ppAuto = new PathPlannerAuto(autoSelector.getSelected().getName()); // rebake pp auto... this might cause delay (bad)
+        return autoCmd;
     }
 
 }
