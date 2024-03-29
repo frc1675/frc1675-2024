@@ -3,6 +3,7 @@ package frc.robot.auto.cmd.arm;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.arm.ArmSubsystem;
@@ -27,12 +28,18 @@ public class AutoArmMove extends Command {
 
     @Override
     public void initialize() {
+        DataLogManager.log("Moving arm to " + position.getAsDouble());
         arm.setTarget(position.getAsDouble());
     }
 
     @Override
     public boolean isFinished() {
         return debouncer.calculate(arm.isOnTarget());
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        DataLogManager.log("Moved arm to " + position.getAsDouble());
     }
 
 }

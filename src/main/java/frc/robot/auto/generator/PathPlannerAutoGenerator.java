@@ -23,6 +23,7 @@ import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto.cmd.arm.AutoArmHome;
 import frc.robot.auto.cmd.arm.AutoArmMove;
 import frc.robot.auto.cmd.group.AutoIntakeNote;
+import frc.robot.auto.cmd.group.ConfigurableShootSequence;
 import frc.robot.auto.cmd.group.ExtraPathfinding;
 import frc.robot.auto.cmd.group.ShootSequence;
 import frc.robot.auto.cmd.shooter.AutoSetTargetSpeed;
@@ -134,15 +135,22 @@ public class PathPlannerAutoGenerator {
 
     private void registerCommands() {
         NamedCommands.registerCommand("shootSequence", new ShootSequence(shooter, undertaker, arm, led, autoContext));
+        
+        NamedCommands.registerCommand("closeAShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_A_SHOT_ANGLE));
+        NamedCommands.registerCommand("closeBShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_B_SHOT_ANGLE));
+        NamedCommands.registerCommand("closeCShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_C_SHOT_ANGLE));
+        NamedCommands.registerCommand("closerCShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSER_C_SHOT_ANGLE));
+        NamedCommands.registerCommand("behindCloseBShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.BEHIND_CLOSE_B_SHOT_ANGLE));
+        NamedCommands.registerCommand("sourceSideShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.SOURCE_SIDE_SHOT_ANGLE));
 
         NamedCommands.registerCommand("intake", new AutoIntakeNote(shooter, undertaker)); //blocking
         NamedCommands.registerCommand("intakeUntil", new AutoIntakeNote(shooter, undertaker).withTimeout(0.5)); //blocking
 
         NamedCommands.registerCommand("armHome", new AutoArmHome(arm)); //blocking
 
-        NamedCommands.registerCommand("armNoteLeft", new AutoArmMove(arm, Constants.Auto.LEFT_NOTE_ANGLE)); //blocking
-        NamedCommands.registerCommand("armNoteMiddle", new AutoArmMove(arm, Constants.Auto.MIDDLE_NOTE_ANGLE)); //blocking
-        NamedCommands.registerCommand("armNoteRight", new AutoArmMove(arm, Constants.Auto.RIGHT_NOTE_ANGLE)); //blocking
+        NamedCommands.registerCommand("armNoteLeft", new AutoArmMove(arm, Constants.Auto.CLOSE_A_SHOT_ANGLE)); //blocking
+        NamedCommands.registerCommand("armNoteMiddle", new AutoArmMove(arm, Constants.Auto.CLOSE_B_SHOT_ANGLE)); //blocking
+        NamedCommands.registerCommand("armNoteRight", new AutoArmMove(arm, Constants.Auto.CLOSER_C_SHOT_ANGLE)); //blocking
         
         NamedCommands.registerCommand("shoot", new AutoShoot(shooter).withTimeout(0.25)); //blocking
         NamedCommands.registerCommand("spinUpClose", new AutoSpinUp(shooter, Constants.Auto.CLOSE_SHOT_SPEED_TOP, Constants.Auto.CLOSE_SHOT_SPEED_BOTTOM)); //blocking
@@ -152,17 +160,18 @@ public class PathPlannerAutoGenerator {
 
     private void setupAutoContext(String selectedAuto) {
         autoContext.clear();
+        DataLogManager.log("setting auto context for " + selectedAuto);
         switch (selectedAuto) {
-            case "Score4":
-                autoContext.addAngle(Constants.Auto.LEFT_NOTE_ANGLE, Constants.Auto.MIDDLE_NOTE_ANGLE, Constants.Auto.RIGHT_NOTE_ANGLE);
+            case "SubAClose4":
+                autoContext.addAngle(Constants.Auto.CLOSE_A_SHOT_ANGLE, Constants.Auto.CLOSE_B_SHOT_ANGLE, Constants.Auto.CLOSER_C_SHOT_ANGLE);
                 break;
-            case "CenterClose":
-                autoContext.addAngle(Constants.Auto.MIDDLE_NOTE_ANGLE);
+            case "SubB2":
+                autoContext.addAngle(Constants.Auto.CLOSE_B_SHOT_ANGLE);
                 break;
-            case "LeftFarLane":
-                autoContext.addAngle(Constants.Auto.LEFT_NOTE_ANGLE, Constants.Auto.LEFT_NOTE_ANGLE);
+            case "AmpSide3":
+                autoContext.addAngle(Constants.Auto.CLOSE_A_SHOT_ANGLE, Constants.Auto.CLOSE_A_SHOT_ANGLE);
                 break;
-            case "RightFarLane":
+            case "SubCMidC2":
                 autoContext.addAngle(Constants.Auto.FAR_SHOT_ANGLE);
                 break;
         }

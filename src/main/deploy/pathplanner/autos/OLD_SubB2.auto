@@ -1,0 +1,56 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3584883107613055,
+      "y": 5.573284220930263
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "spinUpFar"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SubBToCloseB"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootSequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "armHome"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "OldShotSequenceAutos",
+  "choreoAuto": false
+}

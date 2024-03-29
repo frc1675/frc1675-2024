@@ -39,7 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootSequence"
+            "name": "closeBShot"
           }
         },
         {
@@ -51,6 +51,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "NewShotSequenceAutos",
   "choreoAuto": false
 }

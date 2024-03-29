@@ -83,10 +83,14 @@ public class Constants {
 
         public static final double INTAKE_ATTEMPT_TIMEOUT = 0.5;
 
-        public static final double LEFT_NOTE_ANGLE = Arm.HOME_POSITION - 35;
-        public static final double MIDDLE_NOTE_ANGLE = Arm.HOME_POSITION - 31;
-        public static final double RIGHT_NOTE_ANGLE = Arm.HOME_POSITION - 25;
-        public static final double FAR_SHOT_ANGLE = MIDDLE_NOTE_ANGLE; //TODO measure this
+        public static final double CLOSE_A_SHOT_ANGLE = Arm.HOME_POSITION - 35;
+        public static final double CLOSE_B_SHOT_ANGLE = Arm.HOME_POSITION - 31;
+        public static final double CLOSE_C_SHOT_ANGLE = Arm.HOME_POSITION - 33; // not tested yet
+        public static final double CLOSER_C_SHOT_ANGLE = Arm.HOME_POSITION - 25;
+        public static final double BEHIND_CLOSE_B_SHOT_ANGLE = Arm.HOME_POSITION - 37; // not tested yet
+        public static final double SOURCE_SIDE_SHOT_ANGLE = Arm.HOME_POSITION - 37; // not tested yet
+
+        public static final double FAR_SHOT_ANGLE = CLOSE_B_SHOT_ANGLE; //TODO measure this
 
         public static final double SUFFICIENT_EXTRA_PATHFINDING_TIME = 2;
         public static final PathConstraints EXTRA_PATHFINDING_CONSTRAINTS = new PathConstraints(3, 3, 9.4, 12.5);

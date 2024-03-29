@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.379091743208445,
+      "y": 5.532054990898668
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SubBToCloseB"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "TestShots",
+  "choreoAuto": false
+}
