@@ -8,7 +8,7 @@ import frc.robot.poseScheduler.FieldArea2d;
 
 public class Constants {
 
-    public class Drive {
+    public static class Drive {
         public static final double MAXIMUM_VELOCITY = 5.5; // meters per second
         public static final double MAXIMUM_ANGULAR_VELOCITY = 8; // radians per second
 
@@ -30,7 +30,7 @@ public class Constants {
         public static final double ROTATION_TARGET_RANGE = 1.5;
     }
 
-    public class Arm {
+    public static class Arm {
         // Encoder constants
         public static final int ENCODER_CHANNEL = 7;
         public static final int ENCODER_CHANNEL_B = 29;
@@ -59,7 +59,7 @@ public class Constants {
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
     }
 
-    public class PathPlanner {
+    public static class PathPlanner {
         public static final boolean PATH_PLANNER_IS_ENABLED = false;
 
         public static final double MAXIMUM_VELOCITY = 2.5; // meters per second
@@ -81,7 +81,7 @@ public class Constants {
         public static final double DYNAMIC_PATHING_MAX_DISTANCE = 5; // meters
     }
 
-    public class Field {
+    public static class Field {
         public static final Translation2d SPEAKER_SCORING_POSITION = new Translation2d(1.67, 5.52);
 
         public static final FieldArea2d FRIENDLY_ALLIANCE_AREA = new FieldArea2d(0, 0, 5.85, 8.21);
@@ -97,7 +97,7 @@ public class Constants {
         public static final Pose2d SUBWOOFER_RIGHT_RED = new Pose2d(15.5, 6.7, Rotation2d.fromDegrees(-60));
     }
 
-    public class Shooter {
+    public static class Shooter {
         public static final double SHOOT_SPEED = 1700;
         public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
         public static final double LONG_SHOT_SPEED = 5000;
@@ -130,12 +130,12 @@ public class Constants {
         public static final double INDEXER_MOI = 1;
     }
 
-    public class Dashboard {
+    public static class Dashboard {
         public static final boolean DISABLE_TUNER = false;
         public static final String VERSION_FILE_NAME = "version/.robotVersionMini";
     }
 
-    public class Controller {
+    public static class Controller {
         public static final double DEADZONE_CONSTANT = 0.1675;
 
         public static final double RUMBLE_POWER = 1;
@@ -150,11 +150,11 @@ public class Constants {
         public static final int RIGHT_TRIGGER = 3;
     }
 
-    public class LEDController {
+    public static class LEDController {
         public static final int LED_CONTROLLER_CHANNEL = 0;
     }
 
-    public class Undertaker {
+    public static class Undertaker {
         public static final int INTAKE_MOTOR_ONE = 13;
         public static final int INTAKE_MOTOR_TWO = 14;
 

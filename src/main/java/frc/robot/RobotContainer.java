@@ -44,6 +44,7 @@ public class RobotContainer {
   private final AbstractAutoGenerator autoGenerator;
   private final RobotContext robotContext;
 
+
   public RobotContainer() {
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
