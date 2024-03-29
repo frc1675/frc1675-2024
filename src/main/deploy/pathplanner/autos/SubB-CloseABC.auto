@@ -5,7 +5,7 @@
       "x": 1.3627004691613382,
       "y": 5.53478686990652
     },
-    "rotation": 60.0
+    "rotation": 0.34240098075242287
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SubAToCloseA"
+                  "pathName": "SubBToCloseA"
                 }
               },
               {
@@ -39,7 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootSequence"
+            "name": "closeAShot"
           }
         },
         {
@@ -70,7 +70,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootSequence"
+            "name": "closeBShot"
           }
         },
         {
@@ -80,7 +80,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CloseBToCloseC"
+                  "pathName": "CloseBToCloseCScore"
                 }
               },
               {
@@ -99,28 +99,9 @@
           }
         },
         {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CloseCToCloserShot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "shootSequence"
+            "name": "closeCShot"
           }
         },
         {
@@ -132,6 +113,6 @@
       ]
     }
   },
-  "folder": "OldShotSequenceAutos",
+  "folder": "NewShotSequenceAutos",
   "choreoAuto": false
 }

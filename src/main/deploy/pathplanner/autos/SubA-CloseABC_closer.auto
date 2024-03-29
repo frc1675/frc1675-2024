@@ -39,7 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootSequence"
+            "name": "closeAShot"
           }
         },
         {
@@ -70,7 +70,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootSequence"
+            "name": "closeBShot"
           }
         },
         {
@@ -120,7 +120,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootSequence"
+            "name": "closerCShot"
           }
         },
         {
@@ -132,6 +132,6 @@
       ]
     }
   },
-  "folder": "OldShotSequenceAutos",
+  "folder": "NewShotSequenceAutos",
   "choreoAuto": false
 }

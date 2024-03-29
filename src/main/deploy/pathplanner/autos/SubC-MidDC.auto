@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3627004691613382,
-      "y": 5.53478686990652
+      "x": 0.7166110838045305,
+      "y": 4.377836110081538
     },
-    "rotation": 60.0
+    "rotation": -60.164460899738465
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,26 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SubAToCloseA"
+                  "pathName": "SubCToMidD"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MidDToSourceSideScore"
                 }
               },
               {
@@ -39,7 +58,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootSequence"
+            "name": "sourceSideShot"
           }
         },
         {
@@ -49,38 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CloseAToCloseB"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "armHome"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootSequence"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CloseBToCloseC"
+                  "pathName": "SourceSideScoreToMidC"
                 }
               },
               {
@@ -105,7 +93,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CloseCToCloserShot"
+                  "pathName": "MidCToSourceSideScore"
                 }
               },
               {
@@ -120,7 +108,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootSequence"
+            "name": "sourceSideShot"
           }
         },
         {
@@ -132,6 +120,6 @@
       ]
     }
   },
-  "folder": "OldShotSequenceAutos",
+  "folder": "NewShotSequenceAutos",
   "choreoAuto": false
 }
