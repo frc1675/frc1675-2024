@@ -135,7 +135,7 @@ public class PathPlannerAutoGenerator {
 
     private void registerCommands() {
         NamedCommands.registerCommand("shootSequence", new ShootSequence(shooter, undertaker, arm, led, autoContext));
-        
+
         NamedCommands.registerCommand("closeAShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_A_SHOT_ANGLE));
         NamedCommands.registerCommand("closeBShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_B_SHOT_ANGLE));
         NamedCommands.registerCommand("closeCShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_C_SHOT_ANGLE));
@@ -162,16 +162,16 @@ public class PathPlannerAutoGenerator {
         autoContext.clear();
         DataLogManager.log("setting auto context for " + selectedAuto);
         switch (selectedAuto) {
-            case "SubAClose4":
+            case "OLD_SubAClose4":
                 autoContext.addAngle(Constants.Auto.CLOSE_A_SHOT_ANGLE, Constants.Auto.CLOSE_B_SHOT_ANGLE, Constants.Auto.CLOSER_C_SHOT_ANGLE);
                 break;
-            case "SubB2":
+            case "OLD_SubB2":
                 autoContext.addAngle(Constants.Auto.CLOSE_B_SHOT_ANGLE);
                 break;
-            case "AmpSide3":
+            case "OLD_AmpSide3":
                 autoContext.addAngle(Constants.Auto.CLOSE_A_SHOT_ANGLE, Constants.Auto.CLOSE_A_SHOT_ANGLE);
                 break;
-            case "SubCMidC2":
+            case "OLD_SubCMidC2":
                 autoContext.addAngle(Constants.Auto.FAR_SHOT_ANGLE);
                 break;
         }
