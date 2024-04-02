@@ -16,22 +16,6 @@
     },
     {
       "anchor": {
-        "x": 2.0101955409238235,
-        "y": 6.252528376310915
-      },
-      "prevControl": {
-        "x": 1.3768462609067285,
-        "y": 6.252528376310915
-      },
-      "nextControl": {
-        "x": 2.3597204984145823,
-        "y": 6.252528376310915
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 2.8913771479041297,
         "y": 6.996025357200549
       },
@@ -44,7 +28,13 @@
       "linkedName": "CloseAScoreAngle"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": 10.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
