@@ -18,6 +18,7 @@ import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.auto.cmd.group.ConfigurableShootSequence;
+import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DefaultDrive;
@@ -105,6 +106,8 @@ public class RobotContainer {
     if(shotTesting)
     {
       driverController.b().onTrue(new ConfigurableShootSequence(shooter, undertakerSubsystem, arm, ledSubsystem, () -> testAngleEntry.getDouble(Constants.Auto.CLOSE_B_SHOT_ANGLE)));
+      //driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Shooter.AUTO_SHOT_SPEED, Constants.Shooter.AUTO_SHOT_SPEED));
+      //driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
     }
   }
 
