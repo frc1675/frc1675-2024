@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -74,12 +75,16 @@ public class PathPlannerAutoGenerator {
             drive
         );
 
+        autoSelector = new SendableChooser<String>();
+        for (String s : AutoBuilder.getAllAutoNames()) {
+            autoSelector.addOption(s, s);
+        }
+        autoSelector.setDefaultOption("None", "None");
 
-        autoSelector = AutoBuilder.getAllAutoNames(); // the sendablechooser should really only be the name strings (fix w/ jake later)
         autoSelector.onChange((cmd) -> {
             if(cmd != null){
                 setStartingPose(cmd);
-                ppAuto = new PathPlannerAuto(cmd); // because we are composing later, we need to cook a fresh Command every time we select.
+                ppAuto = getPathPlannerAuto(); // because we are composing later, we need to cook a fresh Command every time we select.
             }
         });
 
@@ -87,8 +92,7 @@ public class PathPlannerAutoGenerator {
     }
 
     private void setStartingPose(String cmdName) {
-        if (cmdName == null || cmdName.equals("InstantCommand")) {
-            //This is the none command
+        if (cmdName == null || cmdName.equals("None")) {
             field.setRobotPose(new Pose2d());
             return;
         }
@@ -129,6 +133,14 @@ public class PathPlannerAutoGenerator {
         NamedCommands.registerCommand("spinDown", new AutoSetTargetSpeed(shooter, 0, 0)); //non-blocking
     }
 
+    private Command getPathPlannerAuto() {
+        String selected = autoSelector.getSelected();
+        if (selected == null || selected.equalsIgnoreCase("none")) {
+            return Commands.none();
+        }
+        return new PathPlannerAuto(selected);
+    }
+
     public Command getAutoCommand() {
         Command autoCmd = new SequentialCommandGroup(
             //We always want to shoot the preloaded piece, and we want to shoot before the delay.
@@ -140,7 +152,7 @@ public class PathPlannerAutoGenerator {
             ppAuto,
             new AutoSetTargetSpeed(shooter, 0, 0)
         );
-        ppAuto = new PathPlannerAuto(autoSelector.getSelected()); // rebake pp auto... this might cause delay (bad)
+        ppAuto = getPathPlannerAuto(); // rebake pp auto... this might cause delay (bad)
         return autoCmd;
     }
 
