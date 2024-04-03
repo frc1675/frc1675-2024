@@ -35,8 +35,7 @@ public class ConfigurableShootSequence extends SequentialCommandGroup {
                         DataLogManager.log("Detected that autonomous failed to intake note. Skipping shooting sequence.");
                     })
                 ),
-                () -> true
-                //shooter::isIndexerLoaded
+                shooter::isIndexerLoaded
             )
         );
     }
