@@ -5,8 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -14,9 +17,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
-import frc.robot.auto.generator.AbstractAutoGenerator;
+import frc.robot.auto.cmd.group.ConfigurableShootSequence;
+import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
-import frc.robot.auto.generator.SimpleAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
@@ -42,11 +45,15 @@ public class RobotContainer {
   private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
   
-  private final AbstractAutoGenerator autoGenerator;
+  private final PathPlannerAutoGenerator autoGenerator;
   private final RobotContext robotContext;
 
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
+
+  private boolean shotTesting = false;
+  private ShuffleboardTab testOnlyTab;
+  private GenericEntry testAngleEntry;
 
   public RobotContainer() {
     DataLogManager.start();
@@ -64,12 +71,7 @@ public class RobotContainer {
 
     robotContext = new RobotContext(arm, shooter);
 
-    autoGenerator = 
-      Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
-      ?
-      new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem)
-      :
-      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
+    autoGenerator = new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, ledSubsystem);
 
     driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
     operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
@@ -77,6 +79,9 @@ public class RobotContainer {
     Dashboards.initVoltageDashboard();
     //Dashboards.initDriverDashboard(robotContext::hasNote);
     VersionFile.getInstance().putToDashboard();
+
+    // Comment the below out when not testing.
+    initTestingOnlyTab();
       
     configureBindings();
   }
@@ -97,6 +102,13 @@ public class RobotContainer {
     operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE));
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
+
+    if(shotTesting)
+    {
+      driverController.b().onTrue(new ConfigurableShootSequence(shooter, undertakerSubsystem, arm, ledSubsystem, () -> testAngleEntry.getDouble(Constants.Auto.CLOSE_B_SHOT_ANGLE)));
+      //driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Shooter.AUTO_SHOT_SPEED, Constants.Shooter.AUTO_SHOT_SPEED));
+      //driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
+    }
   }
 
   public void teleopInit() {
@@ -118,6 +130,12 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoGenerator.getAutoCommand();
+  }
+
+  private void initTestingOnlyTab() {
+    shotTesting = true; // lock to stop null stuff by accident in config bindings
+    testOnlyTab = Shuffleboard.getTab("Test Only");
+    testAngleEntry = testOnlyTab.add("Shot Test Angle", Constants.Auto.CLOSE_B_SHOT_ANGLE).withSize(2, 1).withPosition(3, 0).getEntry();
   }
 
 }
