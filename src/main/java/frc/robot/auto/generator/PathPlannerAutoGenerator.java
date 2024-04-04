@@ -8,7 +8,6 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -22,12 +21,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto.cmd.arm.AutoArmHome;
-import frc.robot.auto.cmd.arm.AutoArmMove;
 import frc.robot.auto.cmd.group.AutoIntakeNote;
 import frc.robot.auto.cmd.group.ConfigurableShootSequence;
 import frc.robot.auto.cmd.shooter.AutoSetTargetSpeed;
-import frc.robot.auto.cmd.shooter.AutoShoot;
 import frc.robot.auto.cmd.shooter.AutoSpinUp;
+import frc.robot.auto.cmd.shooter.NoteBlocker;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.shooter.ShooterSubsystem;
@@ -43,7 +41,6 @@ public class PathPlannerAutoGenerator {
     private ShuffleboardTab tab;
     private GenericEntry delay;
 
-    private final DriveSubsystem drive;
     private final ArmSubsystem arm;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
@@ -51,7 +48,6 @@ public class PathPlannerAutoGenerator {
     private Command ppAuto;
 
     public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, LEDSubsystem led) {
-        this.drive = drive;
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
@@ -131,6 +127,8 @@ public class PathPlannerAutoGenerator {
         NamedCommands.registerCommand("spinUpClose", new AutoSpinUp(shooter, Constants.Auto.CLOSE_SHOT_SPEED_TOP, Constants.Auto.CLOSE_SHOT_SPEED_BOTTOM)); //blocking
         NamedCommands.registerCommand("spinUpFar", new AutoSetTargetSpeed(shooter, Constants.Auto.SHOT_SPEED, Constants.Auto.SHOT_SPEED)); //non-blocking
         NamedCommands.registerCommand("spinDown", new AutoSetTargetSpeed(shooter, 0, 0)); //non-blocking
+
+        NamedCommands.registerCommand("hasNote", new NoteBlocker(shooter));
     }
 
     private Command getPathPlannerAuto() {

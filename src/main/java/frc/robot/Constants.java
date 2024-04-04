@@ -92,6 +92,8 @@ public class Constants {
 
         public static final double FAR_SHOT_ANGLE = CLOSE_B_SHOT_ANGLE; //TODO measure this
 
+        public static final double CANCELLED_PATH_TRAVEL_TIME = 2;
+
         public static final double SUFFICIENT_EXTRA_PATHFINDING_TIME = 2;
         public static final PathConstraints EXTRA_PATHFINDING_CONSTRAINTS = new PathConstraints(3, 3, 9.4, 12.5);
 
