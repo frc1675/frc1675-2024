@@ -81,6 +81,7 @@ public class RobotContainer {
 
     Dashboards.initVoltageDashboard();
     Dashboards.initDriverDashboard(robotContext::hasNote);
+    Dashboards.initMemoryDashboard();
     VersionFile.getInstance().putToDashboard();
 
     // Comment the below out when not testing.
