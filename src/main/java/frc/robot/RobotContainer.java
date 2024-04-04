@@ -129,8 +129,6 @@ public class RobotContainer {
             )
     );
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
-    //We use this because it is non-blocking and will end instantly. We want to run at amp speed constantly to speed up spin up
-    CommandScheduler.getInstance().schedule(new AutoSetTargetSpeed(shooter, Constants.Shooter.AMP_SHOOT_SPEED, Constants.Shooter.AMP_SHOOT_SPEED)); 
     ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
   }
 
