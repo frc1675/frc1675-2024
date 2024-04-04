@@ -22,9 +22,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "SubBToCloseB"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SubBToCloseB"
+                      }
+                    }
+                  ]
                 }
               },
               {

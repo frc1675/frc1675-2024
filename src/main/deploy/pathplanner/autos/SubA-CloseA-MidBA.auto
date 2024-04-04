@@ -22,9 +22,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "SubAToCloseA"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SubAToCloseA"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -47,9 +60,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "CloseAToMidB"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "CloseAToMidB"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -72,9 +98,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "MidBToBehindCloseB"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "MidBToBehindCloseB"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -97,9 +136,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "BehindCloseBToMidA"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "BehindCloseBToMidA"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -122,9 +174,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "MidAToBehindCloseB"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "MidAToBehindCloseB"
+                      }
+                    }
+                  ]
                 }
               },
               {

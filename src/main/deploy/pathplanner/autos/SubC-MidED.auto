@@ -22,9 +22,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "SubCToMidE"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SubCToMidE"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -41,9 +54,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "MidEToSourceSideScore"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "MidEToSourceSideScore"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -66,9 +92,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "SourceSideScoreToMidD"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SourceSideScoreToMidD"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -91,9 +130,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "MidDToSourceSideScore"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "MidDToSourceSideScore"
+                      }
+                    }
+                  ]
                 }
               },
               {

@@ -35,6 +35,7 @@
     "cancoder",
     "CANRX",
     "CANTX",
+    "choreo",
     "Deadband",
     "DEADZONE",
     "debouncer",

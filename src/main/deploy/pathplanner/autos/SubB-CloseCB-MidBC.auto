@@ -22,9 +22,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "SubBToCloseCScoreAngle"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SubBToCloseCScoreAngle"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -47,9 +60,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "CloseCScoreToCloseB"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "CloseCScoreToCloseB"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -78,9 +104,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "CloseBToMidB"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "CloseBToMidB"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -103,9 +142,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "MidBToBehindCloseB"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "MidBToBehindCloseB"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -128,9 +180,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "BehindCloseBToMidC"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "BehindCloseBToMidC"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -153,9 +218,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "MidCToBehindCloseB"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "hasNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "MidCToBehindCloseB"
+                      }
+                    }
+                  ]
                 }
               },
               {
