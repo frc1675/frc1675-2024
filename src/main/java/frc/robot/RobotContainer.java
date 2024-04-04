@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -18,6 +19,7 @@ import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.auto.cmd.group.ConfigurableShootSequence;
+import frc.robot.auto.cmd.shooter.AutoSetTargetSpeed;
 import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
@@ -127,6 +129,8 @@ public class RobotContainer {
             )
     );
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
+    //We use this because it is non-blocking and will end instantly. We want to run at amp speed constantly to speed up spin up
+    CommandScheduler.getInstance().schedule(new AutoSetTargetSpeed(shooter, Constants.Shooter.AMP_SHOOT_SPEED, Constants.Shooter.AMP_SHOOT_SPEED)); 
     ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
   }
 

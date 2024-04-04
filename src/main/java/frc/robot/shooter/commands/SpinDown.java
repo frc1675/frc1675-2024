@@ -4,6 +4,7 @@
 package frc.robot.shooter.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.shooter.ShooterSubsystem;
 
 public class SpinDown extends Command {
@@ -16,7 +17,7 @@ public class SpinDown extends Command {
 
   @Override
   public void initialize() {
-    subsystem.setTargetShooterSpeeds(0, 0);
+    subsystem.setTargetShooterSpeeds(Constants.Shooter.AMP_SHOOT_SPEED, Constants.Shooter.AMP_SHOOT_SPEED);
   }
 
   @Override
