@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class Dashboards {
     private static boolean voltageNeedsInit = true;
     private static boolean driverNeedsInit = true;
+    private static boolean memoryNeedsInit = true;
 
     public static void initVoltageDashboard() {
         if (voltageNeedsInit) {
@@ -42,6 +43,13 @@ public class Dashboards {
             tab.addBoolean("Has note", hasNote).withSize(1, 5).withPosition(9, 0);
 
             driverNeedsInit = false;
+        }
+    }
+
+    public static void initMemoryDashboard() {
+        if (memoryNeedsInit) {
+            Runtime r = Runtime.getRuntime();
+            Shuffleboard.getTab("Memory Usage").addDouble("Usage percent", () -> r.freeMemory() / (double) r.totalMemory());
         }
     }
 }
