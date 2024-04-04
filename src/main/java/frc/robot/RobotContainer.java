@@ -36,7 +36,6 @@ import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
 import frc.robot.util.AllianceUtil;
 import frc.robot.util.Dashboards;
-import frc.robot.vision.VisionSubsystem;
 
 public class RobotContainer {
   private final PoseScheduler poseScheduler;
@@ -44,7 +43,7 @@ public class RobotContainer {
   private final ShooterSubsystem shooter;
   private final LEDSubsystem ledSubsystem;
   private final UndertakerSubsystem undertakerSubsystem;
-  private final VisionSubsystem visionSubsystem;
+  //private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
   
   private final PathPlannerAutoGenerator autoGenerator;
@@ -65,7 +64,7 @@ public class RobotContainer {
     poseScheduler = new PoseScheduler();
     drive = new DriveSubsystem(poseScheduler);
 
-    visionSubsystem = VisionSubsystem.create();
+    //visionSubsystem = VisionSubsystem.create();
     ledSubsystem = LEDSubsystem.create();
     undertakerSubsystem = UndertakerSubsystem.create();
     shooter = ShooterSubsystem.create();
@@ -113,8 +112,8 @@ public class RobotContainer {
     if(shotTesting)
     {
       driverController.b().onTrue(new ConfigurableShootSequence(shooter, undertakerSubsystem, arm, ledSubsystem, () -> testAngleEntry.getDouble(Constants.Auto.CLOSE_B_SHOT_ANGLE)));
-      //driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Shooter.AUTO_SHOT_SPEED, Constants.Shooter.AUTO_SHOT_SPEED));
-      //driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
+      driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Shooter.AUTO_SHOT_SPEED, Constants.Shooter.AUTO_SHOT_SPEED));
+      driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
     }
   }
 
