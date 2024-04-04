@@ -28,6 +28,8 @@ import frc.robot.notification.ContextualColor;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
+import frc.robot.shooter.commands.SpinDown;
+import frc.robot.shooter.commands.SpinUp;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.RobotContext;
@@ -103,6 +105,10 @@ public class RobotContainer {
     operatorController.b().onTrue(new MoveToPosition(arm, Constants.Arm.BEHIND_NOTE_B_ANGLE));
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
+
+    operatorController.povUp().onTrue(new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED));
+    operatorController.povDown().onTrue(new SpinDown(shooter));
+
 
     if(shotTesting)
     {
