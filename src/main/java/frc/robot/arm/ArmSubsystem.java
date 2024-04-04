@@ -62,7 +62,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public boolean isAtPodiumPosition() {
-        return isOnTarget() && getTarget() == Constants.Arm.LONG_SHOT_ANGLE;
+        return isOnTarget() && getTarget() == Constants.Arm.PODIUM_SHOT_ANGLE;
     }
 
     public boolean isBroken() {

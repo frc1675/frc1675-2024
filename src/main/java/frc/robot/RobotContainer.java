@@ -77,11 +77,11 @@ public class RobotContainer {
     operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
 
     Dashboards.initVoltageDashboard();
-    //Dashboards.initDriverDashboard(robotContext::hasNote);
+    Dashboards.initDriverDashboard(robotContext::hasNote);
     VersionFile.getInstance().putToDashboard();
 
     // Comment the below out when not testing.
-    initTestingOnlyTab();
+    //initTestingOnlyTab();
       
     configureBindings();
   }
@@ -94,12 +94,13 @@ public class RobotContainer {
      () -> robotContext.getShooterSpeed()[1]
     ));
 
-    driverController.a().onTrue(new TurnToAngle(drive, 90));
+    driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
 
-    operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE));
+    operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.PODIUM_SHOT_ANGLE));
+    operatorController.b().onTrue(new MoveToPosition(arm, Constants.Arm.BEHIND_NOTE_B_ANGLE));
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
 

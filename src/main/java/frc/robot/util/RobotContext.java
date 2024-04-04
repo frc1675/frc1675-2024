@@ -39,10 +39,10 @@ public class RobotContext {
     public double[] getShooterSpeed() {
         if (arm.isAtAmpPosition()) {
             return new double[] {Constants.Shooter.AMP_SHOOT_SPEED, Constants.Shooter.AMP_SHOOT_SPEED};
-        }else if(arm.isAtPodiumPosition()) {
-            return new double[] {Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED};
-        }else {
+        }else if(arm.isAtHomePostion()) {
             return new double[] {Constants.Shooter.SHOOT_SPEED, Constants.Shooter.SHOOT_SPEED * 0.9};
+        }else {
+            return new double[] {Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED};
         }
     }
 

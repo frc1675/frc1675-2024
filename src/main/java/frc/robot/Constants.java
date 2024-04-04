@@ -48,7 +48,8 @@ public class Constants {
         public static final double DEBOUNCE_TIME = 0.5;
         // Position constnats
         public static final double HOME_POSITION = 138;
-        public static final double LONG_SHOT_ANGLE = HOME_POSITION - 33;
+        public static final double PODIUM_SHOT_ANGLE = HOME_POSITION - 33;
+        public static final double BEHIND_NOTE_B_ANGLE = Auto.BEHIND_CLOSE_B_SHOT_ANGLE;
 
         public static final double HIGH_SCORE_POSITION = HOME_POSITION - 78;
         public static final double AMP_POSITION = HOME_POSITION - 103;
