@@ -80,7 +80,6 @@ public class RobotContainer {
     operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
 
     Dashboards.initVoltageDashboard();
-    Dashboards.initDriverDashboard(robotContext::hasNote);
     Dashboards.initMemoryDashboard();
     VersionFile.getInstance().putToDashboard();
 
