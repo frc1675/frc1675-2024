@@ -101,8 +101,7 @@ public class Constants {
     public class Shooter {
         public static final double SHOOT_SPEED = 1700;
         public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
-        public static final double LONG_SHOT_SPEED = 5000;
-        public static final double AUTO_SHOT_SPEED = 3500;
+        public static final double LONG_SHOT_SPEED = 3500;
 
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 

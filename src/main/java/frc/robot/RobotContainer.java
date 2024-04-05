@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -19,7 +18,6 @@ import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
 import frc.robot.auto.cmd.group.ConfigurableShootSequence;
-import frc.robot.auto.cmd.shooter.AutoSetTargetSpeed;
 import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
@@ -97,7 +95,7 @@ public class RobotContainer {
      () -> robotContext.getShooterSpeed()[1]
     ));
 
-    driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
+    driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 180 : 0));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
@@ -107,14 +105,14 @@ public class RobotContainer {
     operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
     operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
 
-    operatorController.povUp().onTrue(new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED));
-    operatorController.povDown().onTrue(new SpinDown(shooter));
+    //operatorController.povUp().onTrue(new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED));
+    //operatorController.povDown().onTrue(new SpinDown(shooter));
 
 
     if(shotTesting)
     {
       driverController.b().onTrue(new ConfigurableShootSequence(shooter, undertakerSubsystem, arm, ledSubsystem, () -> testAngleEntry.getDouble(Constants.Auto.CLOSE_B_SHOT_ANGLE)));
-      driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Shooter.AUTO_SHOT_SPEED, Constants.Shooter.AUTO_SHOT_SPEED));
+      driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Auto.SHOT_SPEED, Constants.Auto.SHOT_SPEED));
       driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
     }
   }
