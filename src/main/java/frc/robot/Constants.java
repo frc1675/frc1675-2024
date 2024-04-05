@@ -119,7 +119,7 @@ public class Constants {
         public static final double SHOOTER_PID_I = 0.0001;
         public static final double SHOOTER_PID_D = 0;
 
-        public static final double SHOOTER_FF_V = 0.00015;
+        public static final double SHOOTER_FF_V = 0.00012;
         public static final double SHOOTER_FF_S = 0;
 
         public static final double SHOOTER_SHOOT_TIME = 0.5;
