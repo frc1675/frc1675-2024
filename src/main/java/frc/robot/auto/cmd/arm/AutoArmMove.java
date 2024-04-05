@@ -13,7 +13,7 @@ public class AutoArmMove extends Command {
     
     private final ArmSubsystem arm;
     private final DoubleSupplier position;
-    private final Debouncer debouncer = new Debouncer(Constants.Arm.DEBOUNCE_TIME);
+    private final Debouncer debouncer = new Debouncer(Constants.Auto.AUTO_DEBOUNCE_TIME);
 
     public AutoArmMove(ArmSubsystem arm, DoubleSupplier position) {
         this.arm = arm;

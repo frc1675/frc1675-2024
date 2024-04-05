@@ -45,7 +45,7 @@ public class Constants {
         public static final double PID_D_COEFFICIENT = 0;
         // Arm movment lmits constants
         public static final double TARGET_RANGE = 2.0;
-        public static final double DEBOUNCE_TIME = 0.5;
+        public static final double DEBOUNCE_TIME = 0.25;
         // Position constnats
         public static final double HOME_POSITION = 138;
         public static final double PODIUM_SHOT_ANGLE = HOME_POSITION - 33;
@@ -92,6 +92,8 @@ public class Constants {
         public static final double SOURCE_SIDE_SHOT_ANGLE = Arm.HOME_POSITION - 39;
 
         public static final double FAR_SHOT_ANGLE = CLOSE_B_SHOT_ANGLE; //TODO measure this
+
+        public static final double AUTO_DEBOUNCE_TIME = 0.1;
 
         public static final double SUFFICIENT_EXTRA_PATHFINDING_TIME = 2;
         public static final PathConstraints EXTRA_PATHFINDING_CONSTRAINTS = new PathConstraints(3, 3, 9.4, 12.5);
