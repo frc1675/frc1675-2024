@@ -21,6 +21,7 @@ import frc.robot.auto.cmd.group.ConfigurableShootSequence;
 import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
+import frc.robot.cmdGroup.ShootAndReturnHome;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.drive.TurnToAngle;
@@ -90,7 +91,7 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
     
-    driverController.rightBumper().onTrue(new SpinUpAndShoot(shooter,
+    driverController.rightBumper().onTrue(new ShootAndReturnHome(shooter, arm,
      () -> robotContext.getShooterSpeed()[0],
      () -> robotContext.getShooterSpeed()[1]
     ));
