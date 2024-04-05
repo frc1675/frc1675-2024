@@ -98,6 +98,11 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
 
         armIO.periodic();
+
+        if (pid.getGoal().position <= Constants.Arm.MAX_ARM_RANGE_DEGREES || pid.getSetpoint().position <= Constants.Arm.MAX_ARM_RANGE_DEGREES) {
+            targetAngle = Constants.Arm.HOME_POSITION;
+        }
+
         //Multiply by -1 to invert motorPower because positive motor power moves the arm upwards but decreases the angle read by the encoder and vice versa for negitive motor power. 
         double motorPower = -1.0 * pid.calculate(getAngle(), targetAngle);
 
