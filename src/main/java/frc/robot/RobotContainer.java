@@ -119,6 +119,9 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
+    shooter.setTargetShooterSpeeds(0, 0); //Spin down after autonomous
+    arm.setTarget(Constants.Arm.HOME_POSITION); //Reset arm position after teleop
+
     drive.setDefaultCommand(
         new DefaultDrive(drive,
             () -> AllianceUtil.getTranslationDirection() * getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
