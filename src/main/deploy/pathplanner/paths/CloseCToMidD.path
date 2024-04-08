@@ -8,43 +8,49 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2977299021645106,
-        "y": 2.8340224440791246
-      },
-      "isLocked": false,
-      "linkedName": "CloseCScoreAngle"
-    },
-    {
-      "anchor": {
-        "x": 3.3985485374679727,
-        "y": 2.0611072320575454
-      },
-      "prevControl": {
-        "x": 2.625633325446393,
-        "y": 2.2719022898816124
-      },
-      "nextControl": {
-        "x": 4.469972178941018,
-        "y": 1.7689007843830789
+        "x": 2.7310308543584263,
+        "y": 5.246454772510115
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.118015665417921,
-        "y": 2.41243232843099
+        "x": 4.604764701683467,
+        "y": 4.719467127949948
       },
       "prevControl": {
-        "x": 6.642801001178277,
-        "y": 0.9440473617109728
+        "x": 4.156117019553612,
+        "y": 5.018565582703185
+      },
+      "nextControl": {
+        "x": 5.131752346243635,
+        "y": 4.368142031576503
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.224361665149523,
+        "y": 4.095469234223708
+      },
+      "prevControl": {
+        "x": 7.56760634776619,
+        "y": 3.5366726368260153
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MidD"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.55,
+      "rotationDegrees": 10.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {

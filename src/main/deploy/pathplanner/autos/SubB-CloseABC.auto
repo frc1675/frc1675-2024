@@ -103,12 +103,6 @@
           "data": {
             "name": "closeCShot"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "armHome"
-          }
         }
       ]
     }

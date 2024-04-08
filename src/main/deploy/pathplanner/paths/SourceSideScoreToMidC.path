@@ -16,19 +16,25 @@
     },
     {
       "anchor": {
-        "x": 8.224361665149523,
-        "y": 4.095469234223708
+        "x": 8.504473271428711,
+        "y": 4.133925300660873
       },
       "prevControl": {
-        "x": 6.239319173473628,
-        "y": 4.127268444268764
+        "x": 6.519430779752817,
+        "y": 4.165724510705929
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "MidC"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.75,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {

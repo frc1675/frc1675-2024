@@ -105,9 +105,28 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "armHome"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CloseAToMidC"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "armHome"
+                }
+              }
+            ]
           }
         }
       ]
