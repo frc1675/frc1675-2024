@@ -34,6 +34,7 @@ import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AllianceUtil;
+import frc.robot.util.FilteredChooserGroup;
 
 public class PathPlannerAutoGenerator {
 
@@ -48,6 +49,7 @@ public class PathPlannerAutoGenerator {
     private final UndertakerSubsystem undertaker;
     private final LEDSubsystem led;
     private Command ppAuto;
+    private String chooserResult = "none yet";
 
     public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, LEDSubsystem led) {
         this.arm = arm;
@@ -76,6 +78,13 @@ public class PathPlannerAutoGenerator {
         autoSelector = new SendableChooser<String>();
         List<String> autos = AutoBuilder.getAllAutoNames();
         Collections.sort(autos);
+
+        
+        FilteredChooserGroup chooserGroup = new FilteredChooserGroup(Shuffleboard.getTab("CHOOSERTEST"), "ChooserTest", 3, autos.toArray(new String[0]));
+        Shuffleboard.getTab("CHOOSERTEST").addString("Chooser Result", () -> chooserResult);
+        chooserGroup.onChange(s -> {
+            chooserResult = s;
+        });
         
         for (String s : autos) {
             autoSelector.addOption(s, s);
