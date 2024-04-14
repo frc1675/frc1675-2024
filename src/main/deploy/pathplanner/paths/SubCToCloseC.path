@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.772558754884436,
-        "y": 5.564105245857552
+        "x": 0.706854784416842,
+        "y": 4.371973526584332
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.985172033572021,
-        "y": 4.452962782797446
+        "x": 1.2437546130441748,
+        "y": 4.590647925946351
       },
       "isLocked": false,
-      "linkedName": "BehindCloseBScore"
+      "linkedName": "SubC"
     },
     {
       "anchor": {
-        "x": 8.118015665417921,
-        "y": 2.41243232843099
+        "x": 2.649054998537956,
+        "y": 4.251033666118688
       },
       "prevControl": {
-        "x": 7.168687710189631,
-        "y": 3.2729742159041164
+        "x": 2.0432426437389966,
+        "y": 4.150064940318861
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MidD"
+      "linkedName": "CloseCScoreAngle"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": 0.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -11.611486423888493,
+    "rotation": -30.55000000000001,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -60.06848815949221,
     "velocity": 0
   },
   "useDefaultConstraints": true

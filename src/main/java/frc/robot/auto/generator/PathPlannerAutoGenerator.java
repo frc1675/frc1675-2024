@@ -1,5 +1,8 @@
 package frc.robot.auto.generator;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -8,7 +11,6 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -22,11 +24,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto.cmd.arm.AutoArmHome;
-import frc.robot.auto.cmd.arm.AutoArmMove;
 import frc.robot.auto.cmd.group.AutoIntakeNote;
 import frc.robot.auto.cmd.group.ConfigurableShootSequence;
 import frc.robot.auto.cmd.shooter.AutoSetTargetSpeed;
-import frc.robot.auto.cmd.shooter.AutoShoot;
 import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.notification.LEDSubsystem;
@@ -43,7 +43,6 @@ public class PathPlannerAutoGenerator {
     private ShuffleboardTab tab;
     private GenericEntry delay;
 
-    private final DriveSubsystem drive;
     private final ArmSubsystem arm;
     private final ShooterSubsystem shooter;
     private final UndertakerSubsystem undertaker;
@@ -51,7 +50,6 @@ public class PathPlannerAutoGenerator {
     private Command ppAuto;
 
     public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, LEDSubsystem led) {
-        this.drive = drive;
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
@@ -76,10 +74,13 @@ public class PathPlannerAutoGenerator {
         );
 
         autoSelector = new SendableChooser<String>();
-        for (String s : AutoBuilder.getAllAutoNames()) {
+        List<String> autos = AutoBuilder.getAllAutoNames();
+        Collections.sort(autos);
+        
+        for (String s : autos) {
             autoSelector.addOption(s, s);
         }
-        autoSelector.setDefaultOption("None", "None");
+        autoSelector.setDefaultOption("SubC-MidDC", "SubC-MidDC");
 
         autoSelector.onChange((cmd) -> {
             if(cmd != null){

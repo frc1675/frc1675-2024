@@ -11,7 +11,7 @@ import frc.robot.shooter.commands.SpinUp;
 public class PodiumShot extends SequentialCommandGroup {
   public PodiumShot(ShooterSubsystem shooter, ArmSubsystem arm) {
     addCommands(
-        new MoveToPosition(arm, Constants.Arm.LONG_SHOT_ANGLE),
+        new MoveToPosition(arm, Constants.Arm.PODIUM_SHOT_ANGLE),
         new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED, Constants.Shooter.LONG_SHOT_SPEED),
         new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME),
         new MoveToPosition(arm, Constants.Arm.HOME_POSITION));

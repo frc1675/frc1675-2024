@@ -45,10 +45,11 @@ public class Constants {
         public static final double PID_D_COEFFICIENT = 0;
         // Arm movment lmits constants
         public static final double TARGET_RANGE = 2.0;
-        public static final double DEBOUNCE_TIME = 0.5;
+        public static final double DEBOUNCE_TIME = 0.25;
         // Position constnats
         public static final double HOME_POSITION = 138;
-        public static final double LONG_SHOT_ANGLE = HOME_POSITION - 33;
+        public static final double PODIUM_SHOT_ANGLE = HOME_POSITION - 33;
+        public static final double BEHIND_NOTE_B_ANGLE = Auto.BEHIND_CLOSE_B_SHOT_ANGLE;
 
         public static final double HIGH_SCORE_POSITION = HOME_POSITION - 78;
         public static final double AMP_POSITION = HOME_POSITION - 103;
@@ -92,6 +93,8 @@ public class Constants {
 
         public static final double FAR_SHOT_ANGLE = CLOSE_B_SHOT_ANGLE; //TODO measure this
 
+        public static final double AUTO_DEBOUNCE_TIME = 0.1;
+
         public static final double SUFFICIENT_EXTRA_PATHFINDING_TIME = 2;
         public static final PathConstraints EXTRA_PATHFINDING_CONSTRAINTS = new PathConstraints(3, 3, 9.4, 12.5);
 
@@ -100,8 +103,7 @@ public class Constants {
     public class Shooter {
         public static final double SHOOT_SPEED = 1700;
         public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
-        public static final double LONG_SHOT_SPEED = 5000;
-        public static final double AUTO_SHOT_SPEED = 3500;
+        public static final double LONG_SHOT_SPEED = 3500;
 
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 
@@ -119,7 +121,7 @@ public class Constants {
         public static final double SHOOTER_PID_I = 0.0001;
         public static final double SHOOTER_PID_D = 0;
 
-        public static final double SHOOTER_FF_V = 0.00015;
+        public static final double SHOOTER_FF_V = 0.00012;
         public static final double SHOOTER_FF_S = 0;
 
         public static final double SHOOTER_SHOOT_TIME = 0.5;

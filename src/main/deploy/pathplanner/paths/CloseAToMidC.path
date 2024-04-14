@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.505991833947063,
-        "y": 4.111477906816047
+        "x": 2.8913771479041297,
+        "y": 6.996025357200549
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.056222055384198,
-        "y": 4.157372782179604
+        "x": 3.89137714790413,
+        "y": 6.996025357200549
       },
       "isLocked": false,
-      "linkedName": "CloseCStraight"
+      "linkedName": "CloseAScoreAngle"
     },
     {
       "anchor": {
-        "x": 2.0101955409238235,
-        "y": 4.251511810459803
+        "x": 5.155174019335199,
+        "y": 4.27445533921025
       },
       "prevControl": {
-        "x": 2.3222806933960154,
-        "y": 4.242332835387091
+        "x": 4.306533672637192,
+        "y": 4.894609842560322
+      },
+      "nextControl": {
+        "x": 6.003814366033206,
+        "y": 3.6543008358601776
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.504473271428711,
+        "y": 4.133925300660873
+      },
+      "prevControl": {
+        "x": 7.586575764157559,
+        "y": 4.693842780096275
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CloserCScore"
+      "linkedName": "MidC"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +55,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -36.56999999999999,
+    "rotation": -13.349248913915638,
     "rotateFast": false
   },
   "reversed": false,

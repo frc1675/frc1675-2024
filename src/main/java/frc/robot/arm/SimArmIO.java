@@ -31,7 +31,7 @@ public class SimArmIO implements IArmIO {
             Units.degreesToRadians(domainSwap(Constants.Arm.MAX_ARM_RANGE_DEGREES)),
             true,
             Units.degreesToRadians(domainSwap(Constants.Arm.HOME_POSITION)),
-            VecBuilder.fill(/* TICK */0));
+            VecBuilder.fill(TICK));
 
     private double angleRads;
     private double motorSpeed;

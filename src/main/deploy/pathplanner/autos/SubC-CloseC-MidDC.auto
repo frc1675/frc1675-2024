@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.365432348169189,
-      "y": 5.538884688418296
+      "x": 0.7166110838045305,
+      "y": 4.377836110081538
     },
-    "rotation": 0
+    "rotation": -60.164460899738465
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SubBToCloseCScoreAngle"
+                  "pathName": "SubCToCloseC"
                 }
               },
               {
@@ -49,7 +49,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CloseCScoreToCloseB"
+                  "pathName": "CloseCToMidD"
                 }
               },
               {
@@ -65,12 +65,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "closeBShot"
           }
         },
         {
@@ -80,7 +74,32 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CloseBToCloseA"
+                  "pathName": "MidDToSourceSideScore"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "sourceSideShot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSideScoreToMidC"
                 }
               },
               {
@@ -99,9 +118,28 @@
           }
         },
         {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MidCToSourceSideScore"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "closeAShot"
+            "name": "sourceSideShot"
           }
         },
         {
