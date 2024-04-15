@@ -34,6 +34,7 @@ import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AllianceUtil;
+import frc.robot.util.ChangableChooser;
 import frc.robot.util.FilteredChooserGroup;
 
 public class PathPlannerAutoGenerator {
@@ -80,11 +81,11 @@ public class PathPlannerAutoGenerator {
         Collections.sort(autos);
 
         
-        FilteredChooserGroup chooserGroup = new FilteredChooserGroup(Shuffleboard.getTab("CHOOSERTEST"), "ChooserTest", 3, autos.toArray(new String[0]));
-        Shuffleboard.getTab("CHOOSERTEST").addString("Chooser Result", () -> chooserResult);
-        chooserGroup.onChange(s -> {
-            chooserResult = s;
-        });
+        //FilteredChooserGroup chooserGroup = new FilteredChooserGroup(Shuffleboard.getTab("CHOOSERTEST"), "ChooserTest", 3, autos.toArray(new String[0]));
+        
+        // chooserGroup.onChange(s -> {
+        //     chooserResult = s;
+        // });
         
         for (String s : autos) {
             autoSelector.addOption(s, s);

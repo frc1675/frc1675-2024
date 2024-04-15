@@ -24,9 +24,7 @@ public class FilteredChooserGroup {
     }
 
     private void populateChooser(int layer, String... parts) {
-        if(choosers[layer] != null) {
-            choosers[layer].close();
-        }
+        
         choosers[layer] = new SendableChooser<String>();
         for(int i = 0; i < parts.length; i++) {
             choosers[layer].addOption(parts[i], parts[i]);
