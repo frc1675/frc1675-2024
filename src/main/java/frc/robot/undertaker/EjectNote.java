@@ -32,5 +32,4 @@ public class EjectNote extends Command {
   public boolean isFinished() {
     return false;
   }
-
 }

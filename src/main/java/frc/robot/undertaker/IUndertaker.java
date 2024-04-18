@@ -9,5 +9,4 @@ public interface IUndertaker {
   public double[] getMotorsOutput();
 
   public double getDesiredSpeed();
-  
 }

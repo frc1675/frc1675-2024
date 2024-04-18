@@ -10,44 +10,43 @@ public class SimVision implements IVision {
   private boolean hasTarget = false;
   private int targetId = 0;
   private LEDMode currentMode;
-  
-  public SimVision(){}
+
+  public SimVision() {}
 
   @Override
-  public Pose2d getBotpose(){
+  public Pose2d getBotpose() {
     return botPose;
   }
 
-  public void setBotPose(Pose2d targetPose){
+  public void setBotPose(Pose2d targetPose) {
     this.botPose = targetPose;
-  } 
+  }
 
   @Override
-  public boolean hasTarget(){
+  public boolean hasTarget() {
     return hasTarget;
   }
 
-  public void setHasTarget(boolean value){
+  public void setHasTarget(boolean value) {
     hasTarget = value;
   }
 
   @Override
-  public int getTargetId(){
+  public int getTargetId() {
     return targetId;
   }
 
-  public void setTargetId(int id){
+  public void setTargetId(int id) {
     targetId = id;
   }
 
   @Override
-  public LEDMode getLEDMode(){
+  public LEDMode getLEDMode() {
     return currentMode;
   }
 
   @Override
-  public void setLEDMode(LEDMode mode){
+  public void setLEDMode(LEDMode mode) {
     currentMode = mode;
   }
-
 }

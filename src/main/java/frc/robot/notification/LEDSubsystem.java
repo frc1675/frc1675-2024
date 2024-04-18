@@ -1,25 +1,23 @@
 package frc.robot.notification;
 
-import java.util.Stack;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import java.util.Stack;
 
-public class LEDSubsystem extends SubsystemBase { 
+public class LEDSubsystem extends SubsystemBase {
   private final Stack<LEDState> stack = new Stack<LEDState>();
 
   private final ILedIO ledIO;
-
 
   public static LEDSubsystem create() {
     return new LEDSubsystem(Robot.isReal() ? new RealLedIO() : new SimLedIO());
   }
 
-  public LEDSubsystem(ILedIO ledIO){
-    this.ledIO = ledIO; 
+  public LEDSubsystem(ILedIO ledIO) {
+    this.ledIO = ledIO;
     stack.push(LEDState.NOTHING);
 
     ledIO.changeColor(stack.peek());
@@ -29,7 +27,7 @@ public class LEDSubsystem extends SubsystemBase {
     tab.addString("Status", () -> stack.peek().getStatusMessage());
   }
 
-  public void addColor(LEDState status){
+  public void addColor(LEDState status) {
     stack.push(status);
     status.setTimeAdded(Timer.getFPGATimestamp());
   }
@@ -46,7 +44,5 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     ledIO.changeColor(stack.peek());
-
   }
- 
 }

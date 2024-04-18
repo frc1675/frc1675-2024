@@ -8,15 +8,14 @@ public class SimShooterIO implements IShooterIO {
   private double shooterTopVoltage;
   private double shooterBottomVoltage;
   private double indexerVoltage;
-  private final FlywheelSim topShooterMotorSim = new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING,
-      Constants.Shooter.SHOOTER_MOI);
-  private final FlywheelSim bottomShooterMotorSim = new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING,
-      Constants.Shooter.SHOOTER_MOI);
-  private final FlywheelSim indexerMotorSim = new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING,
-      Constants.Shooter.INDEXER_MOI);
+  private final FlywheelSim topShooterMotorSim =
+      new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.SHOOTER_MOI);
+  private final FlywheelSim bottomShooterMotorSim =
+      new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.SHOOTER_MOI);
+  private final FlywheelSim indexerMotorSim =
+      new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.INDEXER_MOI);
 
-  public SimShooterIO() {
-  }
+  public SimShooterIO() {}
 
   @Override
   public void setIndexerOutput(double power) {
@@ -41,12 +40,16 @@ public class SimShooterIO implements IShooterIO {
 
   @Override
   public double[] getShooterSpeeds() {
-    return new double[] { topShooterMotorSim.getAngularVelocityRPM(), bottomShooterMotorSim.getAngularVelocityRPM() };
+    return new double[] {
+      topShooterMotorSim.getAngularVelocityRPM(), bottomShooterMotorSim.getAngularVelocityRPM()
+    };
   }
 
   @Override
   public double[] getIndexerSpeeds() {
-    return new double[] { indexerMotorSim.getAngularVelocityRPM(), indexerMotorSim.getAngularVelocityRPM() };
+    return new double[] {
+      indexerMotorSim.getAngularVelocityRPM(), indexerMotorSim.getAngularVelocityRPM()
+    };
   }
 
   @Override

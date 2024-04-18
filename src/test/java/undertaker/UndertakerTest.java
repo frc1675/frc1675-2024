@@ -3,11 +3,10 @@ package undertaker;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
 import frc.robot.undertaker.TestUndertakerIO;
 import frc.robot.undertaker.UndertakerSubsystem;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class UndertakerTest {
 
@@ -29,7 +28,7 @@ public class UndertakerTest {
 
   @Test
   public void testRunMotorAlive() {
-    boolean[] livingMotors = { true, true };
+    boolean[] livingMotors = {true, true};
     undertakerIO.setIsAlive(livingMotors);
     undertaker.run(targetSpeed);
     assertTrue(undertakerIO.getHasRun());
@@ -38,7 +37,7 @@ public class UndertakerTest {
   @Test
   public void testRunMotorDead() {
     undertakerIO.resetHasRun();
-    boolean[] deadMotor = { true, false };
+    boolean[] deadMotor = {true, false};
     undertakerIO.setIsAlive(deadMotor);
     undertaker.run(targetSpeed);
     assertFalse(undertakerIO.getHasRun());

@@ -1,13 +1,12 @@
 package frc.robot.shooter;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkBase.IdleMode;
-
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.LaserCan.RangingMode;
 import au.grapplerobotics.LaserCan.TimingBudget;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import frc.robot.Constants;
 
 public class RealShooterIO implements IShooterIO {
@@ -25,10 +24,14 @@ public class RealShooterIO implements IShooterIO {
   private LaserCan laserCAN;
 
   public RealShooterIO() {
-    shooterMotorTop = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_TOP, CANSparkMax.MotorType.kBrushless);
-    shooterMotorBottom = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_BOTTOM, CANSparkMax.MotorType.kBrushless);
-    indexerMotorTop = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TOP, CANSparkMax.MotorType.kBrushless);
-    indexerMotorBottom = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_BOTTOM, CANSparkMax.MotorType.kBrushless);
+    shooterMotorTop =
+        new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_TOP, CANSparkMax.MotorType.kBrushless);
+    shooterMotorBottom =
+        new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_BOTTOM, CANSparkMax.MotorType.kBrushless);
+    indexerMotorTop =
+        new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TOP, CANSparkMax.MotorType.kBrushless);
+    indexerMotorBottom =
+        new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_BOTTOM, CANSparkMax.MotorType.kBrushless);
 
     indexerMotorTop.setIdleMode(IdleMode.kBrake);
     indexerMotorBottom.setIdleMode(IdleMode.kBrake);
@@ -78,15 +81,18 @@ public class RealShooterIO implements IShooterIO {
 
   @Override
   public double[] getShooterSpeeds() {
-    return new double[] { shooterMotorTopEncoder.getVelocity(), shooterMotorBottomEncoder.getVelocity() };
+    return new double[] {
+      shooterMotorTopEncoder.getVelocity(), shooterMotorBottomEncoder.getVelocity()
+    };
   }
 
   @Override
   public double[] getIndexerSpeeds() {
-    return new double[] { indexerMotorTopEncoder.getVelocity(), indexerMotorBottomEncoder.getVelocity() };
+    return new double[] {
+      indexerMotorTopEncoder.getVelocity(), indexerMotorBottomEncoder.getVelocity()
+    };
   }
 
   @Override
-  public void periodic() {
-  }
+  public void periodic() {}
 }

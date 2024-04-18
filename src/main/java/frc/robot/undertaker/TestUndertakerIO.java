@@ -2,12 +2,11 @@ package frc.robot.undertaker;
 
 public class TestUndertakerIO implements IUndertaker {
 
-  private boolean[] mockMotorStatus = { false, false };
+  private boolean[] mockMotorStatus = {false, false};
   private double desiredSpeed;
   private boolean hasRun = false;
 
-  public TestUndertakerIO() {
-  }
+  public TestUndertakerIO() {}
 
   @Override
   public double getDesiredSpeed() {

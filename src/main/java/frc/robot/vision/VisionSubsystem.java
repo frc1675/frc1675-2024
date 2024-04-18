@@ -20,20 +20,20 @@ public class VisionSubsystem extends SubsystemBase {
   public static VisionSubsystem create() {
     return new VisionSubsystem(Robot.isReal() ? new RealVision() : new SimVision());
   }
-    
-  public VisionSubsystem(IVision implementation){
+
+  public VisionSubsystem(IVision implementation) {
     visionImplementation = implementation;
     tab = Shuffleboard.getTab("Vision");
     tab.addBoolean("Found target: ", () -> hasTarget());
     tab.addInteger("Target Id: ", () -> getTargetId());
     tab.addString("BotPose: ", () -> getBotpose().toString());
   }
-  
-  public boolean hasTarget(){
+
+  public boolean hasTarget() {
     return visionImplementation.hasTarget();
   }
 
-  public Pose2d getBotpose(){
+  public Pose2d getBotpose() {
     Pose2d rtn = visionImplementation.getBotpose();
     if (rtn == null) {
       return new Pose2d();
@@ -41,16 +41,15 @@ public class VisionSubsystem extends SubsystemBase {
     return rtn;
   }
 
-  public int getTargetId(){
+  public int getTargetId() {
     return visionImplementation.getTargetId();
   }
-  
-  public LEDMode getLEDMode(){
+
+  public LEDMode getLEDMode() {
     return visionImplementation.getLEDMode();
   }
 
-  public void setLEDMode(LEDMode mode){
+  public void setLEDMode(LEDMode mode) {
     visionImplementation.setLEDMode(mode);
   }
-
 }

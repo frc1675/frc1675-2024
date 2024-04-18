@@ -2,11 +2,10 @@ package frc.robot.undertaker;
 
 public class SimUndertakerIO implements IUndertaker {
 
-  private boolean[] mockMotorStatus = { false, false };
+  private boolean[] mockMotorStatus = {false, false};
   private double desiredSpeed;
 
-  public SimUndertakerIO() {
-  }
+  public SimUndertakerIO() {}
 
   @Override
   public double getDesiredSpeed() {

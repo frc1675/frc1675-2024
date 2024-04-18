@@ -6,6 +6,7 @@ import frc.robot.arm.ArmSubsystem;
 
 public class MoveToHome extends Command {
   private ArmSubsystem arm;
+
   public MoveToHome(ArmSubsystem arm) {
     this.arm = arm;
     addRequirements(arm);

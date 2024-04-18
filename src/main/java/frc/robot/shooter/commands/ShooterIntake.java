@@ -1,10 +1,9 @@
 package frc.robot.shooter.commands;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.shooter.ShooterSubsystem;
+import java.util.function.BooleanSupplier;
 
 public class ShooterIntake extends Command {
   private final ShooterSubsystem subsystem;

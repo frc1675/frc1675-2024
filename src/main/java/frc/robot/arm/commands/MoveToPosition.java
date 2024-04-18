@@ -9,7 +9,8 @@ public class MoveToPosition extends Command {
   private ArmSubsystem arm;
   private double targetAngle;
   private Debouncer debouncer;
-  public MoveToPosition(ArmSubsystem arm, double targetAngle){
+
+  public MoveToPosition(ArmSubsystem arm, double targetAngle) {
     this.targetAngle = targetAngle;
     this.arm = arm;
     debouncer = new Debouncer(Constants.Arm.DEBOUNCE_TIME);
@@ -22,9 +23,7 @@ public class MoveToPosition extends Command {
   }
 
   @Override
-  public void execute() {
-
-  }
+  public void execute() {}
 
   @Override
   public void end(boolean interrupted) {}
@@ -32,6 +31,5 @@ public class MoveToPosition extends Command {
   @Override
   public boolean isFinished() {
     return debouncer.calculate(arm.isOnTarget());
-    }
   }
-
+}
