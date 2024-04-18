@@ -6,34 +6,34 @@ import frc.robot.shooter.ShooterSubsystem;
 import java.util.function.BooleanSupplier;
 
 public class ShooterIntake extends Command {
-  private final ShooterSubsystem subsystem;
-  private final BooleanSupplier readyToIntake;
+    private final ShooterSubsystem subsystem;
+    private final BooleanSupplier readyToIntake;
 
-  public ShooterIntake(ShooterSubsystem subsystem, BooleanSupplier readyToIntake) {
-    this.subsystem = subsystem;
-    this.readyToIntake = readyToIntake;
-    addRequirements(subsystem);
-  }
-
-  @Override
-  public void initialize() {
-    subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
-  }
-
-  @Override
-  public void execute() {
-    if (readyToIntake.getAsBoolean() && !subsystem.isIndexerLoaded()) {
-      subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
-    } else {
-      subsystem.setIndexerSpeed(0);
+    public ShooterIntake(ShooterSubsystem subsystem, BooleanSupplier readyToIntake) {
+        this.subsystem = subsystem;
+        this.readyToIntake = readyToIntake;
+        addRequirements(subsystem);
     }
-  }
 
-  @Override
-  public void end(boolean interrupted) {}
+    @Override
+    public void initialize() {
+        subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
+    }
 
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public void execute() {
+        if (readyToIntake.getAsBoolean() && !subsystem.isIndexerLoaded()) {
+            subsystem.setIndexerSpeed(Constants.Shooter.INTAKE_SPEED);
+        } else {
+            subsystem.setIndexerSpeed(0);
+        }
+    }
+
+    @Override
+    public void end(boolean interrupted) {}
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

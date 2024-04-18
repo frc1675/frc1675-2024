@@ -12,9 +12,9 @@ import frc.robot.undertaker.UndertakerSubsystem;
  * reports that the indexer is loaded.
  */
 public class AutoIntakeNote extends ParallelCommandGroup {
-  public AutoIntakeNote(ShooterSubsystem shooter, UndertakerSubsystem undertaker) {
-    addCommands(
-        new AutoUndertaker(undertaker, Constants.Undertaker.INTAKE_SPEED, shooter::isIndexerLoaded),
-        new AutoShooterIntake(shooter, Constants.Shooter.INTAKE_SPEED));
-  }
+    public AutoIntakeNote(ShooterSubsystem shooter, UndertakerSubsystem undertaker) {
+        addCommands(
+                new AutoUndertaker(undertaker, Constants.Undertaker.INTAKE_SPEED, shooter::isIndexerLoaded),
+                new AutoShooterIntake(shooter, Constants.Shooter.INTAKE_SPEED));
+    }
 }

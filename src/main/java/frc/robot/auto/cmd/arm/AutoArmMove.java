@@ -10,34 +10,34 @@ import java.util.function.DoubleSupplier;
 /* Move the arm to the given position. This *is* a blocking command. */
 public class AutoArmMove extends Command {
 
-  private final ArmSubsystem arm;
-  private final DoubleSupplier position;
-  private final Debouncer debouncer = new Debouncer(Constants.Auto.AUTO_DEBOUNCE_TIME);
+    private final ArmSubsystem arm;
+    private final DoubleSupplier position;
+    private final Debouncer debouncer = new Debouncer(Constants.Auto.AUTO_DEBOUNCE_TIME);
 
-  public AutoArmMove(ArmSubsystem arm, DoubleSupplier position) {
-    this.arm = arm;
-    this.position = position;
-  }
+    public AutoArmMove(ArmSubsystem arm, DoubleSupplier position) {
+        this.arm = arm;
+        this.position = position;
+    }
 
-  public AutoArmMove(ArmSubsystem arm, double position) {
-    this.arm = arm;
-    this.position = () -> position;
-    addRequirements(arm);
-  }
+    public AutoArmMove(ArmSubsystem arm, double position) {
+        this.arm = arm;
+        this.position = () -> position;
+        addRequirements(arm);
+    }
 
-  @Override
-  public void initialize() {
-    DataLogManager.log("Moving arm to " + position.getAsDouble());
-    arm.setTarget(position.getAsDouble());
-  }
+    @Override
+    public void initialize() {
+        DataLogManager.log("Moving arm to " + position.getAsDouble());
+        arm.setTarget(position.getAsDouble());
+    }
 
-  @Override
-  public boolean isFinished() {
-    return debouncer.calculate(arm.isOnTarget());
-  }
+    @Override
+    public boolean isFinished() {
+        return debouncer.calculate(arm.isOnTarget());
+    }
 
-  @Override
-  public void end(boolean interrupted) {
-    DataLogManager.log("Moved arm to " + position.getAsDouble());
-  }
+    @Override
+    public void end(boolean interrupted) {
+        DataLogManager.log("Moved arm to " + position.getAsDouble());
+    }
 }

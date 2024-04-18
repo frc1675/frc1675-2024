@@ -4,16 +4,16 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import frc.robot.Constants;
 
 public class RealLedIO implements ILedIO {
-  PWMSparkMax ledController = new PWMSparkMax(Constants.LEDController.LED_CONTROLLER_CHANNEL);
+    PWMSparkMax ledController = new PWMSparkMax(Constants.LEDController.LED_CONTROLLER_CHANNEL);
 
-  public RealLedIO() {}
+    public RealLedIO() {}
 
-  @Override
-  public void changeColor(LEDState color) {
-    ledController.set(color.getSparkValue());
-  }
+    @Override
+    public void changeColor(LEDState color) {
+        ledController.set(color.getSparkValue());
+    }
 
-  public boolean getIsAlive() {
-    return ledController.isAlive();
-  }
+    public boolean getIsAlive() {
+        return ledController.isAlive();
+    }
 }

@@ -9,11 +9,8 @@ import java.util.function.DoubleSupplier;
 
 public class ShootAndReturnHome extends SequentialCommandGroup {
 
-  public ShootAndReturnHome(
-      ShooterSubsystem shooter,
-      ArmSubsystem arm,
-      DoubleSupplier topSpeed,
-      DoubleSupplier bottomSpeed) {
-    addCommands(new SpinUpAndShoot(shooter, topSpeed, bottomSpeed), new MoveToHome(arm));
-  }
+    public ShootAndReturnHome(
+            ShooterSubsystem shooter, ArmSubsystem arm, DoubleSupplier topSpeed, DoubleSupplier bottomSpeed) {
+        addCommands(new SpinUpAndShoot(shooter, topSpeed, bottomSpeed), new MoveToHome(arm));
+    }
 }

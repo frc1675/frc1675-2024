@@ -14,19 +14,18 @@ import java.util.function.DoubleSupplier;
 
 public class ConfigurableShootSequence extends SequentialCommandGroup {
 
-  public ConfigurableShootSequence(
-      ShooterSubsystem shooter,
-      UndertakerSubsystem undertaker,
-      ArmSubsystem arm,
-      LEDSubsystem led,
-      DoubleSupplier armAngle) {
-    addCommands(
-        new AutoIntakeNote(shooter, undertaker).withTimeout(Constants.Auto.INTAKE_ATTEMPT_TIMEOUT),
-        new AutoArmMove(arm, armAngle),
-        new AutoShoot(shooter).withTimeout(Constants.Auto.SHOOT_TIME),
-        new InstantCommand(
-            () -> {
-              DataLogManager.log("Did shot");
-            }));
-  }
+    public ConfigurableShootSequence(
+            ShooterSubsystem shooter,
+            UndertakerSubsystem undertaker,
+            ArmSubsystem arm,
+            LEDSubsystem led,
+            DoubleSupplier armAngle) {
+        addCommands(
+                new AutoIntakeNote(shooter, undertaker).withTimeout(Constants.Auto.INTAKE_ATTEMPT_TIMEOUT),
+                new AutoArmMove(arm, armAngle),
+                new AutoShoot(shooter).withTimeout(Constants.Auto.SHOOT_TIME),
+                new InstantCommand(() -> {
+                    DataLogManager.log("Did shot");
+                }));
+    }
 }

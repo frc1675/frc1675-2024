@@ -10,32 +10,32 @@ import java.util.function.BooleanSupplier;
  */
 public class AutoUndertaker extends Command {
 
-  private final UndertakerSubsystem undertaker;
-  private final double speed;
-  private final BooleanSupplier shouldStop;
+    private final UndertakerSubsystem undertaker;
+    private final double speed;
+    private final BooleanSupplier shouldStop;
 
-  public AutoUndertaker(UndertakerSubsystem undertaker, double speed, BooleanSupplier shouldStop) {
-    this.undertaker = undertaker;
-    this.speed = speed;
-    this.shouldStop = shouldStop;
-    addRequirements(undertaker);
-  }
-
-  @Override
-  public void execute() {
-    if (shouldStop.getAsBoolean()) {
-      undertaker.run(0);
-    } else {
-      undertaker.run(speed);
+    public AutoUndertaker(UndertakerSubsystem undertaker, double speed, BooleanSupplier shouldStop) {
+        this.undertaker = undertaker;
+        this.speed = speed;
+        this.shouldStop = shouldStop;
+        addRequirements(undertaker);
     }
-  }
 
-  public void end(boolean interrupted) {
-    undertaker.run(0);
-  }
+    @Override
+    public void execute() {
+        if (shouldStop.getAsBoolean()) {
+            undertaker.run(0);
+        } else {
+            undertaker.run(speed);
+        }
+    }
 
-  @Override
-  public boolean isFinished() {
-    return shouldStop.getAsBoolean();
-  }
+    public void end(boolean interrupted) {
+        undertaker.run(0);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return shouldStop.getAsBoolean();
+    }
 }

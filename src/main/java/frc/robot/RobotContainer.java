@@ -36,146 +36,126 @@ import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
 
 public class RobotContainer {
-  private final PoseScheduler poseScheduler;
-  private final DriveSubsystem drive;
-  private final ShooterSubsystem shooter;
-  private final LEDSubsystem ledSubsystem;
-  private final UndertakerSubsystem undertakerSubsystem;
-  // private final VisionSubsystem visionSubsystem;
-  private final ArmSubsystem arm;
+    private final PoseScheduler poseScheduler;
+    private final DriveSubsystem drive;
+    private final ShooterSubsystem shooter;
+    private final LEDSubsystem ledSubsystem;
+    private final UndertakerSubsystem undertakerSubsystem;
+    // private final VisionSubsystem visionSubsystem;
+    private final ArmSubsystem arm;
 
-  private final PathPlannerAutoGenerator autoGenerator;
-  private final RobotContext robotContext;
+    private final PathPlannerAutoGenerator autoGenerator;
+    private final RobotContext robotContext;
 
-  private final CommandXboxController driverController;
-  private final CommandXboxController operatorController;
+    private final CommandXboxController driverController;
+    private final CommandXboxController operatorController;
 
-  private boolean shotTesting = false;
-  private ShuffleboardTab testOnlyTab;
-  private GenericEntry testAngleEntry;
+    private boolean shotTesting = false;
+    private ShuffleboardTab testOnlyTab;
+    private GenericEntry testAngleEntry;
 
-  public RobotContainer() {
-    DataLogManager.start();
-    DriverStation.startDataLog(DataLogManager.getLog());
-    DataLogManager.log("Data log started.");
+    public RobotContainer() {
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog());
+        DataLogManager.log("Data log started.");
 
-    poseScheduler = new PoseScheduler();
-    drive = new DriveSubsystem(poseScheduler);
+        poseScheduler = new PoseScheduler();
+        drive = new DriveSubsystem(poseScheduler);
 
-    // visionSubsystem = VisionSubsystem.create();
-    ledSubsystem = LEDSubsystem.create();
-    undertakerSubsystem = UndertakerSubsystem.create();
-    shooter = ShooterSubsystem.create();
-    arm = ArmSubsystem.create();
+        // visionSubsystem = VisionSubsystem.create();
+        ledSubsystem = LEDSubsystem.create();
+        undertakerSubsystem = UndertakerSubsystem.create();
+        shooter = ShooterSubsystem.create();
+        arm = ArmSubsystem.create();
 
-    robotContext = new RobotContext(arm, shooter);
+        robotContext = new RobotContext(arm, shooter);
 
-    autoGenerator =
-        new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, ledSubsystem);
+        autoGenerator = new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, ledSubsystem);
 
-    driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
-    operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
+        driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
+        operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
 
-    Dashboards.initVoltageDashboard();
-    Dashboards.initMemoryDashboard();
-    VersionFile.getInstance().putToDashboard();
+        Dashboards.initVoltageDashboard();
+        Dashboards.initMemoryDashboard();
+        VersionFile.getInstance().putToDashboard();
 
-    // Comment the below out when not testing.
-    // initTestingOnlyTab();
+        // Comment the below out when not testing.
+        // initTestingOnlyTab();
 
-    configureBindings();
-  }
-
-  private void configureBindings() {
-    driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-
-    driverController
-        .rightBumper()
-        .onTrue(
-            new ShootAndReturnHome(
-                shooter,
-                arm,
-                () -> robotContext.getShooterSpeed()[0],
-                () -> robotContext.getShooterSpeed()[1]));
-
-    driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
-    driverController
-        .b()
-        .onTrue(
-            new TurnToAngle(
-                drive, AllianceUtil.isRedAlliance() ? 150 : -30.5)); // TODO alliance switching
-    driverController.x().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 90 : -90));
-
-    operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
-    operatorController.rightTrigger().onTrue(new MoveToHome(arm));
-
-    operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.PODIUM_SHOT_ANGLE));
-    operatorController.b().onTrue(new MoveToPosition(arm, Constants.Arm.BEHIND_NOTE_B_ANGLE));
-    operatorController
-        .a()
-        .onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
-    operatorController
-        .y()
-        .onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
-
-    // operatorController.povUp().onTrue(new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED,
-    // Constants.Shooter.LONG_SHOT_SPEED));
-    // operatorController.povDown().onTrue(new SpinDown(shooter));
-
-    if (shotTesting) {
-      driverController
-          .b()
-          .onTrue(
-              new ConfigurableShootSequence(
-                  shooter,
-                  undertakerSubsystem,
-                  arm,
-                  ledSubsystem,
-                  () -> testAngleEntry.getDouble(Constants.Auto.CLOSE_B_SHOT_ANGLE)));
-      driverController
-          .x()
-          .onTrue(new AutoSpinUp(shooter, Constants.Auto.SHOT_SPEED, Constants.Auto.SHOT_SPEED));
-      driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
+        configureBindings();
     }
-  }
 
-  public void teleopInit() {
-    shooter.setTargetShooterSpeeds(0, 0); // Spin down after autonomous
-    arm.setTarget(Constants.Arm.HOME_POSITION); // Reset arm position after teleop
+    private void configureBindings() {
+        driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
 
-    drive.setDefaultCommand(
-        new DefaultDrive(
-            drive,
-            () ->
-                AllianceUtil.getTranslationDirection()
-                    * getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
-            () ->
-                AllianceUtil.getTranslationDirection()
-                    * getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
-            () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
-            robotContext::getDriveSpeedScale));
-    shooter.setDefaultCommand(
-        new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
-    ledSubsystem.setDefaultCommand(
-        new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
-  }
+        driverController
+                .rightBumper()
+                .onTrue(new ShootAndReturnHome(shooter, arm, () -> robotContext.getShooterSpeed()[0], () -> robotContext
+                        .getShooterSpeed()[1]));
 
-  private double getJoystickInput(CommandGenericHID stick, int axe) {
-    return MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
-  }
+        driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
+        driverController
+                .b()
+                .onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 150 : -30.5)); // TODO alliance switching
+        driverController.x().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 90 : -90));
 
-  public Command getAutonomousCommand() {
-    return autoGenerator.getAutoCommand();
-  }
+        operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
+        operatorController.rightTrigger().onTrue(new MoveToHome(arm));
 
-  private void initTestingOnlyTab() {
-    shotTesting = true; // lock to stop null stuff by accident in config bindings
-    testOnlyTab = Shuffleboard.getTab("Test Only");
-    testAngleEntry =
-        testOnlyTab
-            .add("Shot Test Angle", Constants.Auto.CLOSE_B_SHOT_ANGLE)
-            .withSize(2, 1)
-            .withPosition(3, 0)
-            .getEntry();
-  }
+        operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.PODIUM_SHOT_ANGLE));
+        operatorController.b().onTrue(new MoveToPosition(arm, Constants.Arm.BEHIND_NOTE_B_ANGLE));
+        operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
+        operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
+
+        // operatorController.povUp().onTrue(new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED,
+        // Constants.Shooter.LONG_SHOT_SPEED));
+        // operatorController.povDown().onTrue(new SpinDown(shooter));
+
+        if (shotTesting) {
+            driverController
+                    .b()
+                    .onTrue(new ConfigurableShootSequence(
+                            shooter,
+                            undertakerSubsystem,
+                            arm,
+                            ledSubsystem,
+                            () -> testAngleEntry.getDouble(Constants.Auto.CLOSE_B_SHOT_ANGLE)));
+            driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Auto.SHOT_SPEED, Constants.Auto.SHOT_SPEED));
+            driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
+        }
+    }
+
+    public void teleopInit() {
+        shooter.setTargetShooterSpeeds(0, 0); // Spin down after autonomous
+        arm.setTarget(Constants.Arm.HOME_POSITION); // Reset arm position after teleop
+
+        drive.setDefaultCommand(new DefaultDrive(
+                drive,
+                () -> AllianceUtil.getTranslationDirection()
+                        * getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
+                () -> AllianceUtil.getTranslationDirection()
+                        * getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
+                () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
+                robotContext::getDriveSpeedScale));
+        shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
+        ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
+    }
+
+    private double getJoystickInput(CommandGenericHID stick, int axe) {
+        return MathUtil.applyDeadband(stick.getRawAxis(axe), Constants.Controller.DEADZONE_CONSTANT);
+    }
+
+    public Command getAutonomousCommand() {
+        return autoGenerator.getAutoCommand();
+    }
+
+    private void initTestingOnlyTab() {
+        shotTesting = true; // lock to stop null stuff by accident in config bindings
+        testOnlyTab = Shuffleboard.getTab("Test Only");
+        testAngleEntry = testOnlyTab
+                .add("Shot Test Angle", Constants.Auto.CLOSE_B_SHOT_ANGLE)
+                .withSize(2, 1)
+                .withPosition(3, 0)
+                .getEntry();
+    }
 }

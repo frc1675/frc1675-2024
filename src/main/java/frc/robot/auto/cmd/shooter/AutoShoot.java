@@ -10,25 +10,25 @@ import frc.robot.shooter.ShooterSubsystem;
  */
 public class AutoShoot extends Command {
 
-  private final ShooterSubsystem shooter;
+    private final ShooterSubsystem shooter;
 
-  public AutoShoot(ShooterSubsystem shooter) {
-    this.shooter = shooter;
-    addRequirements(shooter);
-  }
+    public AutoShoot(ShooterSubsystem shooter) {
+        this.shooter = shooter;
+        addRequirements(shooter);
+    }
 
-  @Override
-  public void initialize() {
-    shooter.setIndexerSpeed(1);
-  }
+    @Override
+    public void initialize() {
+        shooter.setIndexerSpeed(1);
+    }
 
-  @Override
-  public void end(boolean inter) {
-    shooter.setIndexerSpeed(0);
-  }
+    @Override
+    public void end(boolean inter) {
+        shooter.setIndexerSpeed(0);
+    }
 
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

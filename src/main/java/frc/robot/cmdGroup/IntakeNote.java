@@ -8,11 +8,9 @@ import frc.robot.undertaker.UndertakerSubsystem;
 import java.util.function.BooleanSupplier;
 
 public class IntakeNote extends ParallelCommandGroup {
-  public IntakeNote(
-      ShooterSubsystem shooter, UndertakerSubsystem undertaker, BooleanSupplier readyToIntake) {
-    addCommands(
-        new UndertakerIntake(
-            undertaker, () -> (!shooter.isIndexerLoaded() && readyToIntake.getAsBoolean())),
-        new ShooterIntake(shooter, readyToIntake));
-  }
+    public IntakeNote(ShooterSubsystem shooter, UndertakerSubsystem undertaker, BooleanSupplier readyToIntake) {
+        addCommands(
+                new UndertakerIntake(undertaker, () -> (!shooter.isIndexerLoaded() && readyToIntake.getAsBoolean())),
+                new ShooterIntake(shooter, readyToIntake));
+    }
 }

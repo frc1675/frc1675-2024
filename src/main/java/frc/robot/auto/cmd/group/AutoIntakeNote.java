@@ -9,9 +9,9 @@ import frc.robot.undertaker.UndertakerSubsystem;
 
 /** Runs the undertaker and shooter indexer in intake mode. This command will never end. */
 public class AutoIntakeNote extends ParallelCommandGroup {
-  public AutoIntakeNote(ShooterSubsystem shooter, UndertakerSubsystem undertaker) {
-    addCommands(
-        new AutoUndertaker(undertaker, Constants.Undertaker.INTAKE_SPEED, shooter::isIndexerLoaded),
-        new AutoShooterIntake(shooter, Constants.Shooter.INTAKE_SPEED));
-  }
+    public AutoIntakeNote(ShooterSubsystem shooter, UndertakerSubsystem undertaker) {
+        addCommands(
+                new AutoUndertaker(undertaker, Constants.Undertaker.INTAKE_SPEED, shooter::isIndexerLoaded),
+                new AutoShooterIntake(shooter, Constants.Shooter.INTAKE_SPEED));
+    }
 }

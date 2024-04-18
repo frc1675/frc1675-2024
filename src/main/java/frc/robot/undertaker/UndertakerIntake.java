@@ -10,30 +10,30 @@ import java.util.function.BooleanSupplier;
 
 public class UndertakerIntake extends Command {
 
-  private final UndertakerSubsystem undertaker;
-  private BooleanSupplier readyToIntake;
+    private final UndertakerSubsystem undertaker;
+    private BooleanSupplier readyToIntake;
 
-  public UndertakerIntake(UndertakerSubsystem undertaker, BooleanSupplier readyToIntake) {
-    addRequirements(undertaker);
-    this.undertaker = undertaker;
-    this.readyToIntake = readyToIntake;
-  }
+    public UndertakerIntake(UndertakerSubsystem undertaker, BooleanSupplier readyToIntake) {
+        addRequirements(undertaker);
+        this.undertaker = undertaker;
+        this.readyToIntake = readyToIntake;
+    }
 
-  @Override
-  public void initialize() {
-    undertaker.run(Constants.Undertaker.INTAKE_SPEED);
-  }
+    @Override
+    public void initialize() {
+        undertaker.run(Constants.Undertaker.INTAKE_SPEED);
+    }
 
-  @Override
-  public void execute() {
-    undertaker.run(readyToIntake.getAsBoolean() ? Constants.Undertaker.INTAKE_SPEED : 0);
-  }
+    @Override
+    public void execute() {
+        undertaker.run(readyToIntake.getAsBoolean() ? Constants.Undertaker.INTAKE_SPEED : 0);
+    }
 
-  @Override
-  public void end(boolean interrupted) {}
+    @Override
+    public void end(boolean interrupted) {}
 
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

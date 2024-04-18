@@ -10,36 +10,36 @@ import org.junit.jupiter.api.Test;
 
 public class UndertakerTest {
 
-  private static UndertakerSubsystem undertaker;
-  private static TestUndertakerIO undertakerIO;
-  private static final double targetSpeed = 5;
+    private static UndertakerSubsystem undertaker;
+    private static TestUndertakerIO undertakerIO;
+    private static final double targetSpeed = 5;
 
-  @BeforeAll
-  public static void setup() {
-    undertakerIO = new TestUndertakerIO();
-    undertaker = new UndertakerSubsystem(undertakerIO);
-  }
+    @BeforeAll
+    public static void setup() {
+        undertakerIO = new TestUndertakerIO();
+        undertaker = new UndertakerSubsystem(undertakerIO);
+    }
 
-  @Test
-  public void setsTargetSpeed() {
-    undertaker.run(targetSpeed);
-    assertTrue(undertakerIO.getDesiredSpeed() == targetSpeed);
-  }
+    @Test
+    public void setsTargetSpeed() {
+        undertaker.run(targetSpeed);
+        assertTrue(undertakerIO.getDesiredSpeed() == targetSpeed);
+    }
 
-  @Test
-  public void testRunMotorAlive() {
-    boolean[] livingMotors = {true, true};
-    undertakerIO.setIsAlive(livingMotors);
-    undertaker.run(targetSpeed);
-    assertTrue(undertakerIO.getHasRun());
-  }
+    @Test
+    public void testRunMotorAlive() {
+        boolean[] livingMotors = {true, true};
+        undertakerIO.setIsAlive(livingMotors);
+        undertaker.run(targetSpeed);
+        assertTrue(undertakerIO.getHasRun());
+    }
 
-  @Test
-  public void testRunMotorDead() {
-    undertakerIO.resetHasRun();
-    boolean[] deadMotor = {true, false};
-    undertakerIO.setIsAlive(deadMotor);
-    undertaker.run(targetSpeed);
-    assertFalse(undertakerIO.getHasRun());
-  }
+    @Test
+    public void testRunMotorDead() {
+        undertakerIO.resetHasRun();
+        boolean[] deadMotor = {true, false};
+        undertakerIO.setIsAlive(deadMotor);
+        undertaker.run(targetSpeed);
+        assertFalse(undertakerIO.getHasRun());
+    }
 }

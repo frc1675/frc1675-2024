@@ -6,10 +6,9 @@ import frc.robot.shooter.ShooterSubsystem;
 import java.util.function.DoubleSupplier;
 
 public class SpinUpAndShoot extends SequentialCommandGroup {
-  public SpinUpAndShoot(
-      ShooterSubsystem shooter, DoubleSupplier topSpeed, DoubleSupplier bottomSpeed) {
-    addCommands(
-        new SpinUp(shooter, topSpeed, bottomSpeed),
-        new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME));
-  }
+    public SpinUpAndShoot(ShooterSubsystem shooter, DoubleSupplier topSpeed, DoubleSupplier bottomSpeed) {
+        addCommands(
+                new SpinUp(shooter, topSpeed, bottomSpeed),
+                new Shoot(shooter).withTimeout(Constants.Shooter.SHOOTER_SHOOT_TIME));
+    }
 }
