@@ -23,20 +23,17 @@ import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.cmdGroup.ShootAndReturnHome;
 import frc.robot.drive.DefaultDrive;
+import frc.robot.drive.DriveCommands;
 import frc.robot.drive.DriveSubsystem;
-import frc.robot.drive.TurnToAngle;
 import frc.robot.notification.ContextualColor;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
-import frc.robot.shooter.commands.SpinDown;
-import frc.robot.shooter.commands.SpinUp;
-import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
-import frc.robot.util.RobotContext;
-import frc.robot.util.VersionFile;
 import frc.robot.util.AllianceUtil;
 import frc.robot.util.Dashboards;
+import frc.robot.util.RobotContext;
+import frc.robot.util.VersionFile;
 
 public class RobotContainer {
   private final PoseScheduler poseScheduler;
@@ -63,7 +60,7 @@ public class RobotContainer {
     DataLogManager.log("Data log started.");
 
     poseScheduler = new PoseScheduler();
-    drive = new DriveSubsystem(poseScheduler);
+    drive = new DriveSubsystem();
 
     //visionSubsystem = VisionSubsystem.create();
     ledSubsystem = LEDSubsystem.create();
@@ -96,9 +93,8 @@ public class RobotContainer {
      () -> robotContext.getShooterSpeed()[1]
     ));
 
-    driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
-    driverController.b().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 150 : -30.5)); //TODO alliance switching
-    driverController.x().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 90 : -90));
+    driverController.a().onTrue(DriveCommands.turnToShootCommand(drive));
+    driverController.x().onTrue(DriveCommands.turnToAmpCommand(drive));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
     operatorController.rightTrigger().onTrue(new MoveToHome(arm));
