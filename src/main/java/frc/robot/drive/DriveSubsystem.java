@@ -7,17 +7,16 @@ package frc.robot.drive;
 import java.io.File;
 import java.io.IOException;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.poseScheduler.PoseScheduler;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
@@ -27,20 +26,16 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private SwerveDrive swerve;
+  private final SwerveDrive swerve;
 
-  private final PoseScheduler poseScheduler;
+  private final PIDController rotationController = new PIDController(Constants.Drive.ROTATION_P, Constants.Drive.ROTATION_I, Constants.Drive.ROTATION_D);
+  private Rotation2d rotationTarget = null;
 
-  private ShuffleboardTab dashboard;
-
-  private final PIDController rotationController;
-  private Double targetAngle = null;
-  private int rotationDirection = 1; //Used to make sure the rotation PID continues working while the gyroscope is inverted.
+  private ChassisSpeeds inputSpeeds = new ChassisSpeeds();
+  private boolean isFieldRelative = true;
 
 
-  public DriveSubsystem(PoseScheduler poseScheduler) {
-    this.poseScheduler = poseScheduler;
-    rotationController = new PIDController(Constants.Drive.ROTATION_P, Constants.Drive.ROTATION_I, Constants.Drive.ROTATION_D);
+  public DriveSubsystem() {
     rotationController.enableContinuousInput(-180, 180);
     rotationController.setTolerance(Constants.Drive.ROTATION_TARGET_RANGE);
 
@@ -49,28 +44,27 @@ public class DriveSubsystem extends SubsystemBase {
       swerve = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(
         Constants.Drive.MAXIMUM_VELOCITY, 
         SwerveMath.calculateDegreesPerSteeringRotation(Constants.Drive.STEER_GEAR_RATIO, Constants.Drive.PULSE_PER_ROTATION), 
-        SwerveMath.calculateMetersPerRotation( Constants.Drive.WHEEL_DIAMETER_METERS, Constants.Drive.DRIVE_GEAR_RATIO, Constants.Drive.PULSE_PER_ROTATION)
+        SwerveMath.calculateMetersPerRotation(Constants.Drive.WHEEL_DIAMETER_METERS, Constants.Drive.DRIVE_GEAR_RATIO, Constants.Drive.PULSE_PER_ROTATION)
       );
     } catch (IOException e) {
-      System.out.println("Swerve drive configuration file could not be found at " + Filesystem.getDeployDirectory() + "/swerve");
       e.printStackTrace();
+      throw new Error("Swerve drive configuration could not be loaded from " + Filesystem.getDeployDirectory() + "/swerve", e);
     }
 
-    swerve.chassisVelocityCorrection = false;    
+    swerve.chassisVelocityCorrection = false; //TODO test out setting this
     swerve.setHeadingCorrection(true);
     initDashboard();
   }
 
   private void initDashboard() {
-    dashboard = Shuffleboard.getTab("Drive");
+    ShuffleboardTab dashboard = Shuffleboard.getTab("Drive");
     dashboard.addString("Current Command", this::getCommandName);
 
     dashboard.add("Rotation PID", rotationController);
     dashboard.addDouble("Yaw", () ->swerve.getYaw().getDegrees());
-    dashboard.addDouble("Target angle", () -> targetAngle == null ? -1 : targetAngle);
+    dashboard.addString("Target angle", () -> rotationTarget == null ? "None" : rotationTarget.toString());
 
     dashboard.addBoolean("Rotation On Target?", () -> rotationController.atSetpoint());
-
 
     dashboard.add(swerve.field).withPosition(0, 1).withSize(5, 3);
     int position = 0;
@@ -107,37 +101,56 @@ public class DriveSubsystem extends SubsystemBase {
 
   /**
    * Used for PathPlanner autonomous
+   * 
+   * @param override new pose
+   */
+  public void resetOdometry(Pose2d override) {
+    swerve.resetOdometry(override);
+  }
+
+  /**
+   * Used for PathPlanner autonomous
+   * 
+   * @param speeds robot relative chassis speeds
    */
   public void setRobotRelativeChassisSpeeds(ChassisSpeeds speeds) {
-    swerve.drive(new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond), speeds.omegaRadiansPerSecond, false, false);
+    inputSpeeds = speeds;
+    isFieldRelative = false;
   }
 
-  public void drive(double x, double y, double rotation) {
-    if (rotation != 0 || (targetAngle != null && rotationController.atSetpoint())) {
-      targetAngle = null;
-    }
-
-    if (targetAngle != null) {
-      rotation = rotationDirection * rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle);
-    }else {
-      rotation = rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY;
-    }
-
-    swerve.drive(
-        new Translation2d(
-          x * Constants.Drive.MAXIMUM_VELOCITY, 
-          y * Constants.Drive.MAXIMUM_VELOCITY
-        ),
-        rotation,
-        true, false
-      ); 
-  }
-
+  /**
+   * Get the current robot pose as measured by the odometry. 
+   * Odometry may include vision based measurements.
+   * @return the current pose of the robot
+   */
   public Pose2d getPose() {
     return swerve.getPose();
   }
 
-  public void addVisionMeasurement(Pose2d visionMeasuredPose) {
+  /**
+   * Drive the robot in field relative mode. 
+   * This is the primary method of teleoperated robot control.
+   * 
+   * @param x percent translational speed in the x direction
+   * @param y percent translational speed in the y direction
+   * @param rotation percent rotation speed
+   */
+  public void drive(double x, double y, double rotation) {
+    inputSpeeds = new ChassisSpeeds(
+      x * Constants.Drive.MAXIMUM_VELOCITY,
+      y * Constants.Drive.MAXIMUM_VELOCITY,
+      rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY
+    );
+
+    isFieldRelative = true;
+  }
+
+  /**
+   * Add a vision measurement to the pose estimate. 
+   * @param visionMeasuredPose The pose the vision measured.
+   * @param measurementTimeSeconds The time the given pose was measured in seconds
+   */
+  public void addVisionMeasurement(Pose2d visionMeasuredPose, double measurementTimeSeconds) {
     // Per recommendation from lib authors, discard poses which are 
     // too far away from current pose.
     double distance = Math.sqrt(
@@ -146,31 +159,34 @@ public class DriveSubsystem extends SubsystemBase {
         Math.pow((visionMeasuredPose.getY() - swerve.getPose().getY()), 2)
       );
     if (distance <= Constants.Drive.MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE) {
-      swerve.swerveDrivePoseEstimator.addVisionMeasurement(visionMeasuredPose, Timer.getFPGATimestamp());
+      swerve.swerveDrivePoseEstimator.addVisionMeasurement(visionMeasuredPose, measurementTimeSeconds);
     }
 
   }
 
   /**
-   * Used for autonomous
-   * 
-   * @param override new pose
+   * Set a rotation target. May be null.
+   * @param target Rotation target or null to disable target
    */
-  public void resetOdometry(Pose2d override) {
-    swerve.resetOdometry(override);
-  }
-
-  public void setTargetAngle(double angleDeg) {
-    rotationController.reset();
-    targetAngle = angleDeg;
-  }
-
-  public void unsetTargetAngle() {
-    targetAngle = null;
+  public void setRotationTarget(Rotation2d target) {
+    rotationTarget = target;
   }
 
   @Override
   public void periodic() {
-    poseScheduler.updatePose(getPose());
+    if (inputSpeeds.omegaRadiansPerSecond != 0) {
+      rotationTarget = null;
+    }else if (rotationTarget != null) {
+      inputSpeeds.omegaRadiansPerSecond = rotationController.calculate(
+        MathUtil.inputModulus(swerve.getYaw().getDegrees(), -180, 180), 
+        MathUtil.inputModulus(rotationTarget.getDegrees(), -180, 180)
+      );
+    }
+
+    if (isFieldRelative) {
+      swerve.driveFieldOriented(inputSpeeds);
+    }else {
+      swerve.drive(inputSpeeds);
+    }
   }
 }
