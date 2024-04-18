@@ -26,6 +26,8 @@ public class Constants {
         public static final double ROTATION_I = 0.001;
         public static final double ROTATION_D = 0;
         public static final double ROTATION_TARGET_RANGE = 1.5;
+
+        public static final boolean VISION_POSE_UPDATE_ENABLED = true;
     }
 
     public class Arm {

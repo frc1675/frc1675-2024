@@ -34,6 +34,7 @@ import frc.robot.util.AllianceUtil;
 import frc.robot.util.Dashboards;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
+import frc.robot.vision.VisionDriveSubsystem;
 
 public class RobotContainer {
   private final PoseScheduler poseScheduler;
@@ -41,7 +42,6 @@ public class RobotContainer {
   private final ShooterSubsystem shooter;
   private final LEDSubsystem ledSubsystem;
   private final UndertakerSubsystem undertakerSubsystem;
-  //private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
   
   private final PathPlannerAutoGenerator autoGenerator;
@@ -60,9 +60,9 @@ public class RobotContainer {
     DataLogManager.log("Data log started.");
 
     poseScheduler = new PoseScheduler();
-    drive = new DriveSubsystem();
 
-    //visionSubsystem = VisionSubsystem.create();
+    drive = Constants.Drive.VISION_POSE_UPDATE_ENABLED ? VisionDriveSubsystem.create(poseScheduler) : new DriveSubsystem();
+
     ledSubsystem = LEDSubsystem.create();
     undertakerSubsystem = UndertakerSubsystem.create();
     shooter = ShooterSubsystem.create();
