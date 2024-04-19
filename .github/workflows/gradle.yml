@@ -34,8 +34,8 @@ jobs:
       run: chmod +x gradlew
 
     # Runs a single command using the runners shell
-    - name: Compile and run tests on robot code
-      run: ./gradlew build
+    - name: Compile robot code
+      run: ./gradlew assemble
 
   test:
     # The type of runner that the job will run on
