@@ -62,7 +62,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     dashboard.add("Rotation PID", rotationController);
     dashboard.addDouble("Yaw", () ->swerve.getYaw().getDegrees());
-    dashboard.addString("Target angle", () -> rotationTarget == null ? "None" : rotationTarget.toString());
+    dashboard.addDouble("Target angle", () -> rotationTarget == null ? -1 : rotationTarget.getDegrees());
+    dashboard.addBoolean("Has rotation target?", () -> rotationTarget == null);
 
     dashboard.addBoolean("Rotation On Target?", () -> rotationController.atSetpoint());
 
