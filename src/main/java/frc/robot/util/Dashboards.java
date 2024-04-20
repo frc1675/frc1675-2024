@@ -24,7 +24,8 @@ public class Dashboards {
     public static void initMemoryDashboard() {
         if (memoryNeedsInit) {
             Runtime r = Runtime.getRuntime();
-            Shuffleboard.getTab("Memory Usage").addDouble("Usage percent", () -> r.freeMemory() / (double) r.totalMemory());
+            Shuffleboard.getTab("Memory Usage")
+                    .addDouble("Usage percent", () -> r.freeMemory() / (double) r.totalMemory());
         }
     }
 }

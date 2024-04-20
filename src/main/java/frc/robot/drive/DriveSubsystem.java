@@ -4,9 +4,6 @@
 
 package frc.robot.drive;
 
-import java.io.File;
-import java.io.IOException;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,6 +14,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.poseScheduler.PoseScheduler;
+import java.io.File;
+import java.io.IOException;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
@@ -56,49 +56,51 @@ public class DriveSubsystem extends SubsystemBase {
     initDashboard();
   }
 
-  private void initDashboard() {
-    ShuffleboardTab dashboard = Shuffleboard.getTab("Drive");
-    dashboard.addString("Current Command", this::getCommandName);
+    private void initDashboard() {
+        ShuffleboardTab dashboard = Shuffleboard.getTab("Drive");
+        dashboard.addString("Current Command", this::getCommandName);
 
-    dashboard.add("Rotation PID", rotationController);
-    dashboard.addDouble("Yaw", () ->swerve.getYaw().getDegrees());
-    dashboard.addDouble("Target angle", () -> rotationTarget == null ? -1 : rotationTarget.getDegrees());
+        dashboard.add("Rotation PID", rotationController);
+        dashboard.addDouble("Yaw", () -> swerve.getYaw().getDegrees());
+        dashboard.addDouble("Target angle", () -> rotationTarget == null ? -1 : rotationTarget.getDegrees());
     dashboard.addBoolean("Has rotation target?", () -> rotationTarget == null);
 
     dashboard.addBoolean("Rotation On Target?", () -> rotationController.atSetpoint());
 
-    dashboard.add(swerve.field).withPosition(0, 1).withSize(5, 3);
-    int position = 0;
-    for (SwerveModule m : swerve.getModules()) {
-      dashboard.addDouble(m.configuration.name +" Module Position °", () -> m.getAbsolutePosition()).withPosition(position, 0).withSize(2, 1);
-      position += 2;
+        dashboard.add(swerve.field).withPosition(0, 1).withSize(5, 3);
+        int position = 0;
+        for (SwerveModule m : swerve.getModules()) {
+            dashboard
+                    .addDouble(m.configuration.name + " Module Position °", () -> m.getAbsolutePosition())
+                    .withPosition(position, 0)
+                    .withSize(2, 1);
+            position += 2;
+        }
     }
-  }
 
-  private String getCommandName() {
-    if(this.getCurrentCommand() == null) {
-      return "None";
+    private String getCommandName() {
+        if (this.getCurrentCommand() == null) {
+            return "None";
+        }
+        return this.getCurrentCommand().getName();
     }
-    return this.getCurrentCommand().getName();
-  }
 
-  /**
-   * Zero the gyroscope. This is useful for resetting which way is considered
-   * positive for field relative robot driving. This should probably only be done
-   * while debugging.
-   */
-  public void zeroGyroscope() {
-    swerve.zeroGyro();
-  }
+    /**
+     * Zero the gyroscope. This is useful for resetting which way is considered positive for field
+     * relative robot driving. This should probably only be done while debugging.
+     */
+    public void zeroGyroscope() {
+        swerve.zeroGyro();
+    }
 
-  /**
-   * Used for PathPlanner autonomous
-   * 
-   * @return robot relative chassis speeds
-   */
-  public ChassisSpeeds getRobotRelativeSpeeds() {
-    return swerve.getRobotVelocity();
-  }
+    /**
+     * Used for PathPlanner autonomous
+     *
+     * @return robot relative chassis speeds
+     */
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return swerve.getRobotVelocity();
+    }
 
   /**
    * Used for PathPlanner autonomous
