@@ -40,13 +40,8 @@ public class SimArmIO implements IArmIO {
     private final Mechanism2d mech2d = new Mechanism2d(60, 60);
     private final MechanismRoot2d armPivot = mech2d.getRoot("ArmPivot", 30, 30);
     private final MechanismLigament2d armTower = armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
-    private final MechanismLigament2d arm = armPivot.append(
-            new MechanismLigament2d(
-                    "Arm",
-                    30,
-                    domainSwap(Constants.Arm.HOME_POSITION),
-                    6,
-                    new Color8Bit(Color.kYellow)));
+    private final MechanismLigament2d arm = armPivot.append(new MechanismLigament2d(
+            "Arm", 30, domainSwap(Constants.Arm.HOME_POSITION), 6, new Color8Bit(Color.kYellow)));
 
     public SimArmIO() {
         homeSwitch = false;

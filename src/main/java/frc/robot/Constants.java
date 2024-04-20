@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
-
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -10,7 +9,7 @@ public class Constants {
         public static final double MAXIMUM_VELOCITY = 5.5; // meters per second
         public static final double MAXIMUM_ANGULAR_VELOCITY = 8; // radians per second
 
-        public static final double AUTONOMOUS_VELOCITY = MAXIMUM_VELOCITY; //meters per second
+        public static final double AUTONOMOUS_VELOCITY = MAXIMUM_VELOCITY; // meters per second
         public static final double AUTONOMOUS_ACCELERATION = 10.0; // meters per second squared
 
         public static final double MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE = 1.0; // meters
@@ -91,13 +90,12 @@ public class Constants {
         public static final double BEHIND_CLOSE_B_SHOT_ANGLE = Arm.HOME_POSITION - 38;
         public static final double SOURCE_SIDE_SHOT_ANGLE = Arm.HOME_POSITION - 39;
 
-        public static final double FAR_SHOT_ANGLE = CLOSE_B_SHOT_ANGLE; //TODO measure this
+        public static final double FAR_SHOT_ANGLE = CLOSE_B_SHOT_ANGLE; // TODO measure this
 
         public static final double AUTO_DEBOUNCE_TIME = 0.1;
 
         public static final double SUFFICIENT_EXTRA_PATHFINDING_TIME = 2;
         public static final PathConstraints EXTRA_PATHFINDING_CONSTRAINTS = new PathConstraints(3, 3, 9.4, 12.5);
-
     }
 
     public class Shooter {
@@ -164,6 +162,5 @@ public class Constants {
         public static final double INTAKE_SPEED = 0.8;
 
         public static final double EJECT_SPEED = -0.5;
-
     }
 }

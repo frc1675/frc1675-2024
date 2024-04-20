@@ -5,7 +5,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 
-public class UperTunerSendable implements Sendable{
+public class UperTunerSendable implements Sendable {
 
     private final double defaultValue;
     private double currentValue;
@@ -32,8 +32,8 @@ public class UperTunerSendable implements Sendable{
     }
 
     public double getCurrentValue() {
-        //disable tuner if is attached to a FMS or explicitly disabled
-        if(Constants.Dashboard.DISABLE_TUNER || DriverStation.isFMSAttached()) {
+        // disable tuner if is attached to a FMS or explicitly disabled
+        if (Constants.Dashboard.DISABLE_TUNER || DriverStation.isFMSAttached()) {
             return defaultValue;
         }
         return currentValue;
@@ -51,9 +51,10 @@ public class UperTunerSendable implements Sendable{
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("UperTuner");
         builder.addDoubleProperty("defaultValue", () -> defaultValue, null);
-        builder.addDoubleProperty("currentValue", () -> currentValue, (double v) -> {currentValue = v;});
+        builder.addDoubleProperty("currentValue", () -> currentValue, (double v) -> {
+            currentValue = v;
+        });
         builder.addDoubleProperty("max", () -> max, null);
         builder.addDoubleProperty("min", () -> min, null);
     }
-    
 }

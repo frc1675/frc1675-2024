@@ -4,15 +4,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.vision.VisionSubsystem.LEDMode;
 
 public interface IVision {
-  
-  public Pose2d getBotpose();
 
-  public int getTargetId();
+    public Pose2d getBotpose();
 
-  public boolean hasTarget();
+    public int getTargetId();
 
-  public LEDMode getLEDMode();
+    public boolean hasTarget();
 
-  public void setLEDMode(LEDMode mode);
+    public LEDMode getLEDMode();
 
+    public void setLEDMode(LEDMode mode);
 }

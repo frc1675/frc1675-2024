@@ -1,13 +1,11 @@
 package frc.robot.util;
 
-import java.util.Arrays;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringArrayPublisher;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StringSubscriber;
+import java.util.Arrays;
+import java.util.function.Consumer;
 
 /** HEAVILY inspired by 6328's SwitchableChooser */
 public class ChangableChooser {
@@ -18,7 +16,6 @@ public class ChangableChooser {
     private String active = placeholder;
     private String previousActive = placeholder;
 
-    
     private final StringPublisher namePublisher;
     private final StringPublisher typePublisher;
     private final StringArrayPublisher optionsPublisher;
@@ -28,9 +25,12 @@ public class ChangableChooser {
     private StringSubscriber selectedInput;
 
     private Consumer<String> changeLambda;
-    
+
     public ChangableChooser(String tab, String name) {
-        var table = NetworkTableInstance.getDefault().getTable("/Shuffleboard").getSubTable(tab).getSubTable(name);
+        var table = NetworkTableInstance.getDefault()
+                .getTable("/Shuffleboard")
+                .getSubTable(tab)
+                .getSubTable(name);
         namePublisher = table.getStringTopic(".name").publish();
         typePublisher = table.getStringTopic(".type").publish();
         optionsPublisher = table.getStringArrayTopic("options").publish();
@@ -76,7 +76,7 @@ public class ChangableChooser {
         }
         defaultPublisher.set(active);
         activePublisher.set(active);
-        if(previousActive != active && changeLambda != null) {
+        if (previousActive != active && changeLambda != null) {
             changeLambda.accept(active);
         }
         previousActive = active;

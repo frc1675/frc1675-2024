@@ -1,12 +1,10 @@
 package frc.robot.util;
 
+import edu.wpi.first.util.ErrorMessages;
 import java.util.function.Consumer;
 
-import edu.wpi.first.util.ErrorMessages;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-
 public class FilteredChooserGroup {
-    
+
     private MultiPartStringFilterer mpsf;
     private String name;
     private String tabName;
@@ -23,16 +21,16 @@ public class FilteredChooserGroup {
     }
 
     private void populateChooser(int layer, String... parts) {
-        
+
         choosers[layer] = new ChangableChooser(tabName, "Layer " + layer);
-        
+
         choosers[layer].setOptions(parts);
 
         choosers[layer].onChange(s -> {
-            if((layer + 1) < mpsf.getLayerCount()) {
+            if ((layer + 1) < mpsf.getLayerCount()) {
                 // populate next layer chooser
-                String[] previousParts = new String[layer+1];
-                for(int i = 0; i <= layer; i++) {
+                String[] previousParts = new String[layer + 1];
+                for (int i = 0; i <= layer; i++) {
                     previousParts[i] = choosers[i].get();
                 }
                 populateChooser(layer + 1, mpsf.getStringsForLayer(layer + 1, previousParts));
@@ -40,16 +38,16 @@ public class FilteredChooserGroup {
 
             // report an overall change
             String[] allParts = new String[mpsf.getLayerCount()];
-            for(int i = 0; i < layer; i++) {
+            for (int i = 0; i < layer; i++) {
                 allParts[i] = choosers[i].get();
             }
             listener.accept(MultiPartStringFilterer.assembleParts(allParts));
         });
 
-        if((layer + 1) < mpsf.getLayerCount() && choosers[layer + 1] == null) {
+        if ((layer + 1) < mpsf.getLayerCount() && choosers[layer + 1] == null) {
             // populate next layer chooser
-            String[] previousParts = new String[layer+1];
-            for(int i = 0; i <= layer; i++) {
+            String[] previousParts = new String[layer + 1];
+            for (int i = 0; i <= layer; i++) {
                 previousParts[i] = choosers[i].get();
             }
             populateChooser(layer + 1, mpsf.getStringsForLayer(layer + 1, previousParts));
@@ -62,7 +60,7 @@ public class FilteredChooserGroup {
     }
 
     public void periodic() {
-        for(int i = 0; i < choosers.length; i++) {
+        for (int i = 0; i < choosers.length; i++) {
             choosers[i].periodic();
         }
     }

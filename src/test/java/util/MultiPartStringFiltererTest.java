@@ -1,15 +1,11 @@
 package util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import frc.robot.util.MultiPartStringFilterer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import frc.robot.util.MultiPartStringFilterer;
-
 public class MultiPartStringFiltererTest {
-    
+
     @Test
     public void assembleParts() {
         String test1 = MultiPartStringFilterer.assembleParts("SubA", "CloseABC", "MidCD");
@@ -27,7 +23,7 @@ public class MultiPartStringFiltererTest {
     @Test
     public void getNextPart_normalUsage() {
         String[] fullStrings = new String[0];
-        
+
         MultiPartStringFilterer sut = new MultiPartStringFilterer(3, fullStrings);
 
         // on the first layer, return the first part.
@@ -53,7 +49,7 @@ public class MultiPartStringFiltererTest {
     @Test
     public void getNextPart_exceptionalCases() {
         String[] fullStrings = new String[0];
-        
+
         MultiPartStringFilterer sut = new MultiPartStringFilterer(3, fullStrings);
 
         // asking with layersDeep equal to or greater than the MPSF layers should return empty string
@@ -84,34 +80,33 @@ public class MultiPartStringFiltererTest {
         fullStrings[5] = "SubB-CloseCBA-MidCD";
         fullStrings[6] = "SubC--MidCD";
         fullStrings[7] = "SubC--MidDC";
-        
+
         MultiPartStringFilterer sut = new MultiPartStringFilterer(3, fullStrings);
 
         // layer 0 is all normal. Duplicates are not shown.
         String[] test1 = sut.getStringsForLayer(0);
-        Assertions.assertArrayEquals(new String[]{"SubA", "SubB", "SubC"}, test1);
+        Assertions.assertArrayEquals(new String[] {"SubA", "SubB", "SubC"}, test1);
 
         // layer 1 for SubA is also normal.
         String[] test2 = sut.getStringsForLayer(1, "SubA");
-        Assertions.assertArrayEquals(new String[]{"CloseABC"}, test2);
+        Assertions.assertArrayEquals(new String[] {"CloseABC"}, test2);
 
         String[] test3 = sut.getStringsForLayer(2, "SubA", "CloseABC");
-        Assertions.assertArrayEquals(new String[]{"MidCD", "MidCD-FarAB", "MidDC"}, test3);
+        Assertions.assertArrayEquals(new String[] {"MidCD", "MidCD-FarAB", "MidDC"}, test3);
 
         String[] test4 = sut.getStringsForLayer(1, "SubB");
-        Assertions.assertArrayEquals(new String[]{"CloseABC", "CloseB", "CloseCBA"}, test4);
+        Assertions.assertArrayEquals(new String[] {"CloseABC", "CloseB", "CloseCBA"}, test4);
 
         String[] test5 = sut.getStringsForLayer(2, "SubB", "CloseABC");
-        Assertions.assertArrayEquals(new String[]{"MidCD"}, test5);
+        Assertions.assertArrayEquals(new String[] {"MidCD"}, test5);
 
         String[] test6 = sut.getStringsForLayer(2, "SubB", "CloseB");
-        Assertions.assertArrayEquals(new String[]{}, test6);
+        Assertions.assertArrayEquals(new String[] {}, test6);
 
         String[] test7 = sut.getStringsForLayer(1, "SubC");
-        Assertions.assertArrayEquals(new String[]{""}, test7);
+        Assertions.assertArrayEquals(new String[] {""}, test7);
 
         String[] test8 = sut.getStringsForLayer(2, "SubC", "");
-        Assertions.assertArrayEquals(new String[]{"MidCD", "MidDC"}, test8);
-
+        Assertions.assertArrayEquals(new String[] {"MidCD", "MidDC"}, test8);
     }
 }
