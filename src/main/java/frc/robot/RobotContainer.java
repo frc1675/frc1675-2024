@@ -59,8 +59,8 @@ public class RobotContainer {
         DriverStation.startDataLog(DataLogManager.getLog());
         DataLogManager.log("Data log started.");
 
-    poseScheduler = new PoseScheduler();
-    drive = new DriveSubsystem();
+        poseScheduler = new PoseScheduler();
+        drive = new DriveSubsystem();
 
         // visionSubsystem = VisionSubsystem.create();
         ledSubsystem = LEDSubsystem.create();
@@ -93,8 +93,8 @@ public class RobotContainer {
                 .onTrue(new ShootAndReturnHome(shooter, arm, () -> robotContext.getShooterSpeed()[0], () -> robotContext
                         .getShooterSpeed()[1]));
 
-    driverController.a().onTrue(DriveCommands.turnToShootCommand(drive));
-    driverController.x().onTrue(DriveCommands.turnToAmpCommand(drive));
+        driverController.a().onTrue(DriveCommands.turnToShootCommand(drive));
+        driverController.x().onTrue(DriveCommands.turnToAmpCommand(drive));
 
         operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
         operatorController.rightTrigger().onTrue(new MoveToHome(arm));
