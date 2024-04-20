@@ -6,7 +6,8 @@ echo "**Formatting code with spotless**"
 ./gradlew spotlessApply
 
 echo "**Adding changes from reformat**"
-git add .
+# Add changes for any files already added to the repo - will not support partial repo commits currently
+git add -u
 
 status=$?
 
