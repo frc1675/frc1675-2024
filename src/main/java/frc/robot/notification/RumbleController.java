@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
 public class RumbleController extends Command {
-    
+
     private final GenericHID controller;
 
     public RumbleController(GenericHID controller) {

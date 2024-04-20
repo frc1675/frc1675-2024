@@ -16,17 +16,19 @@ public class ArmSubsystem extends SubsystemBase {
     private IArmIO armIO;
     private TrapezoidProfile.Constraints profileConstraints;
 
-
     public static ArmSubsystem create() {
         return new ArmSubsystem(Robot.isReal() ? new RealArmIO() : new SimArmIO());
     }
 
     public ArmSubsystem(IArmIO armIO) {
         this.armIO = armIO;
-        profileConstraints = new TrapezoidProfile.Constraints(Constants.Arm.MAXIMUM_VELOCITY,
-                Constants.Arm.MAXIMUM_ACCELERATION);
-        pid = new ProfiledPIDController(Constants.Arm.PID_P_COEFFICIENT, Constants.Arm.PID_I_COEFFICIENT,
-                Constants.Arm.PID_D_COEFFICIENT, profileConstraints);
+        profileConstraints =
+                new TrapezoidProfile.Constraints(Constants.Arm.MAXIMUM_VELOCITY, Constants.Arm.MAXIMUM_ACCELERATION);
+        pid = new ProfiledPIDController(
+                Constants.Arm.PID_P_COEFFICIENT,
+                Constants.Arm.PID_I_COEFFICIENT,
+                Constants.Arm.PID_D_COEFFICIENT,
+                profileConstraints);
         pid.reset(armIO.getMeasurement());
         broken = false;
         initDashboard();
@@ -62,13 +64,12 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public boolean isAtPodiumPosition() {
-        return isOnTarget() && getTarget() == Constants.Arm.LONG_SHOT_ANGLE;
+        return isOnTarget() && getTarget() == Constants.Arm.PODIUM_SHOT_ANGLE;
     }
 
     public boolean isBroken() {
         return broken;
     }
-
 
     private void initDashboard() {
         dashboard = Shuffleboard.getTab("Arm");
@@ -98,7 +99,14 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
 
         armIO.periodic();
-        //Multiply by -1 to invert motorPower because positive motor power moves the arm upwards but decreases the angle read by the encoder and vice versa for negitive motor power. 
+
+        if (pid.getGoal().position <= Constants.Arm.MAX_ARM_RANGE_DEGREES
+                || pid.getSetpoint().position <= Constants.Arm.MAX_ARM_RANGE_DEGREES) {
+            targetAngle = Constants.Arm.HOME_POSITION;
+        }
+
+        // Multiply by -1 to invert motorPower because positive motor power moves the arm upwards but
+        // decreases the angle read by the encoder and vice versa for negitive motor power.
         double motorPower = -1.0 * pid.calculate(getAngle(), targetAngle);
 
         if (armIO.atFrontLimit()) {
@@ -127,7 +135,6 @@ public class ArmSubsystem extends SubsystemBase {
                 // Arm within safe range, do what it wants (vast majority of time)
                 armIO.setMotorPower(motorPower);
             }
-
         }
     }
 }

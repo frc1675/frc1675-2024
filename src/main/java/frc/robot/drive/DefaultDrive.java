@@ -4,46 +4,49 @@
 
 package frc.robot.drive;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.Command;
-
 public class DefaultDrive extends Command {
-  
-  private DriveSubsystem drive;
-  private DoubleSupplier x;
-  private DoubleSupplier y;
-  private DoubleSupplier rotation;
-  private DoubleSupplier speedScale;
 
-  public DefaultDrive(DriveSubsystem drive, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotation, DoubleSupplier speedScale) {
-    this.drive = drive;
-    this.x = x;
-    this.y = y;
-    this.rotation = rotation;
-    this.speedScale = speedScale;
-    addRequirements(drive);
-  }
+    private DriveSubsystem drive;
+    private DoubleSupplier x;
+    private DoubleSupplier y;
+    private DoubleSupplier rotation;
+    private DoubleSupplier speedScale;
 
-  @Override
-  public void initialize() {}
+    public DefaultDrive(
+            DriveSubsystem drive,
+            DoubleSupplier x,
+            DoubleSupplier y,
+            DoubleSupplier rotation,
+            DoubleSupplier speedScale) {
+        this.drive = drive;
+        this.x = x;
+        this.y = y;
+        this.rotation = rotation;
+        this.speedScale = speedScale;
+        addRequirements(drive);
+    }
 
-  @Override
-  public void execute() {
-    drive.drive(
-      x.getAsDouble() * speedScale.getAsDouble(), 
-      y.getAsDouble() * speedScale.getAsDouble(), 
-      rotation.getAsDouble() * speedScale.getAsDouble()
-    );
-  }
+    @Override
+    public void initialize() {}
 
-  @Override
-  public void end(boolean interrupted) {
-    drive.drive(0, 0, 0);
-  }
+    @Override
+    public void execute() {
+        drive.drive(
+                x.getAsDouble() * speedScale.getAsDouble(),
+                y.getAsDouble() * speedScale.getAsDouble(),
+                rotation.getAsDouble() * speedScale.getAsDouble());
+    }
 
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public void end(boolean interrupted) {
+        drive.drive(0, 0, 0);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

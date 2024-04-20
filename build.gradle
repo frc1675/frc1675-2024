@@ -1,6 +1,7 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2024.2.1"
+    id "edu.wpi.first.GradleRIO" version "2024.3.2"
+    id 'com.diffplug.spotless' version '6.20.0'
 }
 
 java {
@@ -85,7 +86,11 @@ wpi.sim.addDriverstation()
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
     from sourceSets.main.allSource
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
@@ -101,8 +106,52 @@ tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-def getRobotVersionData() { 
-    def robotVersion = new StringBuilder()     
+spotless {
+    enforceCheck = false
+    java {
+        target fileTree('.') {
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        toggleOffOn()
+        palantirJavaFormat()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    groovyGradle {
+        target fileTree('.') {
+            include '**/*.gradle'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        greclipse()
+        indentWithSpaces(4)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    format 'xml', {
+        target fileTree('.') {
+            include '**/*.xml'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        eclipseWtp('xml')
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
+    }
+    format 'misc', {
+        target fileTree('.') {
+            include '**/*.md', '**/.gitignore'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
+    }
+}
+
+def getRobotVersionData() {
+    def robotVersion = new StringBuilder()
     robotVersion.append("Commit: @"+"git rev-parse --short HEAD".execute().text.replace('\n', '')+" by "+"git config user.name".execute().text+"\n")
     robotVersion.append("Branch: ")
     robotVersion.append('git branch --show-current'.execute().text)
@@ -122,12 +171,13 @@ def getMinifiedRobotVersionData() {
     return miniData.toString().replace('\n', '')
 }
 
-def writeVersionToFile = { ->
+def writeVersionToFile = {
+    ->
     if("git config user.name".execute().text.length() < 1) {
         println "Git username not configured, skipping robot version file writing. We are probably on the build server."
         return;
     }
-    
+
     def versionDeployDir = new File("./src/main/deploy/version");
 
     if(!versionDeployDir.exists()) {
@@ -151,9 +201,9 @@ def writeVersionToFile = { ->
 }
 
 tasks.named("build") {
-  doFirst {
-    writeVersionToFile()
-  }
+    doFirst {
+        writeVersionToFile()
+    }
 }
 
 tasks.named("deploy") {
@@ -167,3 +217,12 @@ tasks.named("simulateExternalJavaRelease") {
         writeVersionToFile()
     }
 }
+
+
+task installLocalGitHook(type: Copy){
+    from new File(rootProject.rootDir, 'scripts/pre-commit')
+    into { new File(rootProject.rootDir, '.git/hooks')}
+    fileMode 0775
+}
+
+build.dependsOn installLocalGitHook

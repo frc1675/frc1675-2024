@@ -1,10 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.util.Units;
-import frc.robot.poseScheduler.FieldArea2d;
 
 public class Constants {
 
@@ -12,7 +9,7 @@ public class Constants {
         public static final double MAXIMUM_VELOCITY = 5.5; // meters per second
         public static final double MAXIMUM_ANGULAR_VELOCITY = 8; // radians per second
 
-        public static final double AUTONOMOUS_VELOCITY = MAXIMUM_VELOCITY; //meters per second
+        public static final double AUTONOMOUS_VELOCITY = MAXIMUM_VELOCITY; // meters per second
         public static final double AUTONOMOUS_ACCELERATION = 10.0; // meters per second squared
 
         public static final double MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE = 1.0; // meters
@@ -47,10 +44,12 @@ public class Constants {
         public static final double PID_D_COEFFICIENT = 0;
         // Arm movment lmits constants
         public static final double TARGET_RANGE = 2.0;
-        public static final double DEBOUNCE_TIME = 0.5;
+        public static final double DEBOUNCE_TIME = 0.25;
         // Position constnats
         public static final double HOME_POSITION = 138;
-        public static final double LONG_SHOT_ANGLE = HOME_POSITION - 33;
+        public static final double PODIUM_SHOT_ANGLE = HOME_POSITION - 33;
+        public static final double BEHIND_NOTE_B_ANGLE = Auto.BEHIND_CLOSE_B_SHOT_ANGLE;
+
         public static final double HIGH_SCORE_POSITION = HOME_POSITION - 78;
         public static final double AMP_POSITION = HOME_POSITION - 103;
         public static final double MAX_ARM_RANGE_DEGREES = HOME_POSITION - 118; // home - 125 degrees is vertical
@@ -59,48 +58,50 @@ public class Constants {
         public static final double MAXIMUM_ACCELERATION = 750; // degrees per second squared
     }
 
-    public static class PathPlanner {
-        public static final boolean PATH_PLANNER_IS_ENABLED = false;
-
-        public static final double MAXIMUM_VELOCITY = 2.5; // meters per second
-        public static final double MAXIMUM_ACCELERATION = 1.25; // meters per second squared
-
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 7.5; // radians per second
-        public static final double MAXIMUM_ANGULAR_ACCELERATION = 3.75; // radians per second squared
+    public class Auto {
+        public static final double MODULE_MAXIMUM_VELOCITY = 5.5; // meters per second
 
         public static final double DRIVEBASE_RADIUS = Units.inchesToMeters(14.5); // meters
 
-        public static final double TRANSLATION_P = 8.25;
+        public static final double TRANSLATION_P = 5;
         public static final double TRANSLATION_I = 0;
         public static final double TRANSLATION_D = 0;
 
-        public static final double ROTATION_P = 0.000;
+        public static final double ROTATION_P = 5;
         public static final double ROTATION_I = 0;
         public static final double ROTATION_D = 0;
 
         public static final double DYNAMIC_PATHING_MAX_DISTANCE = 5; // meters
-    }
 
-    public static class Field {
-        public static final Translation2d SPEAKER_SCORING_POSITION = new Translation2d(1.67, 5.52);
+        public static final double CLOSE_SHOT_SPEED_TOP = 1700;
+        public static final double CLOSE_SHOT_SPEED_BOTTOM = CLOSE_SHOT_SPEED_TOP * 0.9;
+        public static final double SHOT_SPEED = 3500;
+        public static final double SHOOT_TIME = 0.25;
+        public static final double SHOOTER_INTAKE_SPEED = Undertaker.INTAKE_SPEED * 0.09;
 
-        public static final FieldArea2d FRIENDLY_ALLIANCE_AREA = new FieldArea2d(0, 0, 5.85, 8.21);
-        
-        //Relative to the drivers
-        //TODO correct position
-        public static final Pose2d SUBWOOFER_FRONT_BLUE = new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180)); 
-        public static final Pose2d SUBWOOFER_LEFT_BLUE = new Pose2d(0.75, 6.7, Rotation2d.fromDegrees(60 + 180));
-        public static final Pose2d SUBWOOFER_RIGHT_BLUE = new Pose2d(0.75, 4.35, Rotation2d.fromDegrees(-60 + 180));
+        public static final double UNDERTAKER_INTAKE_SPEED = Undertaker.INTAKE_SPEED;
 
-        public static final Pose2d SUBWOOFER_FRONT_RED = new Pose2d(15, 5.55, Rotation2d.fromDegrees(0)); 
-        public static final Pose2d SUBWOOFER_LEFT_RED = new Pose2d(15.5, 4.35, Rotation2d.fromDegrees(60));
-        public static final Pose2d SUBWOOFER_RIGHT_RED = new Pose2d(15.5, 6.7, Rotation2d.fromDegrees(-60));
+        public static final double INTAKE_ATTEMPT_TIMEOUT = 0.5;
+
+        public static final double CLOSE_A_SHOT_ANGLE = Arm.HOME_POSITION - 35;
+        public static final double CLOSE_B_SHOT_ANGLE = Arm.HOME_POSITION - 31;
+        public static final double CLOSE_C_SHOT_ANGLE = Arm.HOME_POSITION - 34;
+        public static final double CLOSER_C_SHOT_ANGLE = Arm.HOME_POSITION - 25;
+        public static final double BEHIND_CLOSE_B_SHOT_ANGLE = Arm.HOME_POSITION - 38;
+        public static final double SOURCE_SIDE_SHOT_ANGLE = Arm.HOME_POSITION - 39;
+
+        public static final double FAR_SHOT_ANGLE = CLOSE_B_SHOT_ANGLE; // TODO measure this
+
+        public static final double AUTO_DEBOUNCE_TIME = 0.1;
+
+        public static final double SUFFICIENT_EXTRA_PATHFINDING_TIME = 2;
+        public static final PathConstraints EXTRA_PATHFINDING_CONSTRAINTS = new PathConstraints(3, 3, 9.4, 12.5);
     }
 
     public static class Shooter {
         public static final double SHOOT_SPEED = 1700;
         public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
-        public static final double LONG_SHOT_SPEED = 5000;
+        public static final double LONG_SHOT_SPEED = 3500;
 
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 
@@ -118,7 +119,7 @@ public class Constants {
         public static final double SHOOTER_PID_I = 0.0001;
         public static final double SHOOTER_PID_D = 0;
 
-        public static final double SHOOTER_FF_V = 0.00015;
+        public static final double SHOOTER_FF_V = 0.00012;
         public static final double SHOOTER_FF_S = 0;
 
         public static final double SHOOTER_SHOOT_TIME = 0.5;
@@ -161,6 +162,5 @@ public class Constants {
         public static final double INTAKE_SPEED = 0.8;
 
         public static final double EJECT_SPEED = -0.5;
-
     }
 }

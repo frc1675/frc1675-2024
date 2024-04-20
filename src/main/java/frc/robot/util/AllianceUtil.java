@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
 
 public class AllianceUtil {
-    
+
     public static boolean isRedAlliance() {
         if (Robot.isSimulation()) {
             return false;
@@ -18,7 +18,7 @@ public class AllianceUtil {
         return DriverStation.getAlliance().get().equals(Alliance.Red);
     }
 
-    public static int getAutoDirection() {
-        return isRedAlliance() ? -1 : 1;
+    public static int getTranslationDirection() {
+        return isRedAlliance() ? 1 : -1;
     }
 }
