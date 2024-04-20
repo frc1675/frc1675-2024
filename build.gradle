@@ -226,5 +226,3 @@ task installLocalGitHook(type: Copy){
 }
 
 build.dependsOn installLocalGitHook
-
-

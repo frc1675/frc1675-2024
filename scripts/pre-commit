@@ -1,18 +1,12 @@
 #!/bin/sh
 
-echo "*****Running unit tests******"
+echo "**Performing pre-commit actions**"
 
-stash_commit="$(git stash create)"
-git reset —-hard
-
-./gradlew test
+echo "**Formatting code with spotless**"
+./gradlew spotlessApply
 
 status=$?
 
-if [[ -n "${stash_commit}" ]]
-then git stash apply "${stash_commit}"
-fi
-
-echo "*****Done with unit tests******"
+echo "**Done with pre-commit**"
 
 exit $status
