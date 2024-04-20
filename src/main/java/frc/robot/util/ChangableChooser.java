@@ -1,6 +1,8 @@
 package frc.robot.util;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringArrayPublisher;
@@ -14,7 +16,8 @@ public class ChangableChooser {
 
     private String[] options = new String[] {placeholder};
     private String active = placeholder;
-    
+    private String previousActive = placeholder;
+
     
     private final StringPublisher namePublisher;
     private final StringPublisher typePublisher;
@@ -24,9 +27,10 @@ public class ChangableChooser {
     private final StringPublisher selectedPublisher;
     private StringSubscriber selectedInput;
 
+    private Consumer<String> changeLambda;
     
-    public ChangableChooser(String name) {
-        var table = NetworkTableInstance.getDefault().getTable("SmartDashboard").getSubTable(name);
+    public ChangableChooser(String tab, String name) {
+        var table = NetworkTableInstance.getDefault().getTable("/Shuffleboard").getSubTable(tab).getSubTable(name);
         namePublisher = table.getStringTopic(".name").publish();
         typePublisher = table.getStringTopic(".type").publish();
         optionsPublisher = table.getStringArrayTopic("options").publish();
@@ -72,5 +76,13 @@ public class ChangableChooser {
         }
         defaultPublisher.set(active);
         activePublisher.set(active);
+        if(previousActive != active && changeLambda != null) {
+            changeLambda.accept(active);
+        }
+        previousActive = active;
+    }
+
+    public void onChange(Consumer<String> changeLambda) {
+        this.changeLambda = changeLambda;
     }
 }

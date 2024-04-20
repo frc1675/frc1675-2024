@@ -18,23 +18,16 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private ChangableChooser newChooser;
-
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     FollowPathCommand.warmupCommand().schedule(); //Load all pathplanner classes in order to prevent delay when initally following path
-
-    newChooser = new ChangableChooser("TEST_CHANGE_CHOOSER");
-    newChooser.setOptions(new String[]{ "foo", "bar", "baz" });
-
-    Shuffleboard.getTab("CHOOSERTEST").addString("Chooser Result", () -> newChooser.get());
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    newChooser.periodic();
+    m_robotContainer.autoGenerator.periodic();
   }
 
   @Override
@@ -52,7 +45,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    newChooser.setOptions(new String[]{ "autofoo", "autobar", "autobaz" });
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -68,7 +60,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    newChooser.setOptions(new String[]{ "telefoo", "telebar", "telebaz" });
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

@@ -47,7 +47,7 @@ public class RobotContainer {
   //private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
   
-  private final PathPlannerAutoGenerator autoGenerator;
+  public final PathPlannerAutoGenerator autoGenerator;
   private final RobotContext robotContext;
 
   private final CommandXboxController driverController;

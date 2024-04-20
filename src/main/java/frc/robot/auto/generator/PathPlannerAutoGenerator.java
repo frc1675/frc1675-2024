@@ -51,6 +51,7 @@ public class PathPlannerAutoGenerator {
     private final LEDSubsystem led;
     private Command ppAuto;
     private String chooserResult = "none yet";
+    private FilteredChooserGroup chooserGroup;
 
     public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, LEDSubsystem led) {
         this.arm = arm;
@@ -81,11 +82,11 @@ public class PathPlannerAutoGenerator {
         Collections.sort(autos);
 
         
-        //FilteredChooserGroup chooserGroup = new FilteredChooserGroup(Shuffleboard.getTab("CHOOSERTEST"), "ChooserTest", 3, autos.toArray(new String[0]));
-        
-        // chooserGroup.onChange(s -> {
-        //     chooserResult = s;
-        // });
+        chooserGroup = new FilteredChooserGroup("CHOOSERTEST", "ChooserTest", 3, autos.toArray(new String[0]));
+        Shuffleboard.getTab("CHOOSERTEST").addString("chooser result", () -> chooserResult);
+         chooserGroup.onChange(s -> {
+             chooserResult = s;
+         });
         
         for (String s : autos) {
             autoSelector.addOption(s, s);
@@ -100,6 +101,10 @@ public class PathPlannerAutoGenerator {
         });
 
         setupShuffleboard();
+    }
+
+    public void periodic() {
+        chooserGroup.periodic();
     }
 
     private void setStartingPose(String cmdName) {
