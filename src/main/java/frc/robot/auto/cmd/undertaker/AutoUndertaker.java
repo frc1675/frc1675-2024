@@ -1,15 +1,15 @@
 package frc.robot.auto.cmd.undertaker;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.undertaker.UndertakerSubsystem;
+import java.util.function.BooleanSupplier;
 
 /**
- * Run the undertaker at the given speed, unless the boolean supplier is true. This command never ends. 
+ * Run the undertaker at the given speed, unless the boolean supplier is true. This command never
+ * ends.
  */
 public class AutoUndertaker extends Command {
-    
+
     private final UndertakerSubsystem undertaker;
     private final double speed;
     private final BooleanSupplier shouldStop;
@@ -25,7 +25,7 @@ public class AutoUndertaker extends Command {
     public void execute() {
         if (shouldStop.getAsBoolean()) {
             undertaker.run(0);
-        }else {
+        } else {
             undertaker.run(speed);
         }
     }
@@ -38,5 +38,4 @@ public class AutoUndertaker extends Command {
     public boolean isFinished() {
         return shouldStop.getAsBoolean();
     }
-
 }

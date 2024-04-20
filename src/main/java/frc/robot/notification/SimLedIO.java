@@ -4,30 +4,29 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class SimLedIO implements ILedIO{
+public class SimLedIO implements ILedIO {
 
-  private double ledSparkValue = 0;
-  private final Mechanism2d uiLED;
-  
-  public SimLedIO(){
-    uiLED = new Mechanism2d(3, 3);
+    private double ledSparkValue = 0;
+    private final Mechanism2d uiLED;
 
-    Shuffleboard.getTab("LED Sim").add("LED", uiLED);
-  }
+    public SimLedIO() {
+        uiLED = new Mechanism2d(3, 3);
 
-  @Override
-  public void changeColor(LEDState color){
-    ledSparkValue = color.getSparkValue();
-    uiLED.setBackgroundColor(new Color8Bit(color.getHexCode()));
-  }
+        Shuffleboard.getTab("LED Sim").add("LED", uiLED);
+    }
 
-  public double getLedSparkValue(){
-    return ledSparkValue;
-  }
+    @Override
+    public void changeColor(LEDState color) {
+        ledSparkValue = color.getSparkValue();
+        uiLED.setBackgroundColor(new Color8Bit(color.getHexCode()));
+    }
 
-  @Override
-  public boolean getIsAlive(){
-    return true;
-  }
+    public double getLedSparkValue() {
+        return ledSparkValue;
+    }
 
+    @Override
+    public boolean getIsAlive() {
+        return true;
+    }
 }

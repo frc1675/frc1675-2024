@@ -5,37 +5,36 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class SimVision implements IVision {
 
-  private Pose2d botPose = new Pose2d(0, 0, new Rotation2d(0));
-  private boolean hasTarget = false;
-  private int targetId = 0;
-  
-  public SimVision(){}
+    private Pose2d botPose = new Pose2d(0, 0, new Rotation2d(0));
+    private boolean hasTarget = false;
+    private int targetId = 0;
 
-  @Override
-  public Pose2d getBotpose(){
-    return botPose;
-  }
+    public SimVision() {}
 
-  public void setBotPose(Pose2d targetPose){
-    this.botPose = targetPose;
-  } 
+    @Override
+    public Pose2d getBotpose() {
+        return botPose;
+    }
 
-  @Override
-  public boolean hasTarget(){
-    return hasTarget;
-  }
+    public void setBotPose(Pose2d targetPose) {
+        this.botPose = targetPose;
+    }
 
-  public void setHasTarget(boolean value){
-    hasTarget = value;
-  }
+    @Override
+    public boolean hasTarget() {
+        return hasTarget;
+    }
 
-  @Override
-  public int getTargetId(){
-    return targetId;
-  }
+    public void setHasTarget(boolean value) {
+        hasTarget = value;
+    }
 
-  public void setTargetId(int id){
-    targetId = id;
-  }
+    @Override
+    public int getTargetId() {
+        return targetId;
+    }
 
+    public void setTargetId(int id) {
+        targetId = id;
+    }
 }

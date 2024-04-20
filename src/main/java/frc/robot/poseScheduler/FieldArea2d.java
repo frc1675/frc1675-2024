@@ -3,11 +3,9 @@ package frc.robot.poseScheduler;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
-/**
- * Represents a rectangular area of the field in two dimensions. 
- */
+/** Represents a rectangular area of the field in two dimensions. */
 public class FieldArea2d {
-    
+
     private final double xMin;
     private final double yMin;
 
@@ -23,10 +21,7 @@ public class FieldArea2d {
     }
 
     public boolean withinArea(Translation2d pose) {
-        return 
-            pose.getX() >= xMin && pose.getX() <= xMax
-            && 
-            pose.getY() >= yMin && pose.getY() <= yMax;
+        return pose.getX() >= xMin && pose.getX() <= xMax && pose.getY() >= yMin && pose.getY() <= yMax;
     }
 
     public boolean withinArea(Pose2d pose) {

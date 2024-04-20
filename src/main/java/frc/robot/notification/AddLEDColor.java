@@ -3,7 +3,7 @@ package frc.robot.notification;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AddLEDColor extends Command {
-    
+
     private final LEDState state;
     private final LEDSubsystem led;
 
@@ -22,5 +22,4 @@ public class AddLEDColor extends Command {
     public boolean isFinished() {
         return true;
     }
-
 }
