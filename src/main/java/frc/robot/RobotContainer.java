@@ -95,7 +95,6 @@ public class RobotContainer {
 
         driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
         driverController
-        
                 .b()
                 .onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 150 : -30.5)); // TODO alliance switching
         driverController.x().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 90 : -90));

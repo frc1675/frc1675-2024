@@ -5,6 +5,9 @@ echo "**Performing pre-commit actions**"
 echo "**Formatting code with spotless**"
 ./gradlew spotlessApply
 
+echo "**Adding changes from reformat**"
+git add .
+
 status=$?
 
 echo "**Done with pre-commit**"
