@@ -4,7 +4,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -13,7 +16,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double targetTopShooterSpeed = 0;
   private double targetBottomShooterSpeed = 0;
   private double targetIndexerSpeed = 0;
-  
+
   private double topOutput = 0;
   private double bottomOutput = 0;
 
@@ -21,20 +24,19 @@ public class ShooterSubsystem extends SubsystemBase {
       Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
   private SimpleMotorFeedforward topFeedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S,
       Constants.Shooter.SHOOTER_FF_V);
-      
+
   private PIDController bottomPidController = new PIDController(Constants.Shooter.SHOOTER_PID_P,
       Constants.Shooter.SHOOTER_PID_I, Constants.Shooter.SHOOTER_PID_D);
   private SimpleMotorFeedforward bottomFeedForward = new SimpleMotorFeedforward(Constants.Shooter.SHOOTER_FF_S,
       Constants.Shooter.SHOOTER_FF_V);
 
-
   public static ShooterSubsystem create() {
-      return new ShooterSubsystem(Robot.isReal() ? new RealShooterIO() : new SimShooterIO());
+    return new ShooterSubsystem(Robot.isReal() ? new RealShooterIO() : new SimShooterIO());
   }
 
   public ShooterSubsystem(IShooterIO shooterIO) {
-      this.shooterIO = shooterIO;
-      ShuffleboardInit();
+    this.shooterIO = shooterIO;
+    ShuffleboardInit();
   }
 
   private void ShuffleboardInit() {
@@ -79,13 +81,23 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterIO.setIndexerOutput(targetIndexerSpeed);
   }
 
+  public Command testMotor() {
+    return new InstantCommand(() -> shooterIO.setShooterOutput(0.1, 0))
+        .andThen(new WaitCommand(2))
+        .andThen(() -> shooterIO.setShooterOutput(0, 0));
+  }
+
   @Override
   public void periodic() {
-    topOutput = topPidController.calculate(shooterIO.getShooterSpeeds()[0], targetTopShooterSpeed)
-        + topFeedForward.calculate(targetTopShooterSpeed);
-    bottomOutput = bottomPidController.calculate(shooterIO.getShooterSpeeds()[1], targetBottomShooterSpeed)
-        + bottomFeedForward.calculate(targetBottomShooterSpeed);
-    shooterIO.setShooterOutput(topOutput, bottomOutput);
+    /*
+     * topOutput = topPidController.calculate(shooterIO.getShooterSpeeds()[0],
+     * targetTopShooterSpeed)
+     * + topFeedForward.calculate(targetTopShooterSpeed);
+     * bottomOutput = bottomPidController.calculate(shooterIO.getShooterSpeeds()[1],
+     * targetBottomShooterSpeed)
+     * + bottomFeedForward.calculate(targetBottomShooterSpeed);
+     * shooterIO.setShooterOutput(topOutput, bottomOutput);
+     */
 
     shooterIO.periodic();
   }

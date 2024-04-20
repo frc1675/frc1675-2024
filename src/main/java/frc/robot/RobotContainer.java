@@ -40,10 +40,9 @@ public class RobotContainer {
   private final UndertakerSubsystem undertakerSubsystem;
   private final VisionSubsystem visionSubsystem;
   private final ArmSubsystem arm;
-  
+
   private final AbstractAutoGenerator autoGenerator;
   private final RobotContext robotContext;
-
 
   public RobotContainer() {
     DataLogManager.start();
@@ -61,18 +60,15 @@ public class RobotContainer {
 
     robotContext = new RobotContext(arm, shooter);
 
-    autoGenerator = 
-      Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
-      ?
-      new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext)
-      :
-      new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
+    autoGenerator = Constants.PathPlanner.PATH_PLANNER_IS_ENABLED
+        ? new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, robotContext)
+        : new SimpleAutoGenerator(drive, shooter, undertakerSubsystem, arm, robotContext);
 
     Dashboards.initVoltageDashboard();
     Dashboards.initCurrentDashboard();
     Dashboards.initDriverDashboard(robotContext::hasNote);
     VersionFile.getInstance().putToDashboard();
-      
+
     configureBindings();
   }
 
@@ -85,22 +81,19 @@ public class RobotContainer {
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
             () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
-            robotContext::getDriveSpeedScale
-            )
-    );
+            robotContext::getDriveSpeedScale));
 
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
     ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
 
     driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-    
+
     driverController.rightBumper().onTrue(new SpinUpAndShoot(shooter,
-     () -> robotContext.getShooterSpeed()[0],
-     () -> robotContext.getShooterSpeed()[1]
-    ));
+        () -> robotContext.getShooterSpeed()[0],
+        () -> robotContext.getShooterSpeed()[1]));
 
     driverController.a().onTrue(new TurnToAngle(drive, 90));
-
+    driverController.leftBumper().onTrue(shooter.testMotor());
     shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
 
     operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
