@@ -1,9 +1,8 @@
 package frc.robot.arm;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants;
@@ -63,7 +62,5 @@ public class RealArmIO implements IArmIO {
     }
 
     @Override
-    public void periodic() {
-
-    }
+    public void periodic() {}
 }

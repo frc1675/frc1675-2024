@@ -1,15 +1,11 @@
 package frc.robot.auto.generator;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -34,6 +30,8 @@ import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AllianceUtil;
+import java.util.Collections;
+import java.util.List;
 
 public class PathPlannerAutoGenerator {
 
@@ -49,7 +47,12 @@ public class PathPlannerAutoGenerator {
     private final LEDSubsystem led;
     private Command ppAuto;
 
-    public PathPlannerAutoGenerator(DriveSubsystem drive, ArmSubsystem arm, ShooterSubsystem shooter, UndertakerSubsystem undertaker, LEDSubsystem led) {
+    public PathPlannerAutoGenerator(
+            DriveSubsystem drive,
+            ArmSubsystem arm,
+            ShooterSubsystem shooter,
+            UndertakerSubsystem undertaker,
+            LEDSubsystem led) {
         this.arm = arm;
         this.shooter = shooter;
         this.undertaker = undertaker;
@@ -58,34 +61,37 @@ public class PathPlannerAutoGenerator {
         registerCommands();
 
         AutoBuilder.configureHolonomic(
-            drive::getPose,
-            drive::resetOdometry,
-            drive::getRobotRelativeSpeeds,
-            drive::setRobotRelativeChassisSpeeds,
-            new HolonomicPathFollowerConfig(
-                new PIDConstants(Constants.Auto.TRANSLATION_P, Constants.Auto.TRANSLATION_I, Constants.Auto.TRANSLATION_D),
-                new PIDConstants(Constants.Auto.ROTATION_P, Constants.Auto.ROTATION_I, Constants.Auto.ROTATION_D),
-                Constants.Auto.MODULE_MAXIMUM_VELOCITY, 
-                Constants.Auto.DRIVEBASE_RADIUS, 
-                new ReplanningConfig(true, false)
-            ),
-            AllianceUtil::isRedAlliance,
-            drive
-        );
+                drive::getPose,
+                drive::resetOdometry,
+                drive::getRobotRelativeSpeeds,
+                drive::setRobotRelativeChassisSpeeds,
+                new HolonomicPathFollowerConfig(
+                        new PIDConstants(
+                                Constants.Auto.TRANSLATION_P,
+                                Constants.Auto.TRANSLATION_I,
+                                Constants.Auto.TRANSLATION_D),
+                        new PIDConstants(
+                                Constants.Auto.ROTATION_P, Constants.Auto.ROTATION_I, Constants.Auto.ROTATION_D),
+                        Constants.Auto.MODULE_MAXIMUM_VELOCITY,
+                        Constants.Auto.DRIVEBASE_RADIUS,
+                        new ReplanningConfig(true, false)),
+                AllianceUtil::isRedAlliance,
+                drive);
 
         autoSelector = new SendableChooser<String>();
         List<String> autos = AutoBuilder.getAllAutoNames();
         Collections.sort(autos);
-        
+
         for (String s : autos) {
             autoSelector.addOption(s, s);
         }
         autoSelector.setDefaultOption("SubC-MidDC", "SubC-MidDC");
 
         autoSelector.onChange((cmd) -> {
-            if(cmd != null){
+            if (cmd != null) {
                 setStartingPose(cmd);
-                ppAuto = getPathPlannerAuto(); // because we are composing later, we need to cook a fresh Command every time we select.
+                ppAuto = getPathPlannerAuto(); // because we are composing later, we need to cook a fresh
+                // Command every time we select.
             }
         });
 
@@ -100,11 +106,11 @@ public class PathPlannerAutoGenerator {
 
         try {
             field.setRobotPose(PathPlannerAuto.getStaringPoseFromAutoFile(cmdName));
-        } catch(Exception e) {
-            DataLogManager.log("An exception occurred while setting the starting position of a path planner path: " + e.getMessage());
+        } catch (Exception e) {
+            DataLogManager.log("An exception occurred while setting the starting position of a path planner path: "
+                    + e.getMessage());
             field.setRobotPose(new Pose2d());
         }
-        
     }
 
     private void setupShuffleboard() {
@@ -112,26 +118,52 @@ public class PathPlannerAutoGenerator {
         tab = Shuffleboard.getTab("Auto");
         tab.add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
         tab.add("Starting Pose", field).withPosition(0, 1).withSize(6, 4);
-        tab.addString("Alliance", () -> AllianceUtil.isRedAlliance() ? "Red" : "Blue").withPosition(6, 1);
-        delay = tab.add("Auto delay seconds", 0).withSize(2, 1).withPosition(3, 0).getEntry();
+        tab.addString("Alliance", () -> AllianceUtil.isRedAlliance() ? "Red" : "Blue")
+                .withPosition(6, 1);
+        delay = tab.add("Auto delay seconds", 0)
+                .withSize(2, 1)
+                .withPosition(3, 0)
+                .getEntry();
     }
 
     private void registerCommands() {
-        NamedCommands.registerCommand("closeAShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_A_SHOT_ANGLE));
-        NamedCommands.registerCommand("closeBShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_B_SHOT_ANGLE));
-        NamedCommands.registerCommand("closeCShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_C_SHOT_ANGLE));
-        NamedCommands.registerCommand("closerCShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSER_C_SHOT_ANGLE));
-        NamedCommands.registerCommand("behindCloseBShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.BEHIND_CLOSE_B_SHOT_ANGLE));
-        NamedCommands.registerCommand("sourceSideShot", new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.SOURCE_SIDE_SHOT_ANGLE));
+        NamedCommands.registerCommand(
+                "closeAShot",
+                new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_A_SHOT_ANGLE));
+        NamedCommands.registerCommand(
+                "closeBShot",
+                new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_B_SHOT_ANGLE));
+        NamedCommands.registerCommand(
+                "closeCShot",
+                new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSE_C_SHOT_ANGLE));
+        NamedCommands.registerCommand(
+                "closerCShot",
+                new ConfigurableShootSequence(shooter, undertaker, arm, led, () -> Constants.Auto.CLOSER_C_SHOT_ANGLE));
+        NamedCommands.registerCommand(
+                "behindCloseBShot",
+                new ConfigurableShootSequence(
+                        shooter, undertaker, arm, led, () -> Constants.Auto.BEHIND_CLOSE_B_SHOT_ANGLE));
+        NamedCommands.registerCommand(
+                "sourceSideShot",
+                new ConfigurableShootSequence(
+                        shooter, undertaker, arm, led, () -> Constants.Auto.SOURCE_SIDE_SHOT_ANGLE));
 
-        NamedCommands.registerCommand("intake", new AutoIntakeNote(shooter, undertaker)); //blocking
-        NamedCommands.registerCommand("intakeUntil", new AutoIntakeNote(shooter, undertaker).withTimeout(0.5)); //blocking
+        NamedCommands.registerCommand("intake", new AutoIntakeNote(shooter, undertaker)); // blocking
+        NamedCommands.registerCommand(
+                "intakeUntil", new AutoIntakeNote(shooter, undertaker).withTimeout(0.5)); // blocking
 
-        NamedCommands.registerCommand("armHome", new AutoArmHome(arm)); //blocking
-        
-        NamedCommands.registerCommand("spinUpClose", new AutoSpinUp(shooter, Constants.Auto.CLOSE_SHOT_SPEED_TOP, Constants.Auto.CLOSE_SHOT_SPEED_BOTTOM)); //blocking
-        NamedCommands.registerCommand("spinUpFar", new AutoSetTargetSpeed(shooter, Constants.Auto.SHOT_SPEED, Constants.Auto.SHOT_SPEED)); //non-blocking
-        NamedCommands.registerCommand("spinDown", new AutoSetTargetSpeed(shooter, 0, 0)); //non-blocking
+        NamedCommands.registerCommand("armHome", new AutoArmHome(arm)); // blocking
+
+        NamedCommands.registerCommand(
+                "spinUpClose",
+                new AutoSpinUp(
+                        shooter,
+                        Constants.Auto.CLOSE_SHOT_SPEED_TOP,
+                        Constants.Auto.CLOSE_SHOT_SPEED_BOTTOM)); // blocking
+        NamedCommands.registerCommand(
+                "spinUpFar",
+                new AutoSetTargetSpeed(shooter, Constants.Auto.SHOT_SPEED, Constants.Auto.SHOT_SPEED)); // non-blocking
+        NamedCommands.registerCommand("spinDown", new AutoSetTargetSpeed(shooter, 0, 0)); // non-blocking
     }
 
     private Command getPathPlannerAuto() {
@@ -144,17 +176,16 @@ public class PathPlannerAutoGenerator {
 
     public Command getAutoCommand() {
         Command autoCmd = new SequentialCommandGroup(
-            //We always want to shoot the preloaded piece, and we want to shoot before the delay.
-            new SpinUpAndShoot(shooter, () -> Constants.Shooter.SHOOT_SPEED, () -> Constants.Shooter.SHOOT_SPEED * 0.9),
+                // We always want to shoot the preloaded piece, and we want to shoot before the delay.
+                new SpinUpAndShoot(
+                        shooter, () -> Constants.Shooter.SHOOT_SPEED, () -> Constants.Shooter.SHOOT_SPEED * 0.9),
 
-            //If a delay is set in the shuffleboard, wait that long
-            //This has strategic value and is not required for technical reasons. 
-            new WaitCommand(delay.getDouble(0)), 
-            ppAuto,
-            new AutoSetTargetSpeed(shooter, 0, 0)
-        );
+                // If a delay is set in the shuffleboard, wait that long
+                // This has strategic value and is not required for technical reasons.
+                new WaitCommand(delay.getDouble(0)),
+                ppAuto,
+                new AutoSetTargetSpeed(shooter, 0, 0));
         ppAuto = getPathPlannerAuto(); // rebake pp auto... this might cause delay (bad)
         return autoCmd;
     }
-
 }

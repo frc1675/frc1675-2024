@@ -7,7 +7,7 @@ import frc.robot.Constants;
 import frc.robot.util.RobotContext;
 
 public class ContextualColor extends Command {
-    
+
     private final RobotContext robotContext;
     private final LEDSubsystem led;
     private final GenericHID toRumble;
@@ -31,8 +31,9 @@ public class ContextualColor extends Command {
         if (previousValues[0] != robotContext.hasNote()) {
             if (robotContext.hasNote()) {
                 led.addColor(LEDState.HAS_NOTE);
-                CommandScheduler.getInstance().schedule(new RumbleController(toRumble).withTimeout(Constants.Controller.RUMBLE_TIME));
-            }else {
+                CommandScheduler.getInstance()
+                        .schedule(new RumbleController(toRumble).withTimeout(Constants.Controller.RUMBLE_TIME));
+            } else {
                 led.addColor(LEDState.SHOT_FIRED);
             }
         }
@@ -47,7 +48,7 @@ public class ContextualColor extends Command {
         if (previous != current) {
             if (current) {
                 state.requestRemoval();
-            }else {
+            } else {
                 led.addColor(state);
             }
         }
@@ -64,5 +65,4 @@ public class ContextualColor extends Command {
     public boolean isFinished() {
         return false;
     }
-
 }

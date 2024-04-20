@@ -1,16 +1,15 @@
 package frc.robot.auto.cmd.arm;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.arm.ArmSubsystem;
+import java.util.function.DoubleSupplier;
 
 /* Move the arm to the given position. This *is* a blocking command. */
 public class AutoArmMove extends Command {
-    
+
     private final ArmSubsystem arm;
     private final DoubleSupplier position;
     private final Debouncer debouncer = new Debouncer(Constants.Auto.AUTO_DEBOUNCE_TIME);
@@ -41,5 +40,4 @@ public class AutoArmMove extends Command {
     public void end(boolean interrupted) {
         DataLogManager.log("Moved arm to " + position.getAsDouble());
     }
-
 }

@@ -1,67 +1,66 @@
 package frc.robot.notification;
 
 public enum LEDState {
-  UNDERTAKER_DISABLED(0.61, "Undertaker Disabled", "#ff0000", -1), //RED
-  SPINNING_UP(0.69, "Motors spinning up", "#ffff00", -1), //YELLOW
-  HAS_NOTE(0.77, "Has note", "#00ff00", 2), //GREEN
-  AT_AMP_POSITION(0.87, "At amp position", "0000ff", -1), //BLUE
-  SHOT_FIRED(-0.07,"Shot fired", "#Fdc256", 2), //GOLD
-  NOTHING(0.93 ,"Nothing", "#ffffff", -1), //WHITE
-  AUTONOMOUS_INTAKE_FAILED(-0.11, "Autonomous intake failed", "#da2d07", 2), //RED STROBE
-  AUTONOMOUS_COMPLETE(-0.19, "Autonomous is complete, no further movement", "#808080", 5), // GRAY HEARTBEAT
-  AUTONOMOUS_PATHFINDING(-0.23, "Autonomous is complete, attempting to pathfind.", "#0000ff", 5); //BLUE HEARTBEAT
-  
-  private final double spark;
-  private final String message;
-  private final String hexCode;
-  private final double timeout;
+    UNDERTAKER_DISABLED(0.61, "Undertaker Disabled", "#ff0000", -1), // RED
+    SPINNING_UP(0.69, "Motors spinning up", "#ffff00", -1), // YELLOW
+    HAS_NOTE(0.77, "Has note", "#00ff00", 2), // GREEN
+    AT_AMP_POSITION(0.87, "At amp position", "0000ff", -1), // BLUE
+    SHOT_FIRED(-0.07, "Shot fired", "#Fdc256", 2), // GOLD
+    NOTHING(0.93, "Nothing", "#ffffff", -1), // WHITE
+    AUTONOMOUS_INTAKE_FAILED(-0.11, "Autonomous intake failed", "#da2d07", 2), // RED STROBE
+    AUTONOMOUS_COMPLETE(-0.19, "Autonomous is complete, no further movement", "#808080", 5), // GRAY HEARTBEAT
+    AUTONOMOUS_PATHFINDING(-0.23, "Autonomous is complete, attempting to pathfind.", "#0000ff", 5); // BLUE HEARTBEAT
 
-  private double timeAdded = -1;
-  private boolean removeImmediately = false;
+    private final double spark;
+    private final String message;
+    private final String hexCode;
+    private final double timeout;
 
-  private LEDState(double sparkValue, String statusMessage, String hexCode, double timeout){
-    this.spark = sparkValue; 
-    this.message = statusMessage;
-    this.hexCode = hexCode;
-    this.timeout = timeout;
-  }
+    private double timeAdded = -1;
+    private boolean removeImmediately = false;
 
-  public void requestRemoval() {
-    removeImmediately = true;
-  }
-
-  public void setTimeAdded(double time) {
-    timeAdded = time;
-  }
-
-  public boolean isExpired(double time) {
-
-    if (removeImmediately) {
-      removeImmediately = false;
-      return true;
+    private LEDState(double sparkValue, String statusMessage, String hexCode, double timeout) {
+        this.spark = sparkValue;
+        this.message = statusMessage;
+        this.hexCode = hexCode;
+        this.timeout = timeout;
     }
 
-    if (timeAdded < 0 || timeout < 0) {
-      return false;
+    public void requestRemoval() {
+        removeImmediately = true;
     }
 
-    return (time - timeAdded) >= timeout;
-  }
+    public void setTimeAdded(double time) {
+        timeAdded = time;
+    }
 
-  public double getSparkValue(){
-    return this.spark;
-  }
+    public boolean isExpired(double time) {
 
-  public String getStatusMessage(){
-    return this.message;
-  }
+        if (removeImmediately) {
+            removeImmediately = false;
+            return true;
+        }
 
-  public String getHexCode(){
-    return this.hexCode;
-  }
+        if (timeAdded < 0 || timeout < 0) {
+            return false;
+        }
 
-  public double getTimeout() {
-    return timeout;
-  }
+        return (time - timeAdded) >= timeout;
+    }
 
+    public double getSparkValue() {
+        return this.spark;
+    }
+
+    public String getStatusMessage() {
+        return this.message;
+    }
+
+    public String getHexCode() {
+        return this.hexCode;
+    }
+
+    public double getTimeout() {
+        return timeout;
+    }
 }

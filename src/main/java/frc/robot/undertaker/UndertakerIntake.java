@@ -4,10 +4,9 @@
 
 package frc.robot.undertaker;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import java.util.function.BooleanSupplier;
 
 public class UndertakerIntake extends Command {
 

@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
 
 public class AllianceUtil {
-    
+
     public static boolean isRedAlliance() {
         if (Robot.isSimulation()) {
             return false;
