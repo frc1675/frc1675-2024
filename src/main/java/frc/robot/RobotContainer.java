@@ -93,7 +93,6 @@ public class RobotContainer {
                 .onTrue(new ShootAndReturnHome(shooter, arm, () -> robotContext.getShooterSpeed()[0], () -> robotContext
                         .getShooterSpeed()[1]));
 
-        // hey test
         driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
         driverController
                 .b()
