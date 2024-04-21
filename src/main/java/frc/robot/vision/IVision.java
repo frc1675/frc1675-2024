@@ -1,7 +1,6 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.vision.VisionSubsystem.LEDMode;
 
 public interface IVision {
 
@@ -10,8 +9,4 @@ public interface IVision {
     public int getTargetId();
 
     public boolean hasTarget();
-
-    public LEDMode getLEDMode();
-
-    public void setLEDMode(LEDMode mode);
 }
