@@ -104,7 +104,7 @@ public class PathPlannerAutoGenerator {
             }
         });
 
-        setupShuffleboard();
+        // setupShuffleboard();
     }
 
     public void periodic() {

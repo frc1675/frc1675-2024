@@ -34,6 +34,7 @@ import frc.robot.util.AllianceUtil;
 import frc.robot.util.Dashboards;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
+import java.util.LinkedHashMap;
 
 public class RobotContainer {
     private final PoseScheduler poseScheduler;
@@ -94,10 +95,19 @@ public class RobotContainer {
                         .getShooterSpeed()[1]));
 
         driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
-        driverController
-                .b()
-                .onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 150 : -30.5)); // TODO alliance switching
-        driverController.x().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 90 : -90));
+        driverController.b().onTrue(arm.testClearOptions()); // TODO alliance switching
+
+        LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
+        map1.put("foo1", "foo1val");
+        map1.put("bar1", "bar1val");
+        map1.put("baz1", "baz1val");
+
+        LinkedHashMap<String, String> map2 = new LinkedHashMap<>();
+        map2.put("foo2", "foo2val");
+        map2.put("bar2", "bar2val");
+        map2.put("baz2", "baz2val");
+        driverController.x().onTrue(arm.testSetOptions(map1, "foo1", "foo1Val"));
+        driverController.y().onTrue(arm.testSetOptions(map2, "foo2", "foo2Val"));
 
         operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
         operatorController.rightTrigger().onTrue(new MoveToHome(arm));
