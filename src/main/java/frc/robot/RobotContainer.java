@@ -14,11 +14,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
-import frc.robot.auto.cmd.group.ConfigurableShootSequence;
-import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.cmdGroup.ShootAndReturnHome;
@@ -27,6 +26,9 @@ import frc.robot.drive.DriveSubsystem;
 import frc.robot.drive.TurnToAngle;
 import frc.robot.notification.ContextualColor;
 import frc.robot.notification.LEDSubsystem;
+import frc.robot.operation.JakeDriverConfiguration;
+import frc.robot.operation.OperationConfiguration;
+import frc.robot.operation.WillOperatorConfiguration;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.undertaker.UndertakerSubsystem;
@@ -34,6 +36,8 @@ import frc.robot.util.AllianceUtil;
 import frc.robot.util.Dashboards;
 import frc.robot.util.RobotContext;
 import frc.robot.util.VersionFile;
+import java.util.ArrayList;
+import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
     private final PoseScheduler poseScheduler;
@@ -49,6 +53,8 @@ public class RobotContainer {
 
     private final CommandXboxController driverController;
     private final CommandXboxController operatorController;
+
+    private ArrayList<OperationConfiguration> operationConfigs = new ArrayList<>();
 
     private boolean shotTesting = false;
     private ShuffleboardTab testOnlyTab;
@@ -82,46 +88,24 @@ public class RobotContainer {
         // Comment the below out when not testing.
         // initTestingOnlyTab();
 
-        configureBindings();
+        initOperationConfigs();
+        registerRobotFunctions();
     }
 
-    private void configureBindings() {
-        driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    private void initOperationConfigs() {
+        operationConfigs.add(new JakeDriverConfiguration(driverController));
+        operationConfigs.add(new WillOperatorConfiguration(operatorController));
 
-        driverController
-                .rightBumper()
-                .onTrue(new ShootAndReturnHome(shooter, arm, () -> robotContext.getShooterSpeed()[0], () -> robotContext
-                        .getShooterSpeed()[1]));
+        // examples
+        // operationConfigs.add(new InvertedRotationDriverConfiguration(driverController));
+        // operationConfigs.add(new SCurvedDriverConfiguration(driverController));
+        // operationConfigs.add(new OverridesConfiguration(overrideController));
 
-        driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
-        driverController
-                .b()
-                .onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 150 : -30.5)); // TODO alliance switching
-        driverController.x().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 90 : -90));
+    }
 
-        operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
-        operatorController.rightTrigger().onTrue(new MoveToHome(arm));
-
-        operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.PODIUM_SHOT_ANGLE));
-        operatorController.b().onTrue(new MoveToPosition(arm, Constants.Arm.BEHIND_NOTE_B_ANGLE));
-        operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
-        operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
-
-        // operatorController.povUp().onTrue(new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED,
-        // Constants.Shooter.LONG_SHOT_SPEED));
-        // operatorController.povDown().onTrue(new SpinDown(shooter));
-
-        if (shotTesting) {
-            driverController
-                    .b()
-                    .onTrue(new ConfigurableShootSequence(
-                            shooter,
-                            undertakerSubsystem,
-                            arm,
-                            ledSubsystem,
-                            () -> testAngleEntry.getDouble(Constants.Auto.CLOSE_B_SHOT_ANGLE)));
-            driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Auto.SHOT_SPEED, Constants.Auto.SHOT_SPEED));
-            driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
+    private void registerRobotFunctions() {
+        for (OperationConfiguration opConfig : operationConfigs) {
+            opConfig.registerRobotFunctions(this);
         }
     }
 
@@ -129,16 +113,61 @@ public class RobotContainer {
         shooter.setTargetShooterSpeeds(0, 0); // Spin down after autonomous
         arm.setTarget(Constants.Arm.HOME_POSITION); // Reset arm position after teleop
 
-        drive.setDefaultCommand(new DefaultDrive(
-                drive,
-                () -> AllianceUtil.getTranslationDirection()
-                        * getJoystickInput(driverController, Constants.Controller.LEFT_Y_AXIS),
-                () -> AllianceUtil.getTranslationDirection()
-                        * getJoystickInput(driverController, Constants.Controller.LEFT_X_AXIS),
-                () -> getJoystickInput(driverController, Constants.Controller.RIGHT_X_AXIS),
-                robotContext::getDriveSpeedScale));
+        for (OperationConfiguration opConfig : operationConfigs) {
+            opConfig.registerTeleopFunctions(this);
+        }
+
         shooter.setDefaultCommand(new IntakeNote(shooter, undertakerSubsystem, robotContext::getReadyToIntake));
         ledSubsystem.setDefaultCommand(new ContextualColor(robotContext, ledSubsystem, driverController.getHID()));
+    }
+
+    public void registerZeroGyro(Trigger t) {
+        t.onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
+    }
+
+    public void registerShootAndGoHome(Trigger t) {
+        t.onTrue(new ShootAndReturnHome(shooter, arm, () -> robotContext.getShooterSpeed()[0], () -> robotContext
+                .getShooterSpeed()[1]));
+    }
+
+    public void registerTurnToSpeakerWall(Trigger t) {
+        t.onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
+    }
+
+    public void registerAimFromPodium(Trigger t) {
+        t.onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 150 : -30.5)); // TODO alliance switching
+    }
+
+    public void registerTurnToAmp(Trigger t) {
+        t.onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 90 : -90));
+    }
+
+    public void registerArmToAmp(Trigger t) {
+        t.onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
+    }
+
+    public void registerArmToHome(Trigger t) {
+        t.onTrue(new MoveToHome(arm));
+    }
+
+    public void registerArmToPodiumShot(Trigger t) {
+        t.onTrue(new MoveToPosition(arm, Constants.Arm.PODIUM_SHOT_ANGLE));
+    }
+
+    public void registerArmToFarShot(Trigger t) {
+        t.onTrue(new MoveToPosition(arm, Constants.Arm.BEHIND_NOTE_B_ANGLE));
+    }
+
+    public void registerEnableIntake(Trigger t) {
+        t.onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
+    }
+
+    public void registerDisableIntake(Trigger t) {
+        t.onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
+    }
+
+    public void registerDefaultDrive(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotation) {
+        drive.setDefaultCommand(new DefaultDrive(drive, x, y, rotation, robotContext::getDriveSpeedScale));
     }
 
     private double getJoystickInput(CommandGenericHID stick, int axe) {
