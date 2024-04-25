@@ -99,7 +99,6 @@ public class RobotContainer {
                 .b()
                 .onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 150 : -30.5)); // TODO alliance switching
         driverController.x().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 90 : -90));
-        driverController.leftBumper().onTrue(shooter.testMotor());
 
         operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
         operatorController.rightTrigger().onTrue(new MoveToHome(arm));

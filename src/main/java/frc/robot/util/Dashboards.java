@@ -32,10 +32,10 @@ public class Dashboards {
             tab.addDouble("Right Arm Motor Current", () -> PDH.getCurrent(18));
             tab.addDouble("Left Arm Motor Current", () -> PDH.getCurrent(5));
             // Shooter Motors
-            tab.addDouble("Shooter Motor 1 Current", () -> PDH.getCurrent(6));
-            tab.addDouble("Shooter Motor 2 Current", () -> PDH.getCurrent(7));
-            tab.addDouble("Shooter Motor 3 Current", () -> PDH.getCurrent(12));
-            tab.addDouble("Shooter Motor 4 Current", () -> PDH.getCurrent(13));
+            tab.addDouble("Shooter Motor Top Current", () -> PDH.getCurrent(12));
+            tab.addDouble("Shooter Motor Bottom Current", () -> PDH.getCurrent(7));
+            tab.addDouble("Indexer Motor Top Current", () -> PDH.getCurrent(13));
+            tab.addDouble("Indexer Motor Bottom Current", () -> PDH.getCurrent(6));
             // Undertaker Motors
             tab.addDouble("Undertaker left Motor Current", () -> PDH.getCurrent(4));
 
