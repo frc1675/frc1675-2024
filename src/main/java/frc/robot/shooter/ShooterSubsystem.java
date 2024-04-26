@@ -103,15 +103,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
-          topOutput = topPidController.calculate(shooterIO.getShooterSpeeds()[0],
-          targetTopShooterSpeed)
-          + topFeedForward.calculate(targetTopShooterSpeed);
-          bottomOutput = bottomPidController.calculate(shooterIO.getShooterSpeeds()[1],
-          targetBottomShooterSpeed)
-          + bottomFeedForward.calculate(targetBottomShooterSpeed);
-          shooterIO.setShooterOutput(topOutput, bottomOutput);
-         
+
+        topOutput = topPidController.calculate(shooterIO.getShooterSpeeds()[0], targetTopShooterSpeed)
+                + topFeedForward.calculate(targetTopShooterSpeed);
+        bottomOutput = bottomPidController.calculate(shooterIO.getShooterSpeeds()[1], targetBottomShooterSpeed)
+                + bottomFeedForward.calculate(targetBottomShooterSpeed);
+        shooterIO.setShooterOutput(topOutput, bottomOutput);
 
         shooterIO.periodic();
     }
