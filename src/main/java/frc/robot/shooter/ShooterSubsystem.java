@@ -4,7 +4,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -92,8 +95,15 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterIO.setIndexerOutput(targetIndexerSpeed);
     }
 
+    public Command testMotor() {
+        return new InstantCommand(() -> shooterIO.setShooterOutput(0.1, 0))
+                .andThen(new WaitCommand(2))
+                .andThen(() -> shooterIO.setShooterOutput(0, 0));
+    }
+
     @Override
     public void periodic() {
+
         topOutput = topPidController.calculate(shooterIO.getShooterSpeeds()[0], targetTopShooterSpeed)
                 + topFeedForward.calculate(targetTopShooterSpeed);
         bottomOutput = bottomPidController.calculate(shooterIO.getShooterSpeeds()[1], targetBottomShooterSpeed)
