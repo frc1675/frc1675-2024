@@ -5,7 +5,7 @@ import edu.wpi.first.math.util.Units;
 
 public class Constants {
 
-    public class Drive {
+    public static class Drive {
         public static final double MAXIMUM_VELOCITY = 5.5; // meters per second
         public static final double MAXIMUM_ANGULAR_VELOCITY = 8; // radians per second
 
@@ -27,7 +27,7 @@ public class Constants {
         public static final double ROTATION_TARGET_RANGE = 1.5;
     }
 
-    public class Arm {
+    public static class Arm {
         // Encoder constants
         public static final int ENCODER_CHANNEL = 7;
         public static final int ENCODER_CHANNEL_B = 29;
@@ -98,7 +98,7 @@ public class Constants {
         public static final PathConstraints EXTRA_PATHFINDING_CONSTRAINTS = new PathConstraints(3, 3, 9.4, 12.5);
     }
 
-    public class Shooter {
+    public static class Shooter {
         public static final double SHOOT_SPEED = 1700;
         public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
         public static final double LONG_SHOT_SPEED = 3500;
@@ -131,12 +131,12 @@ public class Constants {
         public static final double INDEXER_MOI = 1;
     }
 
-    public class Dashboard {
+    public static class Dashboard {
         public static final boolean DISABLE_TUNER = false;
         public static final String VERSION_FILE_NAME = "version/.robotVersionMini";
     }
 
-    public class Controller {
+    public static class Controller {
         public static final double DEADZONE_CONSTANT = 0.1675;
 
         public static final double RUMBLE_POWER = 1;
@@ -151,11 +151,11 @@ public class Constants {
         public static final int RIGHT_TRIGGER = 3;
     }
 
-    public class LEDController {
+    public static class LEDController {
         public static final int LED_CONTROLLER_CHANNEL = 0;
     }
 
-    public class Undertaker {
+    public static class Undertaker {
         public static final int INTAKE_MOTOR_ONE = 13;
         public static final int INTAKE_MOTOR_TWO = 14;
 
