@@ -62,7 +62,7 @@ public class Dashboards {
             ShuffleboardTab tab = Shuffleboard.getTab("Git Info");
             tab.addString("Branch", () -> BuildGitInfo.GIT_BRANCH);
             tab.addString("Commit", () -> BuildGitInfo.GIT_SHA.substring(0, 8));
-            tab.addBoolean("Dirty?", () -> BuildGitInfo.DIRTY != 0);
+            tab.addBoolean("Dirty?", () -> BuildGitInfo.DIRTY != 0); // true if any uncommitted changes
             tab.addString("Build Time", () -> BuildGitInfo.BUILD_DATE);
             gitInfoNeedsInit = false;
         }

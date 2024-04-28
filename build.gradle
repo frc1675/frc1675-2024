@@ -107,6 +107,10 @@ tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
+// -------------------------
+// --- Additions by 1675 ---
+// -------------------------
+
 // Configure spotless for styling and checks
 spotless {
     enforceCheck = false
@@ -152,17 +156,19 @@ spotless {
     }
 }
 
-// Configure gversion for generating git info
+// Configure gversion for generating build/git info
+// Credit to 2024 group led by Michael S for writing a standalong implementation before we learned about the gradle plugin
 gversion {
     srcDir       = "src/main/java/"
     classPackage = "frc.robot.generated.git"
     className    = "BuildGitInfo"
     dateFormat   = "yyyy-MM-dd HH:mm:ss z"
-    timeZone     = "America/Chicago" // Use preferred time zone
+    timeZone     = "America/Chicago"
     indent       = "    "
 }
 
 // Installs/updates git hook on build
+// Credit to Michael S 2024 for coming up with git hook idea to enforce spotless
 task installLocalGitHook(type: Copy){
     from new File(rootProject.rootDir, 'scripts/pre-commit')
     into { new File(rootProject.rootDir, '.git/hooks')}
