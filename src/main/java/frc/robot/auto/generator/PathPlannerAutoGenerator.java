@@ -12,9 +12,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -35,9 +33,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class PathPlannerAutoGenerator {
-
-    private SendableChooser<String> autoSelector;
-
     private Field2d field;
     private ShuffleboardTab tab;
     private GenericEntry delay;
@@ -174,14 +169,6 @@ public class PathPlannerAutoGenerator {
         NamedCommands.registerCommand("spinDown", new AutoSetTargetSpeed(shooter, 0, 0)); // non-blocking
     }
 
-    private Command getPathPlannerAuto() {
-        String selected = autoSelector.getSelected();
-        if (selected == null || selected.equalsIgnoreCase("none")) {
-            return Commands.none();
-        }
-        return new PathPlannerAuto(selected);
-    }
-
     public Command getAutoCommand() {
         Command autoCmd = new SequentialCommandGroup(
                 // We always want to shoot the preloaded piece, and we want to shoot before the delay.
@@ -193,7 +180,9 @@ public class PathPlannerAutoGenerator {
                 new WaitCommand(delay.getDouble(0)),
                 ppAuto,
                 new AutoSetTargetSpeed(shooter, 0, 0));
-        ppAuto = getPathPlannerAuto(); // rebake pp auto... this might cause delay (bad)
+        if (AutoBuilder.getAllAutoNames().contains(chooserResult)) {
+            ppAuto = new PathPlannerAuto(chooserResult); // rebake pp auto... this might cause delay (bad)
+        }
         return autoCmd;
     }
 }
