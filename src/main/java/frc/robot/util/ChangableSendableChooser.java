@@ -89,9 +89,11 @@ public class ChangableSendableChooser<V> implements Sendable, AutoCloseable {
     /**
      * Removes all options from the chooser.
      * After this call, the default choice will revert to empty string.
+     * After this call, setting any value will trigger onChange, even if the value is the same as the value before clearing.
      */
     public void clearOptions() {
         m_defaultChoice = "";
+        m_previousVal = "";
         m_selected = m_defaultChoice;
 
         m_map.clear();
@@ -140,6 +142,7 @@ public class ChangableSendableChooser<V> implements Sendable, AutoCloseable {
 
         m_defaultChoice = name;
         addOption(name, object);
+        m_selected = m_defaultChoice;
     }
 
     /**

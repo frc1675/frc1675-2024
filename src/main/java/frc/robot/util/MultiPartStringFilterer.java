@@ -43,10 +43,12 @@ public class MultiPartStringFilterer {
     public static String assembleParts(String... stringParts) {
         StringBuilder returnBuilder = new StringBuilder();
         for (int i = 0; i < stringParts.length; i++) {
-            if (i != 0) {
-                returnBuilder.append("-");
+            if (stringParts[i] != null) {
+                if (i != 0) {
+                    returnBuilder.append("-");
+                }
+                returnBuilder.append(stringParts[i]);
             }
-            returnBuilder.append(stringParts[i]);
         }
 
         return returnBuilder.toString();

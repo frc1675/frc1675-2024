@@ -81,34 +81,7 @@ public class PathPlannerAutoGenerator {
                 AllianceUtil::isRedAlliance,
                 drive);
 
-        autoSelector = new SendableChooser<String>();
-        List<String> autos = AutoBuilder.getAllAutoNames();
-        Collections.sort(autos);
-
-        chooserGroup = new FilteredChooserGroup("CHOOSERTEST", "ChooserTest", 3, autos.toArray(new String[0]));
-        Shuffleboard.getTab("CHOOSERTEST").addString("chooser result", () -> chooserResult);
-        chooserGroup.onChange(s -> {
-            chooserResult = s;
-        });
-
-        for (String s : autos) {
-            autoSelector.addOption(s, s);
-        }
-        autoSelector.setDefaultOption("SubC-MidDC", "SubC-MidDC");
-
-        autoSelector.onChange((cmd) -> {
-            if (cmd != null) {
-                setStartingPose(cmd);
-                ppAuto = getPathPlannerAuto(); // because we are composing later, we need to cook a fresh
-                // Command every time we select.
-            }
-        });
-
-        // setupShuffleboard();
-    }
-
-    public void periodic() {
-        chooserGroup.periodic();
+        setupShuffleboard();
     }
 
     private void setStartingPose(String cmdName) {
@@ -129,7 +102,29 @@ public class PathPlannerAutoGenerator {
     private void setupShuffleboard() {
         field = new Field2d();
         tab = Shuffleboard.getTab("Auto");
-        tab.add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
+        List<String> autos = AutoBuilder.getAllAutoNames();
+        Collections.sort(autos);
+
+        chooserGroup = new FilteredChooserGroup(tab, "AutoLayer", 3, autos.toArray(new String[0]));
+        chooserGroup.onChange(s -> {
+            chooserResult = s;
+            if (autos.contains(s)) {
+                setStartingPose(s);
+                ppAuto = new PathPlannerAuto(s);
+            }
+        });
+
+        tab.addString("Loaded Auto", () -> {
+            if (ppAuto != null) {
+                return ppAuto.getName();
+            } else {
+                return "no auto initialized";
+            }
+        });
+        tab.addBoolean(
+                "Auto Matches Choices",
+                () -> (ppAuto != null && ppAuto.getName().equals(chooserResult)));
+
         tab.add("Starting Pose", field).withPosition(0, 1).withSize(6, 4);
         tab.addString("Alliance", () -> AllianceUtil.isRedAlliance() ? "Red" : "Blue")
                 .withPosition(6, 1);
