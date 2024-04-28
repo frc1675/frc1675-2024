@@ -182,4 +182,4 @@ ctre_sim/
 simgui.json
 simgui-ds.json
 networktables.json
-src/main/deploy/version/*
+src/main/java/frc/robot/generated/*

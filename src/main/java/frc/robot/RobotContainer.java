@@ -33,7 +33,6 @@ import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AllianceUtil;
 import frc.robot.util.Dashboards;
 import frc.robot.util.RobotContext;
-import frc.robot.util.VersionFile;
 
 public class RobotContainer {
     private final PoseScheduler poseScheduler;
@@ -78,7 +77,7 @@ public class RobotContainer {
         Dashboards.initVoltageDashboard();
         Dashboards.initCurrentDashboard();
         Dashboards.initMemoryDashboard();
-        VersionFile.getInstance().putToDashboard();
+        Dashboards.initGitInfoDashboard();
 
         // Comment the below out when not testing.
         // initTestingOnlyTab();
