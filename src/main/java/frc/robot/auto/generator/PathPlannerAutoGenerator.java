@@ -85,7 +85,7 @@ public class PathPlannerAutoGenerator {
         for (String s : autos) {
             autoSelector.addOption(s, s);
         }
-        autoSelector.setDefaultOption("SubC-MidDC", "SubC-MidDC");
+        autoSelector.setDefaultOption("None", "None");
 
         autoSelector.onChange((cmd) -> {
             if (cmd != null) {
