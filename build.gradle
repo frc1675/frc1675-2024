@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
     id 'com.diffplug.spotless' version '6.20.0'
+    id "com.peterabeles.gversion" version "1.10"
 }
 
 java {
@@ -106,6 +107,11 @@ tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
+// -------------------------
+// --- Additions by 1675 ---
+// -------------------------
+
+// Configure spotless for styling and checks
 spotless {
     enforceCheck = false
     java {
@@ -150,79 +156,29 @@ spotless {
     }
 }
 
-def getRobotVersionData() {
-    def robotVersion = new StringBuilder()
-    robotVersion.append("Commit: @"+"git rev-parse --short HEAD".execute().text.replace('\n', '')+" by "+"git config user.name".execute().text+"\n")
-    robotVersion.append("Branch: ")
-    robotVersion.append('git branch --show-current'.execute().text)
-    robotVersion.append("Uncommitted Changes: ")
-    robotVersion.append('git diff --shortstat'.execute().text)
-    robotVersion.append("--------------------\n")
-    robotVersion.append('git status -s'.execute().text)
-    return robotVersion.toString()
+// Configure gversion for generating build/git info
+// Credit to 2024 group led by Michael S for writing a standalong implementation before we learned about the gradle plugin
+gversion {
+    srcDir       = "src/main/java/"
+    classPackage = "frc.robot.generated.git"
+    className    = "BuildGitInfo"
+    dateFormat   = "yyyy-MM-dd HH:mm:ss z"
+    timeZone     = "America/Chicago"
+    indent       = "    "
 }
 
-def getMinifiedRobotVersionData() {
-    def miniData = new StringBuilder()
-    miniData.append("git config user.name".execute().text + "@")
-    miniData.append("git branch --show-current".execute().text)
-    miniData.append(" | "+"git rev-parse --short HEAD".execute().text)
-    miniData.append(" | "+("git status -s".execute().text.length() > 0 ? "*" : ""))
-    return miniData.toString().replace('\n', '')
-}
-
-def writeVersionToFile = {
-    ->
-    if("git config user.name".execute().text.length() < 1) {
-        println "Git username not configured, skipping robot version file writing. We are probably on the build server."
-        return;
-    }
-
-    def versionDeployDir = new File("./src/main/deploy/version");
-
-    if(!versionDeployDir.exists()) {
-        if(! versionDeployDir.mkdir()) {
-            println "Version deploy directory could not be created."
-        }
-    }
-
-    def versionFile = new File(versionDeployDir, ".robotVersion")
-    def versionFileMini = new File(versionDeployDir, ".robotVersionMini")
-    if(versionFile.exists()){
-        versionFile.delete()
-    }
-
-    if(versionFileMini.exists()) {
-        versionFileMini.delete()
-    }
-    versionFile << getRobotVersionData()
-    versionFileMini << getMinifiedRobotVersionData()
-    println("Wrote version information to .robotVersion")
-}
-
-tasks.named("build") {
-    doFirst {
-        writeVersionToFile()
-    }
-}
-
-tasks.named("deploy") {
-    doFirst {
-        writeVersionToFile()
-    }
-}
-
-tasks.named("simulateExternalJavaRelease") {
-    doFirst {
-        writeVersionToFile()
-    }
-}
-
-
+// Installs/updates git hook on build
+// Credit to Michael S 2024 for coming up with git hook idea to enforce spotless
 task installLocalGitHook(type: Copy){
     from new File(rootProject.rootDir, 'scripts/pre-commit')
     into { new File(rootProject.rootDir, '.git/hooks')}
     fileMode 0775
 }
 
+// Set up custom task dependencies
+
+// install local git hooks on build
 build.dependsOn installLocalGitHook
+
+// create git info file before compile
+compileJava.dependsOn createVersionFile
