@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.util.ChangableSendableChooser;
 
 public class ArmSubsystem extends SubsystemBase {
     private double targetAngle = Constants.Arm.HOME_POSITION;
@@ -16,8 +15,6 @@ public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab dashboard;
     private IArmIO armIO;
     private TrapezoidProfile.Constraints profileConstraints;
-
-    private ChangableSendableChooser<String> testChooser;
 
     public static ArmSubsystem create() {
         return new ArmSubsystem(Robot.isReal() ? new RealArmIO() : new SimArmIO());
@@ -73,8 +70,6 @@ public class ArmSubsystem extends SubsystemBase {
     public boolean isBroken() {
         return broken;
     }
-
-    private String changeResult = "none yet";
 
     private void initDashboard() {
         dashboard = Shuffleboard.getTab("Arm");
