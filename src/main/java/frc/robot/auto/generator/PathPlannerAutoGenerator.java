@@ -12,9 +12,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -30,13 +28,11 @@ import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.shooter.commands.SpinUpAndShoot;
 import frc.robot.undertaker.UndertakerSubsystem;
 import frc.robot.util.AllianceUtil;
+import frc.robot.util.FilteredChooserGroup;
 import java.util.Collections;
 import java.util.List;
 
 public class PathPlannerAutoGenerator {
-
-    private SendableChooser<String> autoSelector;
-
     private Field2d field;
     private ShuffleboardTab tab;
     private GenericEntry delay;
@@ -46,6 +42,8 @@ public class PathPlannerAutoGenerator {
     private final UndertakerSubsystem undertaker;
     private final LEDSubsystem led;
     private Command ppAuto;
+    private String chooserResult = "none yet";
+    private FilteredChooserGroup chooserGroup;
 
     public PathPlannerAutoGenerator(
             DriveSubsystem drive,
@@ -78,23 +76,6 @@ public class PathPlannerAutoGenerator {
                 AllianceUtil::isRedAlliance,
                 drive);
 
-        autoSelector = new SendableChooser<String>();
-        List<String> autos = AutoBuilder.getAllAutoNames();
-        Collections.sort(autos);
-
-        for (String s : autos) {
-            autoSelector.addOption(s, s);
-        }
-        autoSelector.setDefaultOption("SubC-MidDC", "SubC-MidDC");
-
-        autoSelector.onChange((cmd) -> {
-            if (cmd != null) {
-                setStartingPose(cmd);
-                ppAuto = getPathPlannerAuto(); // because we are composing later, we need to cook a fresh
-                // Command every time we select.
-            }
-        });
-
         setupShuffleboard();
     }
 
@@ -116,7 +97,29 @@ public class PathPlannerAutoGenerator {
     private void setupShuffleboard() {
         field = new Field2d();
         tab = Shuffleboard.getTab("Auto");
-        tab.add("Auto Selection", autoSelector).withPosition(0, 0).withSize(2, 1);
+        List<String> autos = AutoBuilder.getAllAutoNames();
+        Collections.sort(autos);
+
+        chooserGroup = new FilteredChooserGroup(tab, "AutoLayer", 3, autos.toArray(new String[0]));
+        chooserGroup.onChange(s -> {
+            chooserResult = s;
+            if (autos.contains(s)) {
+                setStartingPose(s);
+                ppAuto = new PathPlannerAuto(s);
+            }
+        });
+
+        tab.addString("Loaded Auto", () -> {
+            if (ppAuto != null) {
+                return ppAuto.getName();
+            } else {
+                return "no auto initialized";
+            }
+        });
+        tab.addBoolean(
+                "Auto Matches Choices",
+                () -> (ppAuto != null && ppAuto.getName().equals(chooserResult)));
+
         tab.add("Starting Pose", field).withPosition(0, 1).withSize(6, 4);
         tab.addString("Alliance", () -> AllianceUtil.isRedAlliance() ? "Red" : "Blue")
                 .withPosition(6, 1);
@@ -166,14 +169,6 @@ public class PathPlannerAutoGenerator {
         NamedCommands.registerCommand("spinDown", new AutoSetTargetSpeed(shooter, 0, 0)); // non-blocking
     }
 
-    private Command getPathPlannerAuto() {
-        String selected = autoSelector.getSelected();
-        if (selected == null || selected.equalsIgnoreCase("none")) {
-            return Commands.none();
-        }
-        return new PathPlannerAuto(selected);
-    }
-
     public Command getAutoCommand() {
         Command autoCmd = new SequentialCommandGroup(
                 // We always want to shoot the preloaded piece, and we want to shoot before the delay.
@@ -185,7 +180,9 @@ public class PathPlannerAutoGenerator {
                 new WaitCommand(delay.getDouble(0)),
                 ppAuto,
                 new AutoSetTargetSpeed(shooter, 0, 0));
-        ppAuto = getPathPlannerAuto(); // rebake pp auto... this might cause delay (bad)
+        if (AutoBuilder.getAllAutoNames().contains(chooserResult)) {
+            ppAuto = new PathPlannerAuto(chooserResult); // rebake pp auto... this might cause delay (bad)
+        }
         return autoCmd;
     }
 }
