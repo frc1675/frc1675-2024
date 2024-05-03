@@ -5,11 +5,14 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.generated.git.BuildGitInfo;
 
 public class Dashboards {
     private static boolean voltageNeedsInit = true;
     private static boolean currentNeedsInit = true;
     private static boolean memoryNeedsInit = true;
+    private static boolean gitInfoNeedsInit = true;
+
     private static final PowerDistribution PDH = new PowerDistribution(1, ModuleType.kRev);
 
     public static void initVoltageDashboard() {
@@ -50,6 +53,18 @@ public class Dashboards {
             Runtime r = Runtime.getRuntime();
             Shuffleboard.getTab("Memory Usage")
                     .addDouble("Usage percent", () -> r.freeMemory() / (double) r.totalMemory());
+            memoryNeedsInit = false;
+        }
+    }
+
+    public static void initGitInfoDashboard() {
+        if (gitInfoNeedsInit) {
+            ShuffleboardTab tab = Shuffleboard.getTab("Git Info");
+            tab.addString("Branch", () -> BuildGitInfo.GIT_BRANCH);
+            tab.addString("Commit", () -> BuildGitInfo.GIT_SHA.substring(0, 8));
+            tab.addBoolean("Dirty?", () -> BuildGitInfo.DIRTY != 0); // true if any uncommitted changes
+            tab.addString("Build Time", () -> BuildGitInfo.BUILD_DATE);
+            gitInfoNeedsInit = false;
         }
     }
 }
