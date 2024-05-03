@@ -4,13 +4,10 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.util.ChangableSendableChooser;
-import java.util.Map;
 
 public class ArmSubsystem extends SubsystemBase {
     private double targetAngle = Constants.Arm.HOME_POSITION;
@@ -92,51 +89,6 @@ public class ArmSubsystem extends SubsystemBase {
         dashboard.addBoolean("Left home switch: ", () -> armIO.getLeftHomeSwitch());
         dashboard.addBoolean("Is Broken", () -> isBroken());
         dashboard.add(pid);
-
-        testChooser = new ChangableSendableChooser<String>();
-
-        testChooser.setDefaultOption("foo", "fooval");
-        testChooser.addOption("bar", "barval");
-        testChooser.addOption("baz", "bazval");
-
-        testChooser.onChange((s) -> {
-            changeResult = s;
-        });
-
-        dashboard.add("test chooser", testChooser);
-        dashboard.addString("test chooser selected", () -> {
-            String result = testChooser.getSelected();
-            return result == null ? "" : result;
-        });
-        dashboard.addString("test change result", () -> changeResult);
-    }
-
-    public Command testRemoveOption() {
-        return new InstantCommand(() -> testChooser.removeOption("bar"));
-    }
-
-    public Command testAddOption() {
-        return new InstantCommand(() -> {
-            testChooser.addOption("bang", "bangval");
-        });
-    }
-
-    public Command testClearOptions() {
-        return new InstantCommand(() -> {
-            testChooser.clearOptions();
-        });
-    }
-
-    public Command testSetOptions(Map<String, String> options) {
-        return new InstantCommand(() -> {
-            testChooser.setOptions(options);
-        });
-    }
-
-    public Command testSetOptions(Map<String, String> options, String dName, String dVal) {
-        return new InstantCommand(() -> {
-            testChooser.setOptions(options, dName, dVal);
-        });
     }
 
     public double getPositionSetpoint() {
