@@ -12,17 +12,23 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.poseScheduler.PoseScheduler;
+import frc.robot.util.UperTunerSendable;
+
 import java.io.File;
 import java.io.IOException;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
+import swervelib.parser.PIDFConfig;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
+
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -31,6 +37,17 @@ public class DriveSubsystem extends SubsystemBase {
     private final PoseScheduler poseScheduler;
 
     private ShuffleboardTab dashboard;
+
+    private final Field2d m1 = new Field2d();
+    private final Field2d m2 = new Field2d();
+
+
+    private PoseScheduler posScheduler;
+    private UperTunerSendable headingTuneableP;
+    private UperTunerSendable headingTuneableI;
+    private UperTunerSendable headingTuneableD;
+
+    private PIDFConfig headingPidfConfig;
 
     private final PIDController rotationController;
     private Double targetAngle = null;
@@ -86,6 +103,10 @@ public class DriveSubsystem extends SubsystemBase {
                     .withSize(2, 1);
             position += 2;
         }
+        
+        dashboard.add(swerve.field).withPosition(0, 1).withSize(5, 3);
+        dashboard.add("Vision Pose", m1);
+        dashboard.add("Vision Pose 2", m2);
     }
 
     private String getCommandName() {
@@ -176,5 +197,14 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         poseScheduler.updatePose(getPose());
+        
+    if (headingPidfConfig != null) {
+        headingPidfConfig.p = headingTuneableP.getCurrentValue();
+        headingPidfConfig.i = headingTuneableI.getCurrentValue();
+        headingPidfConfig.d = headingTuneableD.getCurrentValue();
     }
+    LimelightHelpers.SetRobotOrientation(Constants.Drive.LIMELIGHT_NAME, swerve.getYaw().getDegrees(), 0, 0, 0, 0, 0);
+    m1.setRobotPose(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Drive.LIMELIGHT_NAME));
+    m2.setRobotPose(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Drive.LIMELIGHT_NAME).pose);
+}
 }
