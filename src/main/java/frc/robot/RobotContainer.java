@@ -78,6 +78,7 @@ public class RobotContainer {
         Dashboards.initCurrentDashboard();
         Dashboards.initMemoryDashboard();
         Dashboards.initGitInfoDashboard();
+        Dashboards.initVisionPoseDashboard(drive);
 
         // Comment the below out when not testing.
         // initTestingOnlyTab();
