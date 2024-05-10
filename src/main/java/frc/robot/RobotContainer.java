@@ -8,6 +8,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,6 +33,7 @@ import frc.robot.notification.LEDSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.undertaker.UndertakerSubsystem;
+import frc.robot.vision.LimelightHelpers;
 import frc.robot.util.AllianceUtil;
 import frc.robot.util.Dashboards;
 import frc.robot.util.RobotContext;
@@ -52,6 +56,10 @@ public class RobotContainer {
     private boolean shotTesting = false;
     private ShuffleboardTab testOnlyTab;
     private GenericEntry testAngleEntry;
+    private final StructPublisher<Pose2d> visionPosePublisher = NetworkTableInstance.getDefault()
+        .getStructTopic("VisionPose", Pose2d.struct).publish();
+    private final StructPublisher<Pose2d> drivePosePublisher = NetworkTableInstance.getDefault()
+        .getStructTopic("DrivePose", Pose2d.struct).publish();
 
     public RobotContainer() {
         DataLogManager.start();
@@ -78,12 +86,16 @@ public class RobotContainer {
         Dashboards.initCurrentDashboard();
         Dashboards.initMemoryDashboard();
         Dashboards.initGitInfoDashboard();
-        Dashboards.initVisionPoseDashboard(drive);
 
         // Comment the below out when not testing.
         // initTestingOnlyTab();
 
         configureBindings();
+    }
+
+    public void updatePoseEstimation() {
+        visionPosePublisher.set(LimelightHelpers.getBotPose2d("limelight-ups"));
+        drivePosePublisher.set(drive.getPose());
     }
 
     private void configureBindings() {

@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.drive.DriveSubsystem;
-import frc.robot.vision.LimelightHelpers;
 import frc.robot.generated.git.BuildGitInfo;
 
 public class Dashboards {
@@ -14,7 +12,6 @@ public class Dashboards {
     private static boolean currentNeedsInit = true;
     private static boolean memoryNeedsInit = true;
     private static boolean gitInfoNeedsInit = true;
-    private static boolean visionPoseInfoNeedsInit = true;
 
     private static final PowerDistribution PDH = new PowerDistribution(1, ModuleType.kRev);
 
@@ -71,12 +68,4 @@ public class Dashboards {
         }
     }
 
-    public static void initVisionPoseDashboard(DriveSubsystem drive) {
-      if (visionPoseInfoNeedsInit) {
-        ShuffleboardTab tab = Shuffleboard.getTab("Pose Comparison");
-        tab.addString("Vision Pose2d", () -> LimelightHelpers.getBotPose2d("limelight-ups"));
-        tab.addString("Drivetrain Pose2d", () -> drive.getPose());
-        visionPoseInfoNeedsInit = false;
-      }
-    }
 }
