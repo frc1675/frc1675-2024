@@ -11,20 +11,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.ArmSubsystem;
-import frc.robot.arm.commands.MoveToHome;
-import frc.robot.arm.commands.MoveToPosition;
-import frc.robot.auto.cmd.group.ConfigurableShootSequence;
-import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.auto.generator.PathPlannerAutoGenerator;
 import frc.robot.cmdGroup.IntakeNote;
-import frc.robot.cmdGroup.ShootAndReturnHome;
 import frc.robot.drive.DefaultDrive;
 import frc.robot.drive.DriveSubsystem;
-import frc.robot.drive.TurnToAngle;
 import frc.robot.notification.ContextualColor;
 import frc.robot.notification.LEDSubsystem;
 import frc.robot.poseScheduler.PoseScheduler;
@@ -40,6 +33,7 @@ public class RobotContainer {
     private final ShooterSubsystem shooter;
     private final LEDSubsystem ledSubsystem;
     private final UndertakerSubsystem undertakerSubsystem;
+    private final Controls controlls;
     // private final VisionSubsystem visionSubsystem;
     private final ArmSubsystem arm;
 
@@ -66,13 +60,15 @@ public class RobotContainer {
         undertakerSubsystem = UndertakerSubsystem.create();
         shooter = ShooterSubsystem.create();
         arm = ArmSubsystem.create();
-
         robotContext = new RobotContext(arm, shooter);
+        driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
+        operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
+       
+        controlls = Controls.create(drive, shooter, poseScheduler, undertakerSubsystem, arm, robotContext, driverController, operatorController);
 
         autoGenerator = new PathPlannerAutoGenerator(drive, arm, shooter, undertakerSubsystem, ledSubsystem);
 
-        driverController = new CommandXboxController(Constants.Controller.DRIVER_CONTROLLER);
-        operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
+        
 
         Dashboards.initVoltageDashboard();
         Dashboards.initCurrentDashboard();
@@ -82,48 +78,10 @@ public class RobotContainer {
         // Comment the below out when not testing.
         // initTestingOnlyTab();
 
-        configureBindings();
+        controlls.driverSelect();
+        controlls.operatorSelect();
     }
 
-    private void configureBindings() {
-        driverController.start().onTrue(new InstantCommand(() -> drive.zeroGyroscope(), drive));
-
-        driverController
-                .rightBumper()
-                .onTrue(new ShootAndReturnHome(shooter, arm, () -> robotContext.getShooterSpeed()[0], () -> robotContext
-                        .getShooterSpeed()[1]));
-
-        driverController.a().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 0 : 180));
-        driverController
-                .b()
-                .onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 150 : -30.5)); // TODO alliance switching
-        driverController.x().onTrue(new TurnToAngle(drive, AllianceUtil.isRedAlliance() ? 90 : -90));
-
-        operatorController.leftTrigger().onTrue(new MoveToPosition(arm, Constants.Arm.AMP_POSITION));
-        operatorController.rightTrigger().onTrue(new MoveToHome(arm));
-
-        operatorController.x().onTrue(new MoveToPosition(arm, Constants.Arm.PODIUM_SHOT_ANGLE));
-        operatorController.b().onTrue(new MoveToPosition(arm, Constants.Arm.BEHIND_NOTE_B_ANGLE));
-        operatorController.a().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(true)));
-        operatorController.y().onTrue(new InstantCommand(() -> robotContext.setIntakeEnabledOverride(false)));
-
-        // operatorController.povUp().onTrue(new SpinUp(shooter, Constants.Shooter.LONG_SHOT_SPEED,
-        // Constants.Shooter.LONG_SHOT_SPEED));
-        // operatorController.povDown().onTrue(new SpinDown(shooter));
-
-        if (shotTesting) {
-            driverController
-                    .b()
-                    .onTrue(new ConfigurableShootSequence(
-                            shooter,
-                            undertakerSubsystem,
-                            arm,
-                            ledSubsystem,
-                            () -> testAngleEntry.getDouble(Constants.Auto.CLOSE_B_SHOT_ANGLE)));
-            driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Auto.SHOT_SPEED, Constants.Auto.SHOT_SPEED));
-            driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
-        }
-    }
 
     public void teleopInit() {
         shooter.setTargetShooterSpeeds(0, 0); // Spin down after autonomous
