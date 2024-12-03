@@ -143,8 +143,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     /**
      * Used for PathPlanner autonomous
-     *
-     * @return robot relative chassis speeds
      */
     public ChassisSpeeds getRobotRelativeSpeeds() {
         return swerve.getRobotVelocity();
