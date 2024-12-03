@@ -59,7 +59,19 @@ public class RobotContainer {
         DataLogManager.log("Data log started.");
 
         poseScheduler = new PoseScheduler();
-        drive = new DriveSubsystem(poseScheduler);
+        drive = new DriveSubsystem(
+                Constants.Drive.MAXIMUM_VELOCITY,
+                Constants.Drive.MAXIMUM_ANGULAR_VELOCITY,
+                Constants.Drive.STEER_GEAR_RATIO,
+                Constants.Drive.PULSE_PER_ROTATION,
+                Constants.Drive.DRIVE_GEAR_RATIO,
+                Constants.Drive.PULSE_PER_ROTATION,
+                Constants.Drive.WHEEL_DIAMETER_METERS,
+                Constants.Drive.ROTATION_P,
+                Constants.Drive.ROTATION_I,
+                Constants.Drive.ROTATION_D,
+                Constants.Drive.ROTATION_TARGET_RANGE,
+                Constants.Drive.MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE);
 
         // visionSubsystem = VisionSubsystem.create();
         ledSubsystem = LEDSubsystem.create();
