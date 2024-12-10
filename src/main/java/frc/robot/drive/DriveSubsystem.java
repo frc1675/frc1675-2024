@@ -141,22 +141,6 @@ public class DriveSubsystem extends SubsystemBase {
         swerve.zeroGyro();
     }
 
-    /**
-     * Used for PathPlanner autonomous
-     */
-    public ChassisSpeeds getRobotRelativeSpeeds() {
-        return swerve.getRobotVelocity();
-    }
-
-    /** Used for PathPlanner autonomous */
-    public void setRobotRelativeChassisSpeeds(ChassisSpeeds speeds) {
-        swerve.drive(
-                new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
-                speeds.omegaRadiansPerSecond,
-                false,
-                false);
-    }
-
     public void drive(double x, double y, double rotation) {
         if (rotation != 0 || (targetAngle != null && rotationController.atSetpoint())) {
             targetAngle = null;
@@ -171,10 +155,6 @@ public class DriveSubsystem extends SubsystemBase {
         swerve.drive(new Translation2d(x * maxTranslationVelocity, y * maxTranslationVelocity), rotation, true, false);
     }
 
-    public Pose2d getPose() {
-        return swerve.getPose();
-    }
-
     public void addVisionMeasurement(Pose2d visionMeasuredPose) {
         // Per recommendation from lib authors, discard poses which are
         // too far away from current pose.
@@ -187,16 +167,36 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Used for autonomous
-     *
-     * @param override new pose
+     * Provide a heading for the robot to point at automatically.
+     * Rotation directive is provided by this automatic pointing until the angle is reached or the rotation stick receives input.
+     * @param angleDeg The heading to point at in degrees. 0/360 is the red alliance wall and increases CCW.
      */
+    public void setTargetAngle(double angleDeg) {
+        rotationController.reset();
+        targetAngle = angleDeg;
+    }
+
+    /** Used for PathPlanner autonomous */
+    public Pose2d getPose() {
+        return swerve.getPose();
+    }
+
+    /** Used for PathPlanner autonomous */
     public void resetOdometry(Pose2d override) {
         swerve.resetOdometry(override);
     }
 
-    public void setTargetAngle(double angleDeg) {
-        rotationController.reset();
-        targetAngle = angleDeg;
+    /** Used for PathPlanner autonomous */
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return swerve.getRobotVelocity();
+    }
+
+    /** Used for PathPlanner autonomous */
+    public void setRobotRelativeChassisSpeeds(ChassisSpeeds speeds) {
+        swerve.drive(
+                new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
+                speeds.omegaRadiansPerSecond,
+                false,
+                false);
     }
 }
