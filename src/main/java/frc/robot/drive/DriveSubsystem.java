@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.poseScheduler.PoseScheduler;
 import java.io.File;
 import java.io.IOException;
 import swervelib.SwerveDrive;
@@ -26,35 +24,61 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class DriveSubsystem extends SubsystemBase {
 
-    private SwerveDrive swerve;
-
-    private final PoseScheduler poseScheduler;
-
+    // JTPTODO REMOVE initdashboard for brownbox version
     private ShuffleboardTab dashboard;
+
+    private SwerveDrive swerve;
 
     private final PIDController rotationController;
     private Double targetAngle = null;
-    private int rotationDirection =
-            1; // Used to make sure the rotation PID continues working while the gyroscope is inverted.
 
-    public DriveSubsystem(PoseScheduler poseScheduler) {
-        this.poseScheduler = poseScheduler;
-        rotationController =
-                new PIDController(Constants.Drive.ROTATION_P, Constants.Drive.ROTATION_I, Constants.Drive.ROTATION_D);
+    private double maxTranslationVelocity;
+    private double maxRotationVelocity;
+    private double maxVisionPoseOverrideDistance;
+
+    /*
+     * Josh concerns:
+     * - rotation controller feels messy but unsure if there is a better way to handle the desired action
+     *   (snap to commanded angles but be controlled by stick otherwise)
+     */
+
+    /**
+     * Constructs a field-relative swerve drive subsystem that uses YAGSL and has needed methods for use with PathPlanner.
+     * Additionally provides capability for automatically pointing to a specific heading.
+     * CAN IDs for drive motors; turning motors, and turning sensors are configured in the YAGSL json files at deploy/swerve.
+     *
+     * @param maxTranslationVelocity Maximum translation velocity of the robot in meters per second
+     * @param maxRotationVelocity Maximum rotation velocity of the robot in radians per second
+     * @param steeringGearRatio Steering gear ratio (for reference, 12.8 in 2024)
+     * @param steeringPulsePerRotation PPR of the steering motor (1 if integrated, 1 in 2024)
+     * @param driveGearRatio Drive gear ratio (for reference, 6.12 in 2024)
+     * @param drivePulsePerRotation PPR of the drive motor (1 if integrated, 1 in 2024)
+     * @param wheelDiameter Wheel diameter in meters
+     * @param pointingP P for automatic pointing rotation
+     * @param pointingI I for automatic pointing rotation
+     * @param pointingD D for automatic pointing rotation
+     * @param pointingTolerance Tolerance for automatic pointing, in degrees.
+     * @param maxVisionPoseOverrideDistance Maximum vision pose difference allowed, in meters. (If the vision pose is too far off, ignore it)
+     */
+    private DriveSubsystem(DriveSubsystemBuilder builder) {
+
+        this.maxRotationVelocity = builder.maxRotationVelocity;
+        this.maxTranslationVelocity = builder.maxTranslationVelocity;
+        this.maxVisionPoseOverrideDistance = builder.maxVisionPoseOverrideDistance;
+
+        rotationController = new PIDController(builder.pointingP, builder.pointingI, builder.pointingD);
         rotationController.enableContinuousInput(-180, 180);
-        rotationController.setTolerance(Constants.Drive.ROTATION_TARGET_RANGE);
+        rotationController.setTolerance(builder.pointingTolerance);
 
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
         try {
             swerve = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
                     .createSwerveDrive(
-                            Constants.Drive.MAXIMUM_VELOCITY,
+                            maxTranslationVelocity,
                             SwerveMath.calculateDegreesPerSteeringRotation(
-                                    Constants.Drive.STEER_GEAR_RATIO, Constants.Drive.PULSE_PER_ROTATION),
+                                    builder.steeringGearRatio, builder.steeringPulsePerRotation),
                             SwerveMath.calculateMetersPerRotation(
-                                    Constants.Drive.WHEEL_DIAMETER_METERS,
-                                    Constants.Drive.DRIVE_GEAR_RATIO,
-                                    Constants.Drive.PULSE_PER_ROTATION));
+                                    builder.wheelDiameter, builder.driveGearRatio, builder.drivePulsePerRotation));
         } catch (IOException e) {
             System.out.println("Swerve drive configuration file could not be found at "
                     + Filesystem.getDeployDirectory()
@@ -64,9 +88,12 @@ public class DriveSubsystem extends SubsystemBase {
 
         swerve.chassisVelocityCorrection = false;
         swerve.setHeadingCorrection(true);
+
+        // JTPTODO REMOVE initdashboard for brownbox version
         initDashboard();
     }
 
+    // JTPTODO REMOVE initdashboard for brownbox version
     private void initDashboard() {
         dashboard = Shuffleboard.getTab("Drive");
         dashboard.addString("Current Command", this::getCommandName);
@@ -103,11 +130,52 @@ public class DriveSubsystem extends SubsystemBase {
         swerve.zeroGyro();
     }
 
+    public void drive(double x, double y, double rotation) {
+        if (rotation != 0 || (targetAngle != null && rotationController.atSetpoint())) {
+            targetAngle = null;
+        }
+
+        if (targetAngle != null) {
+            rotation = rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle);
+        } else {
+            rotation = rotation * maxRotationVelocity;
+        }
+
+        swerve.drive(new Translation2d(x * maxTranslationVelocity, y * maxTranslationVelocity), rotation, true, false);
+    }
+
+    public void addVisionMeasurement(Pose2d visionMeasuredPose) {
+        // Per recommendation from lib authors, discard poses which are
+        // too far away from current pose.
+        double distance =
+                Math.sqrt(Math.pow((visionMeasuredPose.getX() - swerve.getPose().getX()), 2)
+                        + Math.pow((visionMeasuredPose.getY() - swerve.getPose().getY()), 2));
+        if (distance <= maxVisionPoseOverrideDistance) {
+            swerve.swerveDrivePoseEstimator.addVisionMeasurement(visionMeasuredPose, Timer.getFPGATimestamp());
+        }
+    }
+
     /**
-     * Used for PathPlanner autonomous
-     *
-     * @return robot relative chassis speeds
+     * Provide a heading for the robot to point at automatically.
+     * Rotation directive is provided by this automatic pointing until the angle is reached or the rotation stick receives input.
+     * @param angleDeg The heading to point at in degrees. 0/360 is the red alliance wall and increases CCW.
      */
+    public void setTargetAngle(double angleDeg) {
+        rotationController.reset();
+        targetAngle = angleDeg;
+    }
+
+    /** Used for PathPlanner autonomous */
+    public Pose2d getPose() {
+        return swerve.getPose();
+    }
+
+    /** Used for PathPlanner autonomous */
+    public void resetOdometry(Pose2d override) {
+        swerve.resetOdometry(override);
+    }
+
+    /** Used for PathPlanner autonomous */
     public ChassisSpeeds getRobotRelativeSpeeds() {
         return swerve.getRobotVelocity();
     }
@@ -121,60 +189,134 @@ public class DriveSubsystem extends SubsystemBase {
                 false);
     }
 
-    public void drive(double x, double y, double rotation) {
-        if (rotation != 0 || (targetAngle != null && rotationController.atSetpoint())) {
-            targetAngle = null;
+    public static class DriveSubsystemBuilder {
+        private double maxTranslationVelocity;
+        private double maxRotationVelocity;
+
+        private double steeringGearRatio;
+        private double steeringPulsePerRotation;
+
+        private double driveGearRatio;
+        private double drivePulsePerRotation;
+
+        private double wheelDiameter;
+
+        private double pointingP;
+        private double pointingI;
+        private double pointingD;
+        private double pointingTolerance;
+
+        private double maxVisionPoseOverrideDistance;
+
+        private boolean maxVelocitiesSet = false;
+        private boolean steeringPropertiesSet = false;
+        private boolean drivePropertiesSet = false;
+        private boolean wheelPropertiesSet = false;
+        private boolean pointingPidSet = false;
+        private boolean visionPropertiesSet = false;
+
+        /**
+         * Creates a builder to use
+         */
+        public DriveSubsystemBuilder() {}
+
+        /**
+         * Must be called to build a DriveSubsystem
+         * @param maxTranslationVelocity Maximum translation velocity of the robot in meters per second
+         * @param maxRotationVelocity Maximum rotation velocity of the robot in radians per second
+         */
+        public DriveSubsystemBuilder withMaxVelocities(double maxTranslationVelocity, double maxRotationVelocity) {
+            this.maxTranslationVelocity = maxTranslationVelocity;
+            this.maxRotationVelocity = maxRotationVelocity;
+            maxVelocitiesSet = true;
+            return this;
         }
 
-        if (targetAngle != null) {
-            rotation = rotationDirection
-                    * rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle);
-        } else {
-            rotation = rotation * Constants.Drive.MAXIMUM_ANGULAR_VELOCITY;
+        /**
+         * Must be called to build a DriveSubsystem
+         * @param steeringGearRatio Steering gear ratio (for reference, 12.8 in 2024)
+         * @param steeringPulsePerRotation PPR of the steering motor (1 if integrated, 1 in 2024)
+         * @return
+         */
+        public DriveSubsystemBuilder withSteeringMotorProperties(
+                double steeringGearRatio, double steeringPulsePerRotation) {
+            this.steeringGearRatio = steeringGearRatio;
+            this.steeringPulsePerRotation = steeringPulsePerRotation;
+            steeringPropertiesSet = true;
+            return this;
         }
 
-        swerve.drive(
-                new Translation2d(x * Constants.Drive.MAXIMUM_VELOCITY, y * Constants.Drive.MAXIMUM_VELOCITY),
-                rotation,
-                true,
-                false);
-    }
-
-    public Pose2d getPose() {
-        return swerve.getPose();
-    }
-
-    public void addVisionMeasurement(Pose2d visionMeasuredPose) {
-        // Per recommendation from lib authors, discard poses which are
-        // too far away from current pose.
-        double distance =
-                Math.sqrt(Math.pow((visionMeasuredPose.getX() - swerve.getPose().getX()), 2)
-                        + Math.pow((visionMeasuredPose.getY() - swerve.getPose().getY()), 2));
-        if (distance <= Constants.Drive.MAXIMUM_VISION_POSE_OVERRIDE_DISTANCE) {
-            swerve.swerveDrivePoseEstimator.addVisionMeasurement(visionMeasuredPose, Timer.getFPGATimestamp());
+        /**
+         * Must be called to build a DriveSubsystem
+         * @param driveGearRatio Drive gear ratio (for reference, 6.12 in 2024)
+         * @param drivePulsePerRotation PPR of the drive motor (1 if integrated, 1 in 2024)
+         * @return
+         */
+        public DriveSubsystemBuilder withDriveMotorProperties(double driveGearRatio, double drivePulsePerRotation) {
+            this.driveGearRatio = driveGearRatio;
+            this.drivePulsePerRotation = drivePulsePerRotation;
+            drivePropertiesSet = true;
+            return this;
         }
-    }
 
-    /**
-     * Used for autonomous
-     *
-     * @param override new pose
-     */
-    public void resetOdometry(Pose2d override) {
-        swerve.resetOdometry(override);
-    }
+        /**
+         * Must be called to build a DriveSubsystem
+         * @param wheelDiameter Wheel diameter in meters
+         * @return
+         */
+        public DriveSubsystemBuilder withWheelDiameter(double wheelDiameter) {
+            this.wheelDiameter = wheelDiameter;
+            wheelPropertiesSet = true;
+            return this;
+        }
 
-    public void setTargetAngle(double angleDeg) {
-        rotationController.reset();
-        targetAngle = angleDeg;
-    }
+        /**
+         * Must be called to build a DriveSubsystem
+         * @param pointingP P for automatic pointing rotation
+         * @param pointingI I for automatic pointing rotation
+         * @param pointingD D for automatic pointing rotation
+         * @param pointingTolerance Tolerance for automatic pointing, in degrees.
+         * @return
+         */
+        public DriveSubsystemBuilder withPointingPID(
+                double pointingP, double pointingI, double pointingD, double pointingTolerance) {
+            this.pointingP = pointingP;
+            this.pointingI = pointingI;
+            this.pointingD = pointingD;
+            this.pointingTolerance = pointingTolerance;
+            pointingPidSet = true;
+            return this;
+        }
 
-    public void unsetTargetAngle() {
-        targetAngle = null;
-    }
+        /**
+         * Must be called to build a DriveSubsystem
+         * @param maxVisionPoseOverrideDistance Maximum vision pose difference allowed, in meters. (If the vision pose is too far off, ignore it)
+         * @return
+         */
+        public DriveSubsystemBuilder withVisionProperties(double maxVisionPoseOverrideDistance) {
+            this.maxVisionPoseOverrideDistance = maxVisionPoseOverrideDistance;
+            visionPropertiesSet = true;
+            return this;
+        }
 
-    @Override
-    public void periodic() {
-        poseScheduler.updatePose(getPose());
+        /**
+         * Builds a DriveSubsystem as long as all the builder methods have been called.
+         * @return
+         * @throws RuntimeException if all the builder methods have not been called
+         */
+        public DriveSubsystem build() {
+            if (maxVelocitiesSet
+                    && steeringPropertiesSet
+                    && drivePropertiesSet
+                    && wheelPropertiesSet
+                    && pointingPidSet
+                    && visionPropertiesSet) {
+                return new DriveSubsystem(this);
+            } else {
+                // This is an unchecked exception that Java doesn't force us to catch
+                // that's fine because it should never happen, if it does happen the robot should crash.
+                throw new RuntimeException("Didn't fully initialize the builder");
+            }
+        }
     }
 }
