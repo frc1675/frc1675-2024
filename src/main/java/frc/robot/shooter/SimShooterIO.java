@@ -1,19 +1,15 @@
 package frc.robot.shooter;
 
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.robot.Constants;
-
 public class SimShooterIO implements IShooterIO {
     private double shooterTopVoltage;
     private double shooterBottomVoltage;
     private double indexerVoltage;
-    private final FlywheelSim topShooterMotorSim =
-            new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.SHOOTER_MOI);
-    private final FlywheelSim bottomShooterMotorSim =
-            new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.SHOOTER_MOI);
-    private final FlywheelSim indexerMotorSim =
-            new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.INDEXER_MOI);
+    // private final FlywheelSim topShooterMotorSim =
+    //         new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.SHOOTER_MOI);
+    // private final FlywheelSim bottomShooterMotorSim =
+    //         new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.SHOOTER_MOI);
+    // private final FlywheelSim indexerMotorSim =
+    //         new FlywheelSim(DCMotor.getNEO(1), Constants.Shooter.GEARING, Constants.Shooter.INDEXER_MOI);
 
     public SimShooterIO() {}
 
@@ -45,18 +41,19 @@ public class SimShooterIO implements IShooterIO {
 
     @Override
     public double[] getIndexerSpeeds() {
-        return new double[] {indexerMotorSim.getAngularVelocityRPM(), indexerMotorSim.getAngularVelocityRPM()};
+        return new double[] {0.0, 0.0};
+        // return new double[] {indexerMotorSim.getAngularVelocityRPM(), indexerMotorSim.getAngularVelocityRPM()};
     }
 
     @Override
     public void periodic() {
-        topShooterMotorSim.setInputVoltage(shooterTopVoltage);
-        topShooterMotorSim.update(0.02);
+        // topShooterMotorSim.setInputVoltage(shooterTopVoltage);
+        // topShooterMotorSim.update(0.02);
 
-        bottomShooterMotorSim.setInputVoltage(shooterBottomVoltage);
-        bottomShooterMotorSim.update(0.02);
+        // bottomShooterMotorSim.setInputVoltage(shooterBottomVoltage);
+        // bottomShooterMotorSim.update(0.02);
 
-        indexerMotorSim.setInputVoltage(indexerVoltage);
-        indexerMotorSim.update(0.02);
+        // indexerMotorSim.setInputVoltage(indexerVoltage);
+        // indexerMotorSim.update(0.02);
     }
 }

@@ -1,26 +1,25 @@
 package frc.robot.arm;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants;
 
 public class RealArmIO implements IArmIO {
 
-    private CANSparkMax armMotorRight;
-    private CANSparkMax armMotorLeft;
+    private SparkMax armMotorRight;
+    private SparkMax armMotorLeft;
     private DutyCycleEncoder encoder;
     private DigitalInput homeSwitchLeft;
     private DigitalInput homeSwitchRight;
     private double motorPower;
 
     public RealArmIO() {
-        armMotorRight = new CANSparkMax(Constants.Arm.ARM_MOTOR_RIGHT, MotorType.kBrushless);
-        armMotorLeft = new CANSparkMax(Constants.Arm.ARM_MOTOR_LEFT, MotorType.kBrushless);
-        armMotorRight.setIdleMode(IdleMode.kBrake);
-        armMotorLeft.setIdleMode(IdleMode.kBrake);
+        armMotorRight = new SparkMax(Constants.Arm.ARM_MOTOR_RIGHT, MotorType.kBrushless);
+        armMotorLeft = new SparkMax(Constants.Arm.ARM_MOTOR_LEFT, MotorType.kBrushless);
+        // armMotorRight.setIdleMode(IdleMode.kBrake);
+        // armMotorLeft.setIdleMode(IdleMode.kBrake);
         armMotorRight.setInverted(true);
         armMotorLeft.setInverted(false);
         encoder = new DutyCycleEncoder(Constants.Arm.ENCODER_CHANNEL);

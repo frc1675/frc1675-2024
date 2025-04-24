@@ -1,6 +1,5 @@
 package frc.robot.arm;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -24,14 +23,13 @@ public class SimArmIO implements IArmIO {
     // sim to robot: 105.5 - sim_angle = r_angle
     private final SingleJointedArmSim armSim = new SingleJointedArmSim(
             DCMotor.getNEO(2),
-            100,
+            100.0,
             SingleJointedArmSim.estimateMOI(Units.inchesToMeters(30), 13),
             Units.inchesToMeters(30),
             Units.degreesToRadians(domainSwap(Constants.Arm.HOME_POSITION)),
             Units.degreesToRadians(domainSwap(Constants.Arm.MAX_ARM_RANGE_DEGREES)),
             true,
-            Units.degreesToRadians(domainSwap(Constants.Arm.HOME_POSITION)),
-            VecBuilder.fill(TICK));
+            Units.degreesToRadians(domainSwap(Constants.Arm.HOME_POSITION)));
 
     private double angleRads;
     private double motorSpeed;

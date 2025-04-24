@@ -3,9 +3,9 @@ package frc.robot.auto.generator;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -58,21 +58,31 @@ public class PathPlannerAutoGenerator {
 
         registerCommands();
 
-        AutoBuilder.configureHolonomic(
+        RobotConfig config = null;
+        try {
+            config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+        }
+
+        AutoBuilder.configure(
                 drive::getPose,
                 drive::resetOdometry,
                 drive::getRobotRelativeSpeeds,
                 drive::setRobotRelativeChassisSpeeds,
-                new HolonomicPathFollowerConfig(
+                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
+                        // holonomic drive trains
                         new PIDConstants(
                                 Constants.Auto.TRANSLATION_P,
                                 Constants.Auto.TRANSLATION_I,
-                                Constants.Auto.TRANSLATION_D),
+                                Constants.Auto.TRANSLATION_D), // Translation PID constants
                         new PIDConstants(
-                                Constants.Auto.ROTATION_P, Constants.Auto.ROTATION_I, Constants.Auto.ROTATION_D),
-                        Constants.Auto.MODULE_MAXIMUM_VELOCITY,
-                        Constants.Auto.DRIVEBASE_RADIUS,
-                        new ReplanningConfig(true, false)),
+                                Constants.Auto.ROTATION_P,
+                                Constants.Auto.ROTATION_I,
+                                Constants.Auto.ROTATION_D) // Rotation PID constants
+                        ),
+                config, // The robot configuration
                 AllianceUtil::isRedAlliance,
                 drive);
 
@@ -86,7 +96,7 @@ public class PathPlannerAutoGenerator {
         }
 
         try {
-            field.setRobotPose(PathPlannerAuto.getStaringPoseFromAutoFile(cmdName));
+            // field.setRobotPose(PathPlannerAuto.getStaringPoseFromAutoFile(cmdName));
         } catch (Exception e) {
             DataLogManager.log("An exception occurred while setting the starting position of a path planner path: "
                     + e.getMessage());

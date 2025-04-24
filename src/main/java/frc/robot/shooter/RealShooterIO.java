@@ -2,19 +2,19 @@ package frc.robot.shooter;
 
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
-import au.grapplerobotics.LaserCan.RangingMode;
-import au.grapplerobotics.LaserCan.TimingBudget;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkMax;
+import au.grapplerobotics.interfaces.LaserCanInterface.RangingMode;
+import au.grapplerobotics.interfaces.LaserCanInterface.TimingBudget;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import frc.robot.Constants;
 
 public class RealShooterIO implements IShooterIO {
 
-    private CANSparkMax shooterMotorTop;
-    private CANSparkMax shooterMotorBottom;
-    private CANSparkMax indexerMotorTop;
-    private CANSparkMax indexerMotorBottom;
+    private SparkMax shooterMotorTop;
+    private SparkMax shooterMotorBottom;
+    private SparkMax indexerMotorTop;
+    private SparkMax indexerMotorBottom;
 
     private RelativeEncoder shooterMotorTopEncoder;
     private RelativeEncoder shooterMotorBottomEncoder;
@@ -24,13 +24,13 @@ public class RealShooterIO implements IShooterIO {
     private LaserCan laserCAN;
 
     public RealShooterIO() {
-        shooterMotorTop = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_TOP, CANSparkMax.MotorType.kBrushless);
-        shooterMotorBottom = new CANSparkMax(Constants.Shooter.SHOOTER_MOTOR_BOTTOM, CANSparkMax.MotorType.kBrushless);
-        indexerMotorTop = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_TOP, CANSparkMax.MotorType.kBrushless);
-        indexerMotorBottom = new CANSparkMax(Constants.Shooter.INDEXER_MOTOR_BOTTOM, CANSparkMax.MotorType.kBrushless);
+        shooterMotorTop = new SparkMax(Constants.Shooter.SHOOTER_MOTOR_TOP, MotorType.kBrushless);
+        shooterMotorBottom = new SparkMax(Constants.Shooter.SHOOTER_MOTOR_BOTTOM, MotorType.kBrushless);
+        indexerMotorTop = new SparkMax(Constants.Shooter.INDEXER_MOTOR_TOP, MotorType.kBrushless);
+        indexerMotorBottom = new SparkMax(Constants.Shooter.INDEXER_MOTOR_BOTTOM, MotorType.kBrushless);
 
-        indexerMotorTop.setIdleMode(IdleMode.kBrake);
-        indexerMotorBottom.setIdleMode(IdleMode.kBrake);
+        // indexerMotorTop.setIdleMode(IdleMode.kBrake);
+        // indexerMotorBottom.setIdleMode(IdleMode.kBrake);
 
         shooterMotorTop.setInverted(true);
         shooterMotorBottom.setInverted(true);
