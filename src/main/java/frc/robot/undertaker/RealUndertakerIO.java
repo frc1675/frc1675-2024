@@ -11,7 +11,10 @@ public class RealUndertakerIO implements IUndertaker {
     private SparkMax intakeMotorTwo = new SparkMax(Constants.Undertaker.INTAKE_MOTOR_TWO, MotorType.kBrushless);
     private double desiredSpeed;
 
-    public RealUndertakerIO() {}
+    public RealUndertakerIO() {
+        intakeMotorOne.setInverted(true);
+        intakeMotorTwo.setInverted(true);
+    }
 
     @Override
     public double[] getMotorsOutput() {

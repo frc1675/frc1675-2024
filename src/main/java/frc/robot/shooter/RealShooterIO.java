@@ -5,8 +5,13 @@ import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.RangingMode;
 import au.grapplerobotics.interfaces.LaserCanInterface.TimingBudget;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.Constants;
 
 public class RealShooterIO implements IShooterIO {
@@ -15,6 +20,7 @@ public class RealShooterIO implements IShooterIO {
     private SparkMax shooterMotorBottom;
     private SparkMax indexerMotorTop;
     private SparkMax indexerMotorBottom;
+    private SparkBaseConfig idleConfig;
 
     private RelativeEncoder shooterMotorTopEncoder;
     private RelativeEncoder shooterMotorBottomEncoder;
@@ -28,6 +34,11 @@ public class RealShooterIO implements IShooterIO {
         shooterMotorBottom = new SparkMax(Constants.Shooter.SHOOTER_MOTOR_BOTTOM, MotorType.kBrushless);
         indexerMotorTop = new SparkMax(Constants.Shooter.INDEXER_MOTOR_TOP, MotorType.kBrushless);
         indexerMotorBottom = new SparkMax(Constants.Shooter.INDEXER_MOTOR_BOTTOM, MotorType.kBrushless);
+        idleConfig = new SparkMaxConfig();
+
+        idleConfig.idleMode(IdleMode.kBrake);
+        indexerMotorTop.configure(idleConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        indexerMotorBottom.configure(idleConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
         // indexerMotorTop.setIdleMode(IdleMode.kBrake);
         // indexerMotorBottom.setIdleMode(IdleMode.kBrake);
