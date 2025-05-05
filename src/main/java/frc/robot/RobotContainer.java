@@ -17,8 +17,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.arm.commands.MoveToHome;
 import frc.robot.arm.commands.MoveToPosition;
-import frc.robot.auto.cmd.group.ConfigurableShootSequence;
-import frc.robot.auto.cmd.shooter.AutoSpinUp;
 import frc.robot.cmdGroup.IntakeNote;
 import frc.robot.cmdGroup.ShootAndReturnHome;
 import frc.robot.drive.DefaultDrive;
@@ -110,18 +108,6 @@ public class RobotContainer {
         // Constants.Shooter.LONG_SHOT_SPEED));
         // operatorController.povDown().onTrue(new SpinDown(shooter));
 
-        if (shotTesting) {
-            driverController
-                    .b()
-                    .onTrue(new ConfigurableShootSequence(
-                            shooter,
-                            undertakerSubsystem,
-                            arm,
-                            ledSubsystem,
-                            () -> testAngleEntry.getDouble(Constants.Auto.CLOSE_B_SHOT_ANGLE)));
-            driverController.x().onTrue(new AutoSpinUp(shooter, Constants.Auto.SHOT_SPEED, Constants.Auto.SHOT_SPEED));
-            driverController.y().onTrue(new AutoSpinUp(shooter, 0, 0));
-        }
     }
 
     public void teleopInit() {
