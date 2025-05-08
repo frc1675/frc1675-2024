@@ -46,7 +46,7 @@ public class Constants {
         public static final double TARGET_RANGE = 2.0;
         public static final double DEBOUNCE_TIME = 0.25;
         // Position constnats
-        public static final double HOME_POSITION = 138;
+        public static final double HOME_POSITION = 136;
         public static final double PODIUM_SHOT_ANGLE = HOME_POSITION - 33;
         public static final double BEHIND_NOTE_B_ANGLE = Auto.BEHIND_CLOSE_B_SHOT_ANGLE;
 
@@ -99,9 +99,9 @@ public class Constants {
     }
 
     public static class Shooter {
-        public static final double SHOOT_SPEED = 1700;
+        public static final double SHOOT_SPEED = 1190;
         public static final double AMP_SHOOT_SPEED = SHOOT_SPEED * 0.4;
-        public static final double LONG_SHOT_SPEED = 3500;
+        public static final double LONG_SHOT_SPEED = 1295;
 
         public static final double INTAKE_SPEED = Undertaker.INTAKE_SPEED * .09;
 
