@@ -74,7 +74,7 @@ public class RobotContainer {
         Dashboards.initVoltageDashboard();
         Dashboards.initCurrentDashboard();
         Dashboards.initMemoryDashboard();
-        Dashboards.initGitInfoDashboard();
+        //        Dashboards.initGitInfoDashboard();
 
         // Comment the below out when not testing.
         // initTestingOnlyTab();

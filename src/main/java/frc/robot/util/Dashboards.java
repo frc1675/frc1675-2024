@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.generated.git.BuildGitInfo;
+// import frc.robot.generated.git.BuildGitInfo;
 
 public class Dashboards {
     private static boolean voltageNeedsInit = true;
@@ -57,14 +57,14 @@ public class Dashboards {
         }
     }
 
-    public static void initGitInfoDashboard() {
-        if (gitInfoNeedsInit) {
-            ShuffleboardTab tab = Shuffleboard.getTab("Git Info");
-            tab.addString("Branch", () -> BuildGitInfo.GIT_BRANCH);
-            tab.addString("Commit", () -> BuildGitInfo.GIT_SHA.substring(0, 8));
-            tab.addBoolean("Dirty?", () -> BuildGitInfo.DIRTY != 0); // true if any uncommitted changes
-            tab.addString("Build Time", () -> BuildGitInfo.BUILD_DATE);
-            gitInfoNeedsInit = false;
-        }
-    }
+    // public static void initGitInfoDashboard() {
+    //     if (gitInfoNeedsInit) {
+    //         ShuffleboardTab tab = Shuffleboard.getTab("Git Info");
+    //         tab.addString("Branch", () -> BuildGitInfo.GIT_BRANCH);
+    //         tab.addString("Commit", () -> BuildGitInfo.GIT_SHA.substring(0, 8));
+    //         tab.addBoolean("Dirty?", () -> BuildGitInfo.DIRTY != 0); // true if any uncommitted changes
+    //         tab.addString("Build Time", () -> BuildGitInfo.BUILD_DATE);
+    //         gitInfoNeedsInit = false;
+    //     }
+    // }
 }
